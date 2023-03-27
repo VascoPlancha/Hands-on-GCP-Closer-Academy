@@ -440,6 +440,26 @@ So, when creating the Tables, you have to create the schema accodingly.
 
 The dataset is available at `./dataset/titanic.csv`.
 
+
+As a final note, install a virtual environment with the following command:
+
+```python
+python -m venv venv
+```
+
+Install the Python Extension:
+
+![py1]([image.png](https://i.imgur.com/8JlFCFw.png))
+
+With VSCode, do `CTRL+SHIFT+P` and write `Select Interpreter`
+
+![py2](https://i.imgur.com/1Ul2HfI.png)
+
+And find the `venv` python executable.
+
+![py3](https://i.imgur.com/ULm24gE.png)
+
+
 ### 1. Load a file from Cloud Storage to a Bigquery Table using a Cloud Function.
 
 ![ingestion-architecture](docs/part_1/ingestion.png)
