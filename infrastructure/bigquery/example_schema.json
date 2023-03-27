@@ -1,0 +1,20 @@
+[
+    {
+        "name": "my_required_text_field",
+        "type": "STRING",
+        "mode": "REQUIRED",
+        "description": "A text field"
+    },
+    {
+        "name": "my_required_integer_field",
+        "type": "INTEGER",
+        "mode": "NULLABLE",
+        "description": "An integer field"
+    },
+    {
+        "name": "my_nullable_boolean_field",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE",
+        "description": "A boolean field"
+    }
+]
