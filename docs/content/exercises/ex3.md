@@ -11,7 +11,7 @@ In this exercise, you'll be working with the `predictions_endpoint` Cloud Functi
 
 Your task is to develop the code for the `predictions_endpoint` Cloud Function and deploy it, ensuring that it can efficiently handle the entire process from receiving new data to returning predictions.
 
-The outline of the *Cloud Function* code is available at `./functions/train_model/`
+The outline of the *Cloud Function* code is available at `./functions/manual_exercises/train_model/`
 
 1. Set Bucket Name: Add the GCS bucket name where your model is stored.
 

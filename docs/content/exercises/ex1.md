@@ -22,7 +22,7 @@ For this you will need these resources:
 * One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 * One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `./functions/ingest_data/`.
+The outline of the *Cloud Function* code is available at `./functions/manual_exercises/ingest_data/`.
 
 Here are the steps you should follow:
 
