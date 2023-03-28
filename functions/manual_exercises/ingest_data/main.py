@@ -39,22 +39,18 @@ def main(event_data, context):
     that triggered the event, and `bucket`, which is the bucket this
     cloud function is listening.
     """
-    # Useful links:
-    # [1] https://cloud.google.com/appengine/docs/legacy/standard/python/googlecloudstorageclient/read-write-to-cloud-storage#reading_from
-    # [2] https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client#google_cloud_bigquery_client_Client_insert_rows_json
-
     # Clients
-    # storage_client = # IMPLEMENTATION: Use the storage API to make a Client Object
-    # bigquery_client = # IMPLEMENTATION: Use the bigquery API to make a Client Object
-    # publisher = # IMPLEMENTATION: Use the pubsub_b1 API to make a PubliserClient Object
+    # storage_client = # IMPLEMENTATION [1]: Use the storage API to make a Client Object
+    # bigquery_client = # IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
+    # publisher = # IMPLEMENTATION [3]: Use the pubsub_b1 API to make a PubliserClient Object
 
     # Environment variables
     # Note: In a real environment these variables would be passed by environment variables.
     # See: https://cloud.google.com/sdk/gcloud/reference/functions/deploy#--env-vars-file
-    project_id: str = "Your project ID" # IMPLEMENTATION: Set your configurations here
-    dataset_id: str = "Your Data set ID" # IMPLEMENTATION: Set your configurations here
-    table_name: str = "Your Table ID" # IMPLEMENTATION: Set your configurations here
-    topic_ingestion_complete = "Your Topic ID" # IMPLEMENTATION: Set your configurations here
+    project_id: str = "Your project ID" # IMPLEMENTATION [4]: Set your configurations here
+    dataset_id: str = "Your Data set ID" # IMPLEMENTATION [4]: Set your configurations here
+    table_name: str = "Your Table ID" # IMPLEMENTATION [4]: Set your configurations here
+    topic_ingestion_complete = "Your Topic ID" # IMPLEMENTATION [4]: Set your configurations here
 
     # Get a reference to the bucket
     bucket: storage.Bucket = storage_client.get_bucket(event_data['bucket'])
@@ -76,7 +72,7 @@ def main(event_data, context):
 
     # Iterate through the rest of the lines (the data points)
     for datapoint in lines[1:]:
-        errors = bigquery_client._(
+        errors = bigquery_client._( # IMPLEMENTATION [5]: Find the correct method to use here
             table=f"{dataset_id}.",
             json_rows=[_transform_datapoint_into_dictionary(
                 headers=headers,
@@ -100,7 +96,7 @@ def main(event_data, context):
     data = f"I finished ingesting the file {event_data['name']}!!"
 
     # Publish the message
-    publish_future = "Your Instrumentation here"
+    # publish_future = # IMPLEMENTATION [6]: Find the correct method with the PublisherClient to publish a message
 
 
 def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> dict:
@@ -132,6 +128,6 @@ def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> 
     data_dict = dict(zip(headers, values))
 
     # Assign set_type based on a random sample with 70/20/10 split
-    # Optional: You can define a train / test / validation column here.
+    # OPTIONAL [1]: You can define a train / test / validation column here. Define that column in your bigquery table too.
 
     return data_dict
