@@ -46,10 +46,15 @@ def predict(request):
 
         if input_data is None:
             abort(400, 'Request must include JSON data')
+        
+        # Convert the input data to a DataFrame
+        input_df = pd.DataFrame.from_dict([input_data])
 
+        # Make a prediction using the pipeline
+        prediction = pipeline.predict(input_df)
 
         # Return the prediction as a JSON response
-        response = jsonify({'prediction': "",
+        response = jsonify({'prediction': [prediction.tolist()[0]],
                             'uuid': str(uuid.uuid1())})
         response.headers.set('Access-Control-Allow-Origin', '*')
         return response
