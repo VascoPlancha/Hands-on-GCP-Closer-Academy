@@ -20,7 +20,7 @@ For this you will need these resources:
 * One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 * One Topic named `[prefix]-ingestion-complete`, to which the function will be subscribed to.
 
-The outline of the *Cloud Function* code is available at `./functions/train_model/`
+The outline of the *Cloud Function* code is available at `./functions/manual_exercises/train_model/`
 
 1. Decode Base64 Message: Add code to decode the base64 message.
 

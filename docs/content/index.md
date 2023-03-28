@@ -1,4 +1,10 @@
-# Academy
+# 7th Academy Pratical Execises
+
+- [7th Academy Pratical Execises](#7th-academy-pratical-execises)
+  - [Architecture](#architecture)
+    - [Ingestion and training](#ingestion-and-training)
+    - [Make the model available](#make-the-model-available)
+
 
 ## Architecture
 
@@ -7,7 +13,7 @@ We are going to build a simple *MLOps* architecture in *Google Cloud Platform* u
 
 Our minimal *MLOps* system should look like this in the end:
 
-![architecture](resources/architecture/architecture.png)
+![architecture](docs/architecture/architecture.png)
 
 ### Ingestion and training
 
