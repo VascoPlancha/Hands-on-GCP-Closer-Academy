@@ -11,56 +11,26 @@ def main(event_data, context):
     Args:
         event_data (dict): Event payload
         context (dict): Event context.
-
-    The --trigger-bucket event_data is the following:
-    https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto
-
-    event_data: {
-        storageClass: string
-        size: string
-        id: string
-        selfLink: string
-        timeStorageClassUpdated: Timestamp
-        updated: "2023-03-25T19:49:56.709Z"
-        crc32c: string
-        generation: string
-        timeCreated: Timestamp
-        mediaLink: string
-        etag: string
-        name: string
-        bucket: string
-        md5Hash: string
-        metageneration: string
-        contentType: string
-        kind: string
-    }
-
-    The important keys to us now are `name`, which is the name of the file
-    that triggered the event, and `bucket`, which is the bucket this
-    cloud function is listening.
     """
-    # Useful links:
-    # [1] https://cloud.google.com/appengine/docs/legacy/standard/python/googlecloudstorageclient/read-write-to-cloud-storage#reading_from
-    # [2] https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client#google_cloud_bigquery_client_Client_insert_rows_json
-
     # Clients
-    storage_client = "" # Instrument with the clients here.
-    bigquery_client = ""
-    publisher = ""
+    storage_client = storage.Client()
+    bigquery_client = bigquery.Client()
+    publisher = pubsub_v1.PublisherClient()
 
     # Environment variables
     # Note: In a real environment these variables would be passed by environment variables.
     # See: https://cloud.google.com/sdk/gcloud/reference/functions/deploy#--env-vars-file
-    project_id: str = "Your project ID" 
-    dataset_id: str = "Your Data set ID"
-    table_name: str = "Your Table ID"
-    topic_ingestion_complete = "Your Topic ID" 
+    project_id: str = "Project_ID"  # Your project ID
+    dataset_id: str = "bigquery_dataset_data"
+    table_name: str = "bigquery_table_id"
+    topic_ingestion_complete = "ingestion-complete"  # The Topic ID you created
 
     # Get a reference to the bucket
     bucket: storage.Bucket = storage_client.get_bucket(event_data['bucket'])
     # The key 'bucket' exists in the event_data
 
     # The ID of your new GCS object
+    # blob_name = "storage-object-name"
     blob: storage.Blob = bucket.blob(event_data['name'])
 
     # Iterate over the file
@@ -76,8 +46,9 @@ def main(event_data, context):
 
     # Iterate through the rest of the lines (the data points)
     for datapoint in lines[1:]:
-        errors = bigquery_client._(
-            table=f"{dataset_id}.",
+        # Send all the lines into bigquery the `insert_rows_json` method.
+        errors = bigquery_client.insert_rows_json(
+            table=f'{dataset_id}.{table_name}',
             json_rows=[_transform_datapoint_into_dictionary(
                 headers=headers,
                 datapoint=datapoint)],
@@ -99,8 +70,12 @@ def main(event_data, context):
         project_id, topic_ingestion_complete)
     data = f"I finished ingesting the file {event_data['name']}!!"
 
-    # Publish the message
-    publish_future = "Your Instrumentation here"
+    # When you publish a message, the client returns a future.
+    # You don't have to wait for it, you can alternatively write:
+    # _ = publisher.publish(topic_path, data.encode("utf-8"))
+    # or just
+    # publisher.publish(topic_path, data.encode("utf-8"))
+    publish_future = publisher.publish(topic_path, data.encode("utf-8"))
 
 
 def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> dict:
@@ -131,7 +106,16 @@ def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> 
     # Create a dictionary from the headers and values using the zip function
     data_dict = dict(zip(headers, values))
 
+    # Wrangle the data as necessary
+    data_dict['Survived'] = True if data_dict['Survived'] == '1' else False
+    data_dict = {k: v for k, v in data_dict.items() if v or k == 'Survived'}
+
     # Assign set_type based on a random sample with 70/20/10 split
-    # Optional: You can define a train / test / validation column here.
+    set_type = random.choices(
+        ['train', 'test', 'validation'],
+        weights=[0.7, 0.2, 0.1],
+        k=1)[0]
+
+    data_dict['set_type'] = set_type
 
     return data_dict
