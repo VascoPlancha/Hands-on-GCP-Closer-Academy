@@ -128,6 +128,10 @@ def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> 
 
     # Create a dictionary from the headers and values using the zip function
     data_dict = dict(zip(headers, values))
+    
+    # Wrangle the data as necessary
+    data_dict['Survived'] = True if data_dict['Survived'] == '1' else False
+    data_dict = {k: v for k, v in data_dict.items() if v or k == 'Survived'}
 
     # Assign set_type based on a random sample with 70/20/10 split
     # OPTIONAL [1]: You can define a train / test / validation column here. Define that column in your bigquery table too.
