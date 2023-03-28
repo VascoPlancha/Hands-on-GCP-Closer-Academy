@@ -15,13 +15,14 @@ def main(event_data, context):
     The --trigger-bucket event_data is the following:
     https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto
 
+    ```json
     event_data: {
         storageClass: string
         size: string
         id: string
         selfLink: string
         timeStorageClassUpdated: Timestamp
-        updated: "2023-03-25T19:49:56.709Z"
+        updated: Timestamp
         crc32c: string
         generation: string
         timeCreated: Timestamp
@@ -34,6 +35,7 @@ def main(event_data, context):
         contentType: string
         kind: string
     }
+    ```
 
     The important keys to us now are `name`, which is the name of the file
     that triggered the event, and `bucket`, which is the bucket this
