@@ -1,0 +1,43 @@
+site_name: Closer Academy | GCP
+repo_name: Closer Academy Google Cloud Platform
+
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.tabs
+
+watch:
+- functions/
+
+docs_dir: docs/content
+nav:
+- Index: index.md
+- Create Resources: create_resources.md
+- Client Libraries (Python): client_libs_py.md
+- Exercises:
+  - Exercise 1: exercises/ex1.md
+
+
+markdown_extensions:
+- footnotes
+- toc:
+    permalink: True
+- admonition
+- tables
+- pymdownx.superfences:
+    custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [functions/]
+        options:
+          heading_level: 3
+          show_root_full_path: false
+          show_root_heading: true
+- search
