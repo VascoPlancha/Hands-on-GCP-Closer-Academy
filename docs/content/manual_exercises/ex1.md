@@ -74,7 +74,7 @@ gcloud functions deploy prefix_ingest_data \
 
 ## Code:
 
-Remember, you can still find it in the correct folder
+Remember, you can still find it in the correct folder.
 
 ::: manual_exercises.ingest_data.main
 

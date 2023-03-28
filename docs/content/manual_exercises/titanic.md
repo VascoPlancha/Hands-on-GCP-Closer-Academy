@@ -1,4 +1,4 @@
-# 0. Meet the data
+# Meet the dataset
 
 We will use the [Titanic Dataset](https://github.com/datasciencedojo/datasets/blob/master/titanic.csv) available pretty much anywhere.
 

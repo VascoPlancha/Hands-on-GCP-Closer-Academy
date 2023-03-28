@@ -70,3 +70,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"Pclass": 3, "Name": "Some
 ```
 
 or by going to the app [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.
+
+## Code:
+
+Remember, you can still find it in the correct folder.
+
+::: manual_exercises.predictions_endpoint.main
