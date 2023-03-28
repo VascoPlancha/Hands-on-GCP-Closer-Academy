@@ -15,21 +15,22 @@ import joblib
 def main(event_data, context) -> None:
 
     if 'data' in event_data:
-        decoded_msg = ""
+        # decoded_msg = # IMPLEMENTATION [1]: Add code to decode the base64 message.
+        pass # Remove pass once above line is done
 
-    storage_client = ""
-    bigquery_client = ""
+    # storage_client = # IMPLEMENTATION [1]: Use the storage API to make a Client Object
+    # bigquery_client = # IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
 
     def train() -> None:
 
         # Retrieve data from BigQuery and load it into a pandas DataFrame
-        query = "Your Query Here. Confirm you have data."
+        query = "" # IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with titanic data.
 
         df = bigquery_client.query(query).to_dataframe()
 
         # Preprocess the data
         X = df.drop(columns=['Survived', 'PassengerId',
-                    'Name', 'Ticket', 'Cabin', 'set_type'])
+                    'Name', 'Ticket', 'Cabin']) # OPTIONAL [1]: add 'set_type' or other columns that shouldn't be passed to the model.
         y = df['Survived']
 
         # Drop rows with missing target values
@@ -79,12 +80,12 @@ def main(event_data, context) -> None:
         pipeline.fit(X, y)
 
         # Save the trained pipeline to a GCS bucket
-        bucket_name = 'Your Bucket Name'
-        file_name = 'your_model_name.pkl'
+        # bucket_name = 'Your Bucket Name' # IMPLEMENTATION [4]: Add your prefix-bucket-models here
+        # file_name = 'your_model_name.pkl' # IMPLEMENTATION [5]: Give a name to your model.
         joblib.dump(pipeline, '/tmp/'+file_name)
 
-        bucket = ""
-        blob = ""
+        # bucket = # IMPLEMENTATION [6]: Connect to the bucket in [4] using the correct method for the storage Client.
+        # blob = # IMPLEMENTATION [7]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
         blob.upload_from_filename('/tmp/'+file_name)
 
     (train()

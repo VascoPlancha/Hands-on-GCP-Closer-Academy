@@ -1,6 +1,6 @@
 # Load a file from Cloud Storage to a Bigquery Table using a Cloud Function.
 
-![ingestion-architecture](docs/part_1/ingestion.png)
+![ingestion-architecture](../resources/part_1/ingestion.png)
 
 In this exercise, we will create the `ingest_data` Cloud Function, that will perform the following tasks:
 
