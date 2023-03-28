@@ -84,3 +84,9 @@ gcloud functions deploy prefix_train_model \
     --trigger-topic=prefix-ingestion-complete \
     --memory=1024MB
 ```
+
+## Code:
+
+Remember, you can still find it in the correct folder.
+
+::: manual_exercises.train_model.main
