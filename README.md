@@ -13,7 +13,7 @@ We are going to build a simple *MLOps* architecture in *Google Cloud Platform* u
 
 Our minimal *MLOps* system should look like this in the end:
 
-![architecture](docs/architecture/architecture.png)
+![architecture](docs/content/resources/architecture/architecture.png)
 
 ### Ingestion and training
 
