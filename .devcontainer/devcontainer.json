@@ -31,7 +31,8 @@
 				"DavidAnson.vscode-markdownlint",
 				"donjayamanne.githistory",
 				"GitHub.vscode-pull-request-github",
-				"me-dutour-mathieu.vscode-github-actions"
+				"me-dutour-mathieu.vscode-github-actions",
+				"GitHub.copilot"
 			]
 		}
 	},
