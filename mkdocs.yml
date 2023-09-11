@@ -1,6 +1,6 @@
-site_name: Closer Academy | GCP
+site_name: Hands-On GCP | Closer Academy
 repo_name: Closer Academy Google Cloud Platform
-repo_url: https://github.com/Portugapt/closer-7th-academy
+repo_url: https://github.com/Portugapt/Hands-on-gcp-closer-academy
 
 theme:
   name: material

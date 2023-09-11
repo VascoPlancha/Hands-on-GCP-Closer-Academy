@@ -1,5 +1,5 @@
 # Install dependencies
-poetry install --with dev
+poetry install --with dev,docs
 
 # Activate environment
 sh ./.venv/bin/activate
