@@ -5,7 +5,7 @@ poetry install --with dev,docs
 sh ./.venv/bin/activate
 
 # Install pre-commit hooks
-pre-commit install-hooks
+pre-commit install
 
 # Login into GCP
 gcloud auth application-default login
