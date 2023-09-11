@@ -5,7 +5,7 @@ We are going to build a simple *MLOps* project in *Google Cloud Platform* using
 
 Our minimal *MLOps* system should look like this in the end:
 
-![architecture](../resources/architecture/architecture.png)
+![architecture](./resources/architecture/architecture.png)
 
 ## Ingestion and training
 
@@ -14,7 +14,7 @@ Our minimal *MLOps* system should look like this in the end:
 3. A message is sent to the `ingestion_complete` topic, notifying subscribers about the new data in BigQuery.
 4. The `train_model` Cloud Function, subscribed to `ingestion_complete`, is triggered and begins training.
 5. It retrieves data from the `training_data` BigQuery table.
-6. The trained model is saved in the `my-model-storage` bucket.
+6. The trained model is saved .
 
 ### Make the model available
 

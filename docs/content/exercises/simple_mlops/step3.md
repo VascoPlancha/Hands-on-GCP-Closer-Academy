@@ -1,6 +1,6 @@
 # 3. Create an endpoint to serve the model to the outside world.
 
-![prediction-architecture](../resources/part_3/predictions.png)
+![prediction-architecture](./resources/part_3/predictions.png)
 
 In this exercise, you'll be working with the `predictions_endpoint` Cloud Function. This HTTP-triggered function serves as the prediction endpoint for clients to send new data points. Upon receiving a request containing new data, the function performs the following steps:
 

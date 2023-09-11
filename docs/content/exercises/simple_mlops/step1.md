@@ -1,6 +1,6 @@
 # Load a file from Cloud Storage to a Bigquery Table using a Cloud Function.
 
-![ingestion-architecture](../resources/part_1/ingestion.png)
+![ingestion-architecture](./resources/part_1/ingestion.png)
 
 In this exercise, we will create the `ingest_data` Cloud Function, that will perform the following tasks:
 
@@ -10,8 +10,7 @@ In this exercise, we will create the `ingest_data` Cloud Function, that will per
 
 3. After successfully importing the data into BigQuery, the `ingest_data` function will send a message to the `ingestion_complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
 
-The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud Platform.
-
+The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud Platf
 
 - You can adapt the function to create flags/categories for TRAIN/TEST/VALIDATION at runtime, assuming your table was created with that field.
 
