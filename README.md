@@ -8,3 +8,4 @@ For the documententation refer to the [github page](https://portugapt.github.io/
 
 - Docker
 - WSL
+- Visual Studio Code
