@@ -1,1 +1,1 @@
-pip install -r dev-requirements.txt
+poetry install --with dev

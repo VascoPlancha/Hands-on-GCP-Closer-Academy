@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "hands-on-gcp-closer-academy"
+version = "0.2.0"
+description = "Hands On Lab using GCP"
+authors = ["João Monteiro, Ricardo Miranda"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+google-cloud-storage = "^2.10.0"
+google-cloud-bigquery = "^3.11.4"
+google-cloud-pubsub = "^2.18.4"
+google-cloud-firestore = "^2.11.1"
+functions-framework = "^3.4.0"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.4"
+mypy = "^1.5.1"
+deepdiff = "^6.4.1"
+pytest = "^7.4.2"
+pre-commit = "^3.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
