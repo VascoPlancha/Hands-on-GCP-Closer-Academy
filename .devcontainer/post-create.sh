@@ -8,4 +8,4 @@ sh ./.venv/bin/activate
 pre-commit install
 
 # Login into GCP
-gcloud auth application-default login
+gcloud auth login

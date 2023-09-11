@@ -6,12 +6,16 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": true,
             "source.organizeImports": true
-        }
+        },
+        "editor.defaultFormatter": "ms-python.autopep8"
     },
     "ruff.args": [
         "--ignore",
         "F403",
         "E722"
     ],
-    "ruff.run": "onSave"
+    "ruff.run": "onSave",
+    "flake8.args": [
+        "--ignore=E501"
+    ]
 }
