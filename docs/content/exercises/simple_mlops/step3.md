@@ -75,4 +75,4 @@ or by going to the app [on Stackblitz](https://stackblitz.com/edit/closer-gcp-ti
 
 Remember, you can still find it in the correct folder.
 
-::: manual_exercises.predictions_endpoint.main
+::: simple_mlops.predictions_endpoint.main

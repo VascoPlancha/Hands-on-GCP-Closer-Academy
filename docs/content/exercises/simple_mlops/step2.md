@@ -89,4 +89,4 @@ gcloud functions deploy prefix_train_model \
 
 Remember, you can still find it in the correct folder.
 
-::: manual_exercises.train_model.main
+::: simple_mlops.train_model.main

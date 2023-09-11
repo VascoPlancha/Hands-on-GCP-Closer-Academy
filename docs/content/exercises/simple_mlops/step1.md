@@ -1,20 +1,24 @@
-# Load a file from Cloud Storage to a Bigquery Table using a Cloud Function.
+# Load a file from Cloud Storage to a Bigquery Table using a Cloud Function
+
+## My tasks
+
+- Mudar o nome do bucket na imagem
+
+## Introduction
 
 ![ingestion-architecture](./resources/part_1/ingestion.png)
 
 In this exercise, we will create the `ingest_data` Cloud Function, that will perform the following tasks:
 
-1. The `ingest_data` function will actively monitor the `my-data-landing-zone` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger in the Cloud Function to listen for object creation events in the specified bucket.
+1. The `ingest_data` function will actively monitor the `[YOURNAME]-lz` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (*PubSub*) in the Cloud Function to listen for object creation events in the specified bucket.
 
 2. When a new file is detected, the `ingest_data` function will read the contents of the file and write the data into a BigQuery table named `training_data`. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.
 
 3. After successfully importing the data into BigQuery, the `ingest_data` function will send a message to the `ingestion_complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
 
-The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud Platf
+The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud.
 
-- You can adapt the function to create flags/categories for TRAIN/TEST/VALIDATION at runtime, assuming your table was created with that field.
-
-For this you will need these resources:
+The resources needed these tasks are:
 
 * One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema.json`)
 * One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
@@ -23,23 +27,38 @@ For this you will need these resources:
 
 The outline of the *Cloud Function* code is available at `./functions/manual_exercises/ingest_data/`.
 
-Here are the steps you should follow:
+## Tasks
+
+- [ ] Create a Bigquery Dataset and Table
+- [ ] Create a Cloud Storage Bucket
+- [ ] Update the Cloud Function Code
+- [ ] Deploy the Cloud Function
+
+## Code Changes
+
+Here are the steps necessary to complete the exercise:
 
 1. Create Clients: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
 
-```python
-# INSTRUMENTATION [1]: Use the storage API to make a Client Object
-# INSTRUMENTATION [2]: Use the bigquery API to make a Client Object
-# INSTRUMENTATION [3]: Use the pubsub_v1 API to make a PublisherClient Object
-```
+    ```python
+    # INSTRUMENTATION [1]: Use the storage SDK API to make a Client Object
+    # INSTRUMENTATION [2]: Use the bigquery SDK API to make a Client Object
+    # INSTRUMENTATION [3]: Use the pubsub SDK API to make a PublisherClient Object
+    ```
 
-2. Set Environment Variables: Set your project configurations like project ID, dataset ID, table name, and topic ID.
+2. Set Environment Variables
 
-```python
-# IMPLEMENTATION [4]: Set your configurations here
-```
+    In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
-3. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
+    ```yaml
+    _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
+    _BIGQUERY_DATASET_ID: "The BigQuery dataset ID you created"
+    _BIGQUERY_TABLE_ID: "The BigQuery table ID where you will store the data"
+    _TOPIC_INGESTION_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
+    ```
+
+
+1. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
    - Hint: Find all the bigquery `Client()` [methods here](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client)
 
 ```python
@@ -70,10 +89,7 @@ gcloud functions deploy prefix_ingest_data \
     --trigger-bucket=prefix-landing-bucket
 ```
 
+## Documentation
 
-## Code:
-
-Remember, you can still find it in the correct folder.
-
-::: manual_exercises.ingest_data.main
+::: simple_mlops.ingest_data.app.main
 
