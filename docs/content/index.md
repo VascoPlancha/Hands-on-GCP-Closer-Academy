@@ -1,32 +1,33 @@
-# 7th Academy Pratical Execises
+# Hands On GCP - Closer Academy
 
-- [7th Academy Pratical Execises](#7th-academy-pratical-execises)
-  - [Architecture](#architecture)
-    - [Ingestion and training](#ingestion-and-training)
-    - [Make the model available](#make-the-model-available)
+## Introduction
 
+This repository contains the code for the Hands On GCP workshop.
+
+In this workshop we will build a simple *MLOps* system in *Google Cloud Platform*. By end end of it, we should be able to understand how to create resources in Google Cloud, how to use them and how to integrate them with eachother.
+
+## Requirements and Setup
+
+- WSL (Windows Linux Subsystem)
+    - Installation steps: [https://learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+----
+
+- Docker
+    - Download for windows: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+
+----
+
+- Visual Studio Code
+    - Download for windows: [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+
+We are going to use *Visual Studio Code* with devcontainers.
+You can learn more about Devcontainers [here](https://code.visualstudio.com/docs/devcontainers/containers).
 
 ## Architecture
 
-We are going to build a simple *MLOps* architecture in *Google Cloud Platform* using
-`Cloud Storage`, `Cloud Functions`, `Bigquery` and `Pubsub`.
+Please, refer to [this document](./architecture/simplemlops.md) for a detailed explanation of the architecture of the first project.
 
-Our minimal *MLOps* system should look like this in the end:
+## Google Cloud Services
 
-![architecture](docs/architecture/architecture.png)
-
-### Ingestion and training
-
-1. Cloud Function `ingest_data` monitors the `my-data-landing-zone` for new files.
-2. Upon detecting a new file, `ingest_data` writes its contents to the BigQuery table `training_data`.
-3. A message is sent to the `ingestion_complete` topic, notifying subscribers about the new data in BigQuery.
-4. The `train_model` Cloud Function, subscribed to `ingestion_complete`, is triggered and begins training.
-5. It retrieves data from the `training_data` BigQuery table.
-6. The trained model is saved in the `my-model-storage` bucket.
-
-### Make the model available
-
-11. The `predictions_endpoint` Cloud Function receives a request containing new data from a client.
-12. The Function loads the previously stored model into memory.
-13. It makes a prediction and stores the prediction and new data in the `predictions_data` BigQuery table.
-14. The prediction result is returned to the client.
+Please, refer to [this document](./services/index.md) for an introduction to some of the Google Cloud services used in this workshop.

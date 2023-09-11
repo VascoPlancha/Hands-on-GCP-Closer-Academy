@@ -24,7 +24,12 @@ watch:
 
 docs_dir: docs/content
 nav:
-- Index: index.md
+- Overview: 
+  - index: index.md
+  - Architectures: 
+    - Simple MLOps: architecture/simplemlops.md
+  - Services/Resources:
+    - index: services/index.md
 - Create Resources: create_resources.md
 - Client Libraries (Python): client_libs_py.md
 - Manual Exercises:
