@@ -4,12 +4,12 @@ repo_url: https://github.com/Portugapt/Hands-on-gcp-closer-academy
 
 theme:
   name: material
-  palette: 
+  palette:
     # Palette toggle for light mode
     - scheme: default
       primary: amber
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - scheme: slate
@@ -26,7 +26,7 @@ watch:
 
 docs_dir: docs/content
 nav:
-- Overview: 
+- Overview:
   - index: index.md
   - Services/Resources:
     - index: services/index.md
@@ -58,6 +58,8 @@ markdown_extensions:
       - name: mermaid
         class: mermaid
         format: !!python/name:pymdownx.superfences.fence_code_format
+- pymdownx.tasklist:
+      clickable_checkbox: true
 
 plugins:
 - mkdocstrings:
