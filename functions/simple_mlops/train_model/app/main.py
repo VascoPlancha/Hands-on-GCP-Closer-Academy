@@ -1,22 +1,18 @@
-import base64
-from tempfile import TemporaryFile
+from typing import Any
 
-
-from google.cloud import bigquery
-from google.cloud import storage
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
 import joblib
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
-def main(event_data, context) -> None:
+def main(event_data: dict, context: Any) -> None:
 
     if 'data' in event_data:
         # decoded_msg = # IMPLEMENTATION [1]: Add code to decode the base64 message.
-        pass # Remove pass once above line is done
+        pass  # Remove pass once above line is done
 
     # storage_client = # IMPLEMENTATION [1]: Use the storage API to make a Client Object
     # bigquery_client = # IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
@@ -24,13 +20,14 @@ def main(event_data, context) -> None:
     def train() -> None:
 
         # Retrieve data from BigQuery and load it into a pandas DataFrame
-        query = "" # IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with titanic data.
+        # IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with titanic data.
+        query = ""
 
         df = bigquery_client.query(query).to_dataframe()
 
         # Preprocess the data
         X = df.drop(columns=['Survived', 'PassengerId',
-                    'Name', 'Ticket', 'Cabin']) # OPTIONAL [1]: add 'set_type' or other columns that shouldn't be passed to the model.
+                    'Name', 'Ticket', 'Cabin'])  # OPTIONAL [1]: add 'set_type' or other columns that shouldn't be passed to the model.
         y = df['Survived']
 
         # Drop rows with missing target values
