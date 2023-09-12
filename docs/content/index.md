@@ -24,10 +24,6 @@ In this workshop we will build a simple *MLOps* system in *Google Cloud Platform
 We are going to use *Visual Studio Code* with devcontainers.
 You can learn more about Devcontainers [here](https://code.visualstudio.com/docs/devcontainers/containers).
 
-## Architecture
+## Exercises
 
-Please, refer to [this document](./architecture/simplemlops.md) for a detailed explanation of the architecture of the first project.
-
-## Google Cloud Services
-
-Please, refer to [this document](./services/index.md) for an introduction to some of the Google Cloud services used in this workshop.
+- [Simple MLOps Pipelines](./exercises/simple_mlops/index.md)
