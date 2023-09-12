@@ -73,29 +73,49 @@ Here are the steps necessary to complete the exercise:
 
 3. Send the correct arguments to the `storage_download_blob_as_string` function
 
+    TODO
 
-1. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
-   - Hint: Find all the bigquery `Client()` [methods here](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client)
+4. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
 
-```python
-# IMPLEMENTATION [5]: Find the correct method to use here
-```
+    Hint: Find all the bigquery `Client()` [methods here](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client)
 
-4 . Publish Message: Find the correct method with the PublisherClient to publish a message.
-    - Hint: [PublisherClient](https://cloud.google.com/python/docs/reference/pubsublite/latest/google.cloud.pubsublite.cloudpubsub.publisher_client.PublisherClient#google_cloud_pubsublite_cloudpubsub_publisher_client_PublisherClient_publish)
+    ```python
+    # IMPLEMENTATION [5]: Find the correct method to use here
+    ```
 
-```python
-# IMPLEMENTATION [6]: Find the correct method with the PublisherClient to publish a message
-```
+5. Publish Message: Find the correct method with the PublisherClient to publish a message.
 
+   - Hint: [PublisherClient](https://cloud.google.com/python/docs/reference/pubsublite/latest/google.cloud.pubsublite.cloudpubsub.publisher_client.PublisherClient#google_cloud_pubsublite_cloudpubsub_publisher_client_PublisherClient_publish)
 
-5. (Optional) Assign Set Types: You can define a train/test/validation column here. Define that column in your BigQuery table too.
+    ```python
+    # IMPLEMENTATION [6]: Find the correct method with the PublisherClient to publish a message
+    ```
 
-```python
-# OPTIONAL [1]: You can define a train / test / validation column here. Define that column in your BigQuery table too.
-```
+6. (Optional) Assign Set Types: You can define a train/test/validation column here. Define that column in your BigQuery table too.
+
+    ```python
+    # OPTIONAL [1]: You can define a train / test / validation column here. Define that column in your BigQuery table too.
+    ```
+
+2. Deployment
+
+   You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
 Deployment:
+
+```bash
+FUNCTION_NAME="ingest_data"
+MY_NAME="MyName"
+
+gcloud beta functions deploy $MY_NAME-$FUNCTION_NAME \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/ingest_data/app/ \
+    --entry-point=main \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=$MY_NAME-lz" \
+```
 
 ```bash
 gcloud functions deploy prefix_ingest_data \
@@ -105,6 +125,61 @@ gcloud functions deploy prefix_ingest_data \
     --entry-point=main \
     --trigger-bucket=prefix-landing-bucket
 ```
+
+## Hints
+
+### Cloud Events
+
+The CloudEvent argument is an object with the following structure:
+
+```json
+{
+    "attributes": {
+        "specversion": "1.0",
+        "id": "1234567890",
+        "source": " //pubsub.googleapis.com/projects/[The GCP Project of the topic]/topics/[The topic name]",
+        "type": "google.cloud.pubsub.topic.v1.messagePublished",
+        "datacontenttype": "application/json",
+        "time": "2020-08-08T00:11:44.895529672Z"
+    },
+    "data": {
+        "message": {
+            "_comment": "data is base64 encoded string of 'Hello World'",
+            "data": "SGVsbG8gV29ybGQ="
+        }
+    }
+}
+```
+
+You can read the CloudEvent specification in the [github page](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+
+When a Cloud Storage event is passed to a CloudEvent function, the data payload is of type [StorageObjectData](https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto). This protobuf translates to the following `JSON`:
+
+```json
+{
+    "attributes": {
+        "specversion": "1.0",
+        "id": "1234567890",
+        "source": "//storage.googleapis.com/projects/_/buckets/[Bucket Name]",
+        "type": "google.cloud.storage.object.v1.finalized",
+        "datacontenttype": "application/json",
+        "time": "2020-08-08T00:11:44.895529672Z"
+    },
+    "data": {
+        "name": "folder/Test.cs [File path inside the bucket]",
+        "bucket": "[Bucket Name]",
+        "contentType": "application/json",
+        "metageneration": "1",
+        "timeCreated": "2020-04-23T07:38:57.230Z",
+        "updated": "2020-04-23T07:38:57.230Z"
+    }
+}
+```
+
+Read more on how to deploy a function that listens to a Cloud Storage bucket event at:
+
+- [Codelabs - Triggering Event Processing from Cloud Storage using Eventarc and Cloud Functions (2nd gen)](https://codelabs.developers.google.com/triggering-cloud-functions-from-cloud-storage)
+- [Cloud Storage Tutorial (2nd gen)](https://cloud.google.com/functions/docs/tutorials/storage)
 
 ## Documentation
 
