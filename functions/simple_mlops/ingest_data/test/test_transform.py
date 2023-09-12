@@ -1,6 +1,6 @@
 import deepdiff
 
-import functions.simple_mlops.ingest_data.app.m_transform as transform
+from functions.simple_mlops.ingest_data.app import id_transform as transform
 
 # Headers: PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked
 TITANTIC_HEADERS = [
