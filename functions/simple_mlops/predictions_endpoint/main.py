@@ -1,16 +1,16 @@
+import json
+import traceback
+import uuid
+
 import joblib
 import pandas as pd
 from flask import abort, jsonify, make_response
-from google.cloud import storage
-import uuid
-import traceback
-import json
 
 # Load the pipeline from the pickle file
 pipeline = None
 
 
-def load_model():
+def load_model() -> None:
     global pipeline
     if pipeline is None:
         # Download the model from GCS
@@ -25,7 +25,7 @@ def load_model():
         pipeline = joblib.load('/tmp/' + file_name)
 
 
-def predict(request):
+def predict(request: dict) -> int:
     # Load the model if it hasn't been loaded yet
     load_model()
 
@@ -48,7 +48,7 @@ def predict(request):
             abort(400, 'Request must include JSON data')
 
         # Convert the input data to a DataFrame
-        input_df = pd.DataFrame.from_dict([input_data])
+        pd.DataFrame.from_dict([input_data])
 
         # Make a prediction using the pipeline
         # prediction = # IMPLEMENTATION [6]: You pipeline object is lodaded globally, just call it and use the `predict` method
@@ -65,3 +65,4 @@ def predict(request):
             'message': 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()),
             'request': request.get_json()}
         ))
+        return abort(500, 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()))
