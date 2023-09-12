@@ -9,3 +9,4 @@ pre-commit install
 
 # Login into GCP
 gcloud auth login
+gcloud config set project closeracademy-handson
