@@ -1,4 +1,5 @@
 import deepdiff
+import pytest
 
 from functions.simple_mlops.ingest_data.app import id_transform as transform
 
@@ -23,9 +24,8 @@ def test_titanic_transform_line() -> None:
     """Test the first line of the CSV file. A simple line without any quotes."""
     line = '1,0,3,"Braund, Mr. Owen Harris",male,22,1,0,A/5 21171,7.25,,S'
 
-    actual = transform.titanic_transform(
-        headers=TITANTIC_HEADERS,
-        datapoint=line).to_dict()
+    for data in transform.titanic_transform(datapoint=line):
+        actual = data.to_dict()
 
     expected = {
         'PassengerId': 1,
@@ -49,9 +49,8 @@ def test_titanic_line_with_several_quotes() -> None:
     """Test a line of the CSV file with several quotes."""
     line = '23,1,3,"McGowan, Miss. Anna ""Annie""",female,15,0,0,330923,8.0292,,Q'
 
-    actual = transform.titanic_transform(
-        headers=TITANTIC_HEADERS,
-        datapoint=line).to_dict()
+    for data in transform.titanic_transform(datapoint=line):
+        actual = data.to_dict()
 
     expected = {
         'PassengerId': 23,
@@ -69,3 +68,22 @@ def test_titanic_line_with_several_quotes() -> None:
     }
 
     assert {} == deepdiff.DeepDiff(actual, expected)
+
+
+def test_titanic_incomplete_line() -> None:
+    """Test a line of the CSV file that may be incomplete."""
+
+    with pytest.raises(IndexError):
+        line = '23,1,3,"McGowan, Miss. Anna ""Annie"""'
+
+        for data in transform.titanic_transform(datapoint=line):
+            data.to_dict()
+
+
+def test_titanic_cant_transform_str_to_int() -> None:
+    """Test a line with a bad character in a float or integer place."""
+    line = 'a23,1,3,"McGowan, Miss. Anna ""Annie""",female,15,0,0,330923,8.0292,,Q'
+
+    with pytest.raises(ValueError):
+        for data in transform.titanic_transform(datapoint=line):
+            data.to_dict()
