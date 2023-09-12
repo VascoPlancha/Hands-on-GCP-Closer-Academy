@@ -80,6 +80,7 @@ Here are the steps necessary to complete the exercise:
 ```python
 # IMPLEMENTATION [5]: Find the correct method to use here
 ```
+
 4 . Publish Message: Find the correct method with the PublisherClient to publish a message.
     - Hint: [PublisherClient](https://cloud.google.com/python/docs/reference/pubsublite/latest/google.cloud.pubsublite.cloudpubsub.publisher_client.PublisherClient#google_cloud_pubsublite_cloudpubsub_publisher_client_PublisherClient_publish)
 
