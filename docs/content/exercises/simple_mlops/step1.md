@@ -1,5 +1,19 @@
 # Load a file from Cloud Storage to a Bigquery Table using a Cloud Function
 
+- [Load a file from Cloud Storage to a Bigquery Table using a Cloud Function](#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function)
+  - [My tasks](#my-tasks)
+  - [Introduction](#introduction)
+  - [Tasks](#tasks)
+  - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
+    - [1. Create a BigQuery Dataset](#1-create-a-bigquery-dataset)
+    - [2. Create a BigQuery Table](#2-create-a-bigquery-table)
+    - [3. Create a Google Cloud Storage Bucket](#3-create-a-google-cloud-storage-bucket)
+    - [4. Create the pubsub topic for ingestion complete](#4-create-the-pubsub-topic-for-ingestion-complete)
+  - [Update the Cloud Function Code](#update-the-cloud-function-code)
+  - [Hints](#hints)
+    - [Cloud Events](#cloud-events)
+  - [Documentation](#documentation)
+
 ## My tasks
 
 - Mudar o nome do bucket na imagem
@@ -43,12 +57,198 @@ The outline of the *Cloud Function* code is available at `functions/simple_mlops
 
 ## Tasks
 
-- [ ] Create a Bigquery Dataset and Table
-- [ ] Create a Cloud Storage Bucket
+- [ ] Create the Google Cloud Resources
 - [ ] Update the Cloud Function Code
 - [ ] Deploy the Cloud Function
+- [ ] Test the Cloud Function
 
-## Code Changes
+## Create the Google Cloud Resources
+
+Here are the steps necessary to complete the exercise:
+
+You can create the resources with Cloud Shell or in the Console.
+***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.***
+
+For Cloud Shell, set these variables:
+
+```bash
+export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_NAME=$(gcloud config get-value project)
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+export REGION=europe-west3
+export YOURNAME=your_name_in_lowercase
+```
+
+![cloudshell](https://i.imgur.com/5vmuTn8.png)
+
+### 1. Create a BigQuery Dataset
+
+With Cloud Shell (Copy-paste):
+
+```bash
+bq mk \
+    --project_id ${PROJECT_ID} \
+    --location ${REGION} \
+    --dataset \
+    --description "Dataset for the Titanic dataset" \
+    --label=owner:${YOURNAME} \
+    --label=project:${PROJECT_NAME} \
+    --label=purpose:academy \
+    ${YOURNAME}_titanic
+```
+
+Reference: [bq mk --dataset](https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-dataset)
+
+With the Console:
+
+1. Go to BigQuery:
+
+    ![bq-1](https://i.imgur.com/Qvhqno3.png)
+
+2. Click the bullet points icon next to the project name:
+
+    ![bq-2](https://i.imgur.com/bHct9F7.png)
+
+3. Name your data set, change the region, and click `CREATE DATA SET`:
+
+    ![bq-3](https://i.imgur.com/poTqdG6.png)
+
+    Congratulations! You have a `data set`!
+
+4. Edit the labels
+
+    Click in the recently created dataset.
+    ![bq-4](https://i.imgur.com/HG9KUp2.png)
+
+    And add the labels
+
+    ![bq-5](https://i.imgur.com/XMXCcF2.png)
+
+### 2. Create a BigQuery Table
+
+With Cloud Shell (Copy-paste):
+
+```bash
+bq mk \
+    --project_id ${PROJECT_ID} \
+    --table \
+    --description "Table for the Titanic dataset" \
+    --label=owner:${YOURNAME} \
+    --label=project:${PROJECT_NAME} \
+    --label=purpose:academy \
+    --label=dataset:titanic \
+    ${YOURNAME}_titanic.titanic_raw \
+    ./infrastructure/bigquery/titanic_schema_raw.json
+```
+
+Reference: [bq mk --table](https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-table)
+
+With the console:
+
+1. Click the bullets icon next to your data set, and click *Create Table*:
+
+    ![bq-t-1](https://i.imgur.com/dW3pcpN.png)
+
+2. Configure your table:
+
+    ![bq-t-2](https://i.imgur.com/asXwMxi.png)
+
+    1. Make sure it's in your dataset created in the step before
+    2. Name your dataset `titanic_raw`
+    3. Copy the schema in `infrastructure/bigquery/titanic_schema_raw.json` and paste it
+    4. Create the table.
+
+3. Add the labels.
+
+    ![bq-t-3](https://i.imgur.com/sWJsk0K.png)
+
+    To add the labels go to `EDIT DETAILS`, and the same way as the dataset, add the labels. Include the `Dataset` : `titanic` label.
+
+### 3. Create a Google Cloud Storage Bucket
+
+```bash
+gsutil mb \
+    -p ${PROJECT_ID} \
+    -c regional \
+    -l ${REGION} \
+    gs://${YOURNAME}-lz
+
+gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-lz
+gsutil label ch -l project:${PROJECT_NAME} gs://${YOURNAME}-lz
+gsutil label ch -l purpose:academy gs://${YOURNAME}-lz
+```
+
+Reference: [gsutil mb](https://cloud.google.com/storage/docs/gsutil/commands/mb), [gsutil label](https://cloud.google.com/storage/docs/gsutil/commands/label)
+
+With the console:
+
+1. Search for the Cloud Storage in the Search bar.
+
+    ![buckets-1](https://i.imgur.com/voKVC6X.png)
+
+2. In the Cloud Storage UI, you'll notice there are no buckets created yet. To create one, click the `CREATE` button.
+
+    ![buckets-2](https://i.imgur.com/kYTszb3.png)
+
+3. Configurate your bucket
+
+    ![buckets-3-1](https://i.imgur.com/J3daANw.png)
+
+    1. Name your bucket and click Continue.
+    2. Change the storage class from Multi-region to Region. Set the location to europe-west3, as shown in the image, and click Continue.
+    3. Keep the remaining settings as they are.
+    4. Click create.
+
+    Your configuration should look like this:
+
+    ![buckets-4](https://i.imgur.com/vCD4BsS.png)
+
+    If this popup appears, leave the settings as they are.
+
+    ![buckets-pupup1](https://i.imgur.com/nty5chF.png)
+
+And now you have your bucket!
+
+![buckets-created](https://i.imgur.com/ZXLrCRL.png)
+
+Alternatively, you can create a bucket using [Python](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-python), other Client Libraries, or even advanced Infrastructure-as-Code tools like [Terraform](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-terraform) or [Pulumi](https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/).
+
+### 4. Create the pubsub topic for ingestion complete
+
+With Cloud Shell:
+
+```bash
+gcloud pubsub topics create ${YOURNAME}-ingestion-complete \
+    --project=${PROJECT_ID} \
+    --labels=owner=${YOURNAME},project=${PROJECT_NAME},purpose=academy
+```
+
+With the Cloud Console:
+
+1. Search for *Topics* in the search bar.
+2. Click in **CREATE TOPIC**.
+
+    ![ps-1](https://i.imgur.com/iy3OUEr.png)
+
+3. Define your Topic ID and click **CREATE**
+
+    The topic ID should be `[your_name]-complete`
+
+    ![ps-2](https://i.imgur.com/7t1ewA6.png)
+
+    In this case, our Topic ID is `ingestion_complete`.
+
+    Remember where to find your Topic IDs, it will be useful when instrumenting the python scripts.
+
+4. Verify your topic was created
+
+   ![ps-3](https://i.imgur.com/1UjfQoo.png)
+
+   It automatically creates a subscription, but lets ignore that for now.
+
+Now we are ready to move to the cloud function code.
+
+## Update the Cloud Function Code
 
 Here are the steps necessary to complete the exercise:
 
@@ -144,6 +344,7 @@ Here are the steps necessary to complete the exercise:
         --region=europe-west3 \
         --runtime=python311 \
         --source=functions/simple_mlops/ingest_data/app/ \
+        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
         --entry-point=main \
         --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
         --trigger-event-filters="bucket=$MY_NAME-lz"
@@ -154,25 +355,17 @@ Here are the steps necessary to complete the exercise:
         --region=europe-west3 \
         --runtime=python311 \
         --source=functions/simple_mlops/ingest_data/app/ \
+        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
         --entry-point=main \
         --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
         --trigger-event-filters="bucket=jm-test-delete-bucket"
     ```
 
-```bash
-gcloud functions deploy prefix_ingest_data \
-    --region=europe-west3 \
-    --runtime=python39 \
-    --source=gs://prefix-functions-bucket/ingest_data.zip \
-    --entry-point=main \
-    --trigger-bucket=prefix-landing-bucket
-```
-
 ## Hints
 
 ### Cloud Events
 
-The CloudEvent argument is an object with the following structure:
+The CloudEvent is an object with the following structure:
 
 ```json
 {
@@ -208,7 +401,7 @@ When a Cloud Storage event is passed to a CloudEvent function, the data payload 
         "time": "2020-08-08T00:11:44.895529672Z"
     },
     "data": {
-        "name": "folder/Test.cs [File path inside the bucket]",
+        "name": "folder/myfile.csv [File path inside the bucket]",
         "bucket": "[Bucket Name]",
         "contentType": "application/json",
         "metageneration": "1",
@@ -226,3 +419,9 @@ Read more on how to deploy a function that listens to a Cloud Storage bucket eve
 ## Documentation
 
 ::: simple_mlops.ingest_data.app.main
+
+::: simple_mlops.ingest_data.app.funcs.gcp_apis
+
+::: simple_mlops.ingest_data.app.funcs.transform
+
+::: simple_mlops.ingest_data.app.funcs.models
