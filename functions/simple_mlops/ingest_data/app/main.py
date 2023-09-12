@@ -1,12 +1,17 @@
 import os
 
 import functions_framework
-import m_gcp_apis as gcp_apis
 from cloudevents.http import CloudEvent
 from google.cloud import bigquery, pubsub, storage
 
-from . import id_models as models
-from . import id_transform as transform
+try:
+    from _modules import _gcp_apis as gcp_apis
+    from _modules import _models as models
+    from _modules import _transform as transform
+except ImportError:
+    from functions.simple_mlops.ingest_data.app._modules import _gcp_apis as gcp_apis
+    from functions.simple_mlops.ingest_data.app._modules import _models as models
+    from functions.simple_mlops.ingest_data.app._modules import _transform as transform
 
 ################
 # 1. Clients ###
@@ -40,23 +45,28 @@ def load_clients(
     )
 
 
-gcp_clients = load_clients(gcp_project_id="Your Project ID")
-
 ##############################
 # 2. Environment variables ###
 ##############################
 
 
 def _env_vars() -> models.EnvVars:
+    # fqdn = fully qualified domain name
+    # A table fqdn is in the format: project_id.dataset_id.table_id
+
     return models.EnvVars(
-        gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'error'),
-        bq_dataset_id=os.getenv("_BIGQUERY_DATASET_ID", 'error'),
-        bq_table_id=os.getenv("_BIGQUERY_TABLE_ID", 'error'),
-        topic_ingestion_complete=os.getenv("TOPIC_INGESTION_COMPLETE", 'error')
+        gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
+        bq_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
+{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqdn_tbl")}''',
+        topic_ingestion_complete=os.getenv(
+            "TOPIC_INGESTION_COMPLETE", 'topic_ingestion_complete')
     )
 
 
-env_vars = _env_vars()
+if __name__ == "__main__":
+    gcp_clients = load_clients(gcp_project_id="Your Project ID")
+    env_vars = _env_vars()
 
 
 @functions_framework.cloud_event
@@ -67,15 +77,17 @@ def main(cloud_event: CloudEvent) -> None:
         cloud_event (CloudEvent): The cloud event that triggered this function.
     """
     # Get the event data
-    print(cloud_event)
+    print(cloud_event.get_data())
+
+    data = cloud_event.get_data()
 
     #########################################################
     # 3. Correct the arguments below to download the file ###
     #########################################################
     file_contents = gcp_apis.storage_download_blob_as_string(
         CS=gcp_clients.storage_client,
-        bucket_name=cloud_event['bucket'],
-        file_path=cloud_event['name']
+        bucket_name=data['bucket'],
+        file_path=data['name']
     )
     print(file_contents)
 
@@ -87,34 +99,27 @@ def main(cloud_event: CloudEvent) -> None:
     if has_headers:
         datapoints = datapoints[1:]
 
-#     # # Iterate through the rest of the lines (the data points)
-#     # for datapoint in lines[1:]:
-#     #     errors = bigquery_client._(  # IMPLEMENTATION [5]: Find the correct method to use here
-#     #         table=f"{dataset_id}.",
-#     #         json_rows=[_transform_datapoint_into_dictionary(
-#     #             headers=headers,
-#     #             datapoint=datapoint)],
-#     #     )
-#     #     if errors:
-#     #         print(json.dumps({
-#     #             "message": "Encountered errors while inserting row",
-#     #             "errors": errors,
-#     #             'data': _transform_datapoint_into_dictionary(
-#     #                 headers=headers,
-#     #                 datapoint=datapoint),
-#     #             "severity": "ERROR",
-#     #         }
-#
-#
-# ))
+    ###############################################################
+    # 4. Correct the arguments below to insert data into bigquery #
+    ###############################################################
+    # Iterate through the the datapoints and insert them into BigQuery
+    errors = [
+        gcp_apis.bigquery_insert_json_row(
+            BQ=gcp_clients.bigquery_client,
+            table_fqdn=env_vars.bq_table_fqdn,
+            row=[datapoint]
+        ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 
+    if any(errors):
+        raise ValueError(f"Errors found: {errors}")
 
-#     # # Publish the message
-#     # # Define the topic path, it's a string "projects/[PROJECT_ID]/topics/[TOPIC_ID]"
-#     # # but the `topic_path` method helps us.
-#     # topic_path: str = publisher.topic_path(
-#     #     project_id, topic_ingestion_complete)
-#     # data = f"I finished ingesting the file {event_data['name']}!!"
-
-#     # # Publish the message
-#     # # publish_future = # IMPLEMENTATION [6]: Find the correct method with the PublisherClient to publish a message
+    #################################################################
+    # 5. Correct the arguments below to publish a message to pubsub #
+    #################################################################
+    gcp_apis.pubsub_publish_message(
+        PS=gcp_clients.publisher,
+        project_id=env_vars.gcp_project_id,
+        topic_id=env_vars.topic_ingestion_complete,
+        data=f"I finished ingesting the file {data['name']}!!",
+        attributes={'train_model': 'True'},
+    )

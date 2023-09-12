@@ -52,17 +52,32 @@ The outline of the *Cloud Function* code is available at `functions/simple_mlops
 
 Here are the steps necessary to complete the exercise:
 
-1. Create Clients: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
+1. Create the client objects: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
 
     ```python
-    # INSTRUMENTATION [1]: Use the storage SDK API to make a Client Object
-    # INSTRUMENTATION [2]: Use the bigquery SDK API to make a Client Object
-    # INSTRUMENTATION [3]: Use the pubsub SDK API to make a PublisherClient Object
+    ################
+    # 1. Clients ###
+    ################
+    storage_client = 'Create a storage client here, with the correct project ID argument'
+    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
+    publisher = 'Create a publisher client here, with the correct project ID argument'
+
+    return models.GCPClients(
+        storage_client=storage_client,
+        bigquery_client=bigquery_client,
+        publisher=publisher
+    )
     ```
 
 2. Set Environment Variables
 
     In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
+
+    ```python
+    ##############################
+    # 2. Environment variables ###
+    ##############################
+    ```
 
     ```yaml
     _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
@@ -73,49 +88,76 @@ Here are the steps necessary to complete the exercise:
 
 3. Send the correct arguments to the `storage_download_blob_as_string` function
 
-    TODO
-
-4. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
-
-    Hint: Find all the bigquery `Client()` [methods here](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client)
-
     ```python
-    # IMPLEMENTATION [5]: Find the correct method to use here
+    #########################################################
+    # 3. Correct the arguments below to download the file ###
+    #########################################################
+    file_contents = gcp_apis.storage_download_blob_as_string(
+        CS='??',
+        bucket_name='??',
+        file_path='??',
+    )
     ```
 
-5. Publish Message: Find the correct method with the PublisherClient to publish a message.
-
-   - Hint: [PublisherClient](https://cloud.google.com/python/docs/reference/pubsublite/latest/google.cloud.pubsublite.cloudpubsub.publisher_client.PublisherClient#google_cloud_pubsublite_cloudpubsub_publisher_client_PublisherClient_publish)
+4. Insert Rows into BigQuery: Corrent the arguments in the `bigquery_insert_json_row` function to insert data into the BigQuery table.
 
     ```python
-    # IMPLEMENTATION [6]: Find the correct method with the PublisherClient to publish a message
+    ###############################################################
+    # 4. Correct the arguments below to insert data into bigquery #
+    ###############################################################
+    errors = [
+        gcp_apis.bigquery_insert_json_row(
+            BQ=gcp_clients.bigquery_client,
+            table_fqdn=env_vars.bq_table_fqdn,
+            row=[datapoint]
+        ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
+
+    if any(errors):
+        raise ValueError(f"Errors found: {errors}")
     ```
 
-6. (Optional) Assign Set Types: You can define a train/test/validation column here. Define that column in your BigQuery table too.
+5. Publish Message: Correct the arguments in the `pubsub_publish_message` function, to publish a message.
 
     ```python
-    # OPTIONAL [1]: You can define a train / test / validation column here. Define that column in your BigQuery table too.
+    #########################################################
+    # 5. Correct the arguments below to publish a message ###
+    #########################################################
+    gcp_apis.pubsub_publish_message(
+        PS='??',
+        project_id='??',
+        topic_id='??',
+        data=f"I finished ingesting the file {[change me]}!!",
+        attributes={'test': 'attribute'},
+    )
     ```
 
-2. Deployment
+6. Deployment
 
    You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
-Deployment:
+    ```bash
+    FUNCTION_NAME="ingest_data"
+    MY_NAME="MyName"
 
-```bash
-FUNCTION_NAME="ingest_data"
-MY_NAME="MyName"
+    gcloud beta functions deploy $MY_NAME-$FUNCTION_NAME \
+        --gen2 --cpu=1 --memory=512MB \
+        --region=europe-west3 \
+        --runtime=python311 \
+        --source=functions/simple_mlops/ingest_data/app/ \
+        --entry-point=main \
+        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+        --trigger-event-filters="bucket=$MY_NAME-lz"
 
-gcloud beta functions deploy $MY_NAME-$FUNCTION_NAME \
-    --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
-    --runtime=python311 \
-    --source=functions/simple_mlops/ingest_data/app/ \
-    --entry-point=main \
-    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-    --trigger-event-filters="bucket=$MY_NAME-lz" \
-```
+
+    gcloud beta functions deploy jm_test_ingest_data \
+        --gen2 --cpu=1 --memory=512MB \
+        --region=europe-west3 \
+        --runtime=python311 \
+        --source=functions/simple_mlops/ingest_data/app/ \
+        --entry-point=main \
+        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+        --trigger-event-filters="bucket=jm-test-delete-bucket"
+    ```
 
 ```bash
 gcloud functions deploy prefix_ingest_data \

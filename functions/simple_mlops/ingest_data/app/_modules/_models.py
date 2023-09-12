@@ -13,8 +13,7 @@ class GCPClients(NamedTuple):
 
 class EnvVars(NamedTuple):
     gcp_project_id: str
-    bq_dataset_id: str
-    bq_table_id: str
+    bq_table_fqdn: str
     topic_ingestion_complete: str
 
 

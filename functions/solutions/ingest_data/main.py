@@ -1,11 +1,12 @@
-import random
-from typing import List
-from google.cloud import pubsub_v1, bigquery, storage
-import json
 import csv
+import json
+import random
+from typing import Any, List
+
+from google.cloud import bigquery, pubsub_v1, storage
 
 
-def main(event_data, context):
+def main(event_data: dict, context: Any) -> None:
     """Entrypoint of the cloud function
 
     Args:
@@ -75,11 +76,11 @@ def main(event_data, context):
     # _ = publisher.publish(topic_path, data.encode("utf-8"))
     # or just
     # publisher.publish(topic_path, data.encode("utf-8"))
-    publish_future = publisher.publish(topic_path, data.encode("utf-8"))
+    publisher.publish(topic_path, data.encode("utf-8"))
 
 
 def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> dict:
-    """Transforms a CSV datapoint into a dictionary and assigns a 
+    """Transforms a CSV datapoint into a dictionary and assigns a
         set type to the datapoint.
 
     Args:
@@ -88,7 +89,7 @@ def _transform_datapoint_into_dictionary(headers: List[str], datapoint: str) -> 
 
     Returns:
         dict: A dictionary representing the datapoint, with a randomly assigned set type.
-              The set type is included as a key-value pair in the dictionary, 
+              The set type is included as a key-value pair in the dictionary,
               with the key 'set_type'.
 
     Raises:
