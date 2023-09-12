@@ -15,7 +15,7 @@ This exercise will guide you through the process of developing the `train_model`
 
 For this you will need these resources:
 
-* One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema.json`)
+* One Bigquery `data set` and two bigquery `tables` (The schemas are available at `./infrastructure/bigquery/titanic_schema_raw.json`)
 * One GCS Bucket named `[prefix]-models-bucket` where you will save the model
 * One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 * One Topic named `[prefix]-ingestion-complete`, to which the function will be subscribed to.
@@ -89,4 +89,4 @@ gcloud functions deploy prefix_train_model \
 
 Remember, you can still find it in the correct folder.
 
-::: simple_mlops.train_model.main
+::: simple_mlops.train_model.app.main
