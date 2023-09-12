@@ -35,18 +35,18 @@ def titanic_transform(
 
         # Zip the headers and values together into a dictionary
         datapoint_obj = models.TitanicData(
-            PassengerId=int(datapoint_decoded[0]),
-            Survived=True if datapoint_decoded[1] == '1' else False,
-            Pclass=int(datapoint_decoded[2]),
-            Name=datapoint_decoded[3],
-            Sex=datapoint_decoded[4],
-            Age=int(datapoint_decoded[5]),
-            SibSp=int(datapoint_decoded[6]),
-            Parch=int(datapoint_decoded[7]),
-            Ticket=datapoint_decoded[8],
-            Fare=float(datapoint_decoded[9]),
-            Cabin=datapoint_decoded[10],
-            Embarked=datapoint_decoded[11],
+            PassengerId=datapoint_decoded[0] if datapoint_decoded[0] else '',
+            Survived=datapoint_decoded[1] if datapoint_decoded[1] else '',
+            Pclass=datapoint_decoded[2] if datapoint_decoded[2] else '',
+            Name=datapoint_decoded[3] if datapoint_decoded[3] else '',
+            Sex=datapoint_decoded[4] if datapoint_decoded[4] else '',
+            Age=datapoint_decoded[5] if datapoint_decoded[5] else '',
+            SibSp=datapoint_decoded[6] if datapoint_decoded[6] else '',
+            Parch=datapoint_decoded[7] if datapoint_decoded[7] else '',
+            Ticket=datapoint_decoded[8] if datapoint_decoded[8] else '',
+            Fare=datapoint_decoded[9] if datapoint_decoded[9] else '',
+            Cabin=datapoint_decoded[10] if datapoint_decoded[10] else '',
+            Embarked=datapoint_decoded[11] if datapoint_decoded[11] else '',
         )
 
         # Yield the datapoint object

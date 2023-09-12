@@ -20,18 +20,18 @@ class EnvVars(NamedTuple):
 @dataclass(kw_only=True, frozen=True)
 class TitanicData():
     """The data for the titanic dataset."""
-    PassengerId: int
-    Survived: bool
-    Pclass: int
-    Name: str
-    Sex: str
-    Age: int
-    SibSp: int
-    Parch: int
-    Ticket: str
-    Fare: float
-    Cabin: str
-    Embarked: str
+    PassengerId: str | None
+    Survived: str | None
+    Pclass: str | None
+    Name: str | None
+    Sex: str | None
+    Age: str | None
+    SibSp: str | None
+    Parch: str | None
+    Ticket: str | None
+    Fare: str | None
+    Cabin: str | None
+    Embarked: str | None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TitanicData':

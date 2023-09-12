@@ -1,5 +1,6 @@
 """This module contains the functions that interact with the GCP APIs."""
-from typing import Any, Dict
+import json
+from typing import Any, Dict, Sequence
 
 from google.cloud import bigquery, pubsub, storage
 
@@ -37,7 +38,7 @@ def storage_download_blob_as_string(
 def bigquery_insert_json_row(
     BQ: bigquery.Client,
     table_fqdn: str,
-    row: Dict[str, Any],
+    row: Sequence[Dict[str, Any]],
 ) -> Any:
     """Inserts a row into a bigquery table.
 
@@ -46,12 +47,19 @@ def bigquery_insert_json_row(
         table_fqdn (str): The fully qualified name of the table.
         row (Dict[str, Any]): The row to insert into the table.
     """
+    def _filter_dict(d: Dict[str, str]) -> Dict[str, str]:
+        return {k: v for k, v in d.items() if isinstance(v, str) and bool(v.strip())}
+
+    if not isinstance(row, Sequence) and isinstance(row, Dict):
+        row = [row]
+
     errors = BQ.insert_rows_json(
         table=table_fqdn,
-        json_rows=[row],
+        json_rows=[_filter_dict(d=d) for d in row],
     )
 
     if errors:
+        print(json.dumps({'message': errors, 'severity': 'ERROR'}))
         return errors
     else:
         return None

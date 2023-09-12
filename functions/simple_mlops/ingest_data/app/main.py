@@ -9,6 +9,10 @@ try:
 except ImportError:
     from functions.simple_mlops.ingest_data.app.funcs import gcp_apis, models, transform
 
+##############################################
+# 0. Create the necessary resources in GCP ###
+##############################################
+
 ################
 # 1. Clients ###
 ################
@@ -60,9 +64,8 @@ def _env_vars() -> models.EnvVars:
     )
 
 
-if __name__ == "__main__":
-    env_vars = _env_vars()
-    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+env_vars = _env_vars()
+gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
@@ -85,7 +88,6 @@ def main(cloud_event: CloudEvent) -> None:
         bucket_name=data['bucket'],
         file_path=data['name']
     )
-    print(file_contents)
 
     # Split the content by lines
     datapoints = transform.split_lines(content=file_contents)
@@ -103,7 +105,7 @@ def main(cloud_event: CloudEvent) -> None:
         gcp_apis.bigquery_insert_json_row(
             BQ=gcp_clients.bigquery_client,
             table_fqdn=env_vars.bq_table_fqdn,
-            row=[datapoint]
+            row=[datapoint.to_dict()]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 
     if any(errors):
