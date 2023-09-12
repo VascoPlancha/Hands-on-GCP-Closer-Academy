@@ -5,13 +5,9 @@ from cloudevents.http import CloudEvent
 from google.cloud import bigquery, pubsub, storage
 
 try:
-    from funcs import _gcp_apis as gcp_apis
-    from funcs import _models as models
-    from funcs import _transform as transform
+    from funcs import gcp_apis, models, transform
 except ImportError:
-    from functions.simple_mlops.ingest_data.app.funcs import _gcp_apis as gcp_apis
-    from functions.simple_mlops.ingest_data.app.funcs import _models as models
-    from functions.simple_mlops.ingest_data.app.funcs import _transform as transform
+    from functions.simple_mlops.ingest_data.app.funcs import gcp_apis, models, transform
 
 ################
 # 1. Clients ###

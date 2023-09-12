@@ -1,7 +1,7 @@
 import csv
 from typing import Generator, List
 
-from . import _models as models
+from . import models
 
 
 def split_lines(
