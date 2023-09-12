@@ -20,12 +20,26 @@ The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery
 
 The resources needed these tasks are:
 
-* One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema.json`)
-* One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
-* One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
-* One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
+- One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema.json`)
+- One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
+- One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
+- One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `./functions/manual_exercises/ingest_data/`.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
+
+```text
+.
+└── ingest_data/
+    ├── app/
+    │   ├── models.py # Module with models to make typechecking easier. You can safely ignore
+    │   ├── gcp_apis.py # Module that contains functions to call google services. Please take a look inside to understand
+    │   ├── main.py # The Module you will have to change
+    │   └── requirements.txt # Requirements for the function execution
+    ├── config/
+    │   └── dev.env.yaml # Environment variables that will ship with the function deployment
+    └── tests/
+        └── test_*.py # Unit tests
+```
 
 ## Tasks
 
@@ -57,13 +71,15 @@ Here are the steps necessary to complete the exercise:
     _TOPIC_INGESTION_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
     ```
 
+3. Send the correct arguments to the `storage_download_blob_as_string` function
+
 
 1. Insert Rows into BigQuery: Find the correct method to insert rows as JSON into the BigQuery table.
    - Hint: Find all the bigquery `Client()` [methods here](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client)
 
 ```python
 # IMPLEMENTATION [5]: Find the correct method to use here
-``` 
+```
 4 . Publish Message: Find the correct method with the PublisherClient to publish a message.
     - Hint: [PublisherClient](https://cloud.google.com/python/docs/reference/pubsublite/latest/google.cloud.pubsublite.cloudpubsub.publisher_client.PublisherClient#google_cloud_pubsublite_cloudpubsub_publisher_client_PublisherClient_publish)
 
@@ -92,4 +108,3 @@ gcloud functions deploy prefix_ingest_data \
 ## Documentation
 
 ::: simple_mlops.ingest_data.app.main
-
