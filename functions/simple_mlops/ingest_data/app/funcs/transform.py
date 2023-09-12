@@ -24,8 +24,7 @@ def titanic_transform(
     """Generator that transforms a CSV datapoint into a titanic data object.
 
     Args:
-        headers (List[str]): The headers of the CSV file.
-        datapoint (str): A CSV datapoint as a string.
+        datapoints (List[str]): A list of CSV datapoints.
 
     Yields:
         models.TitanicData: A titanic data object.
