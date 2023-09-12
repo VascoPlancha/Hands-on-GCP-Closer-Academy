@@ -1,7 +1,7 @@
 import csv
-from typing import List
+from typing import Generator, List
 
-from . import id_models as models
+from . import _models as models
 
 
 def split_lines(
@@ -19,26 +19,18 @@ def split_lines(
 
 
 def titanic_transform(
-    headers: List[str],
     datapoint: str,
-) -> models.TitanicData:
+) -> Generator[models.TitanicData, None, None]:
     """Transform the titanic data into a dictionary of rows.
 
     Args:
         headers (List[str]): The headers of the CSV file.
         datapoint (str): A CSV datapoint as a string.
 
-    Returns:
-        Dict[str, str]: A dictionary representing the datapoint.
-
-    Raises:
-        ValueError: If the number of values in the datapoint does not match the number of headers.
+    Yields:
+        models.TitanicData: A titanic data object.
     """
     datapoint_decoded = list(csv.reader([datapoint]))[0]
-
-    if len(datapoint_decoded) != len(headers):
-        raise ValueError(
-            "Number of values in datapoint does not match number of headers.")
 
     # Zip the headers and values together into a dictionary
     datapoint_obj = models.TitanicData(
@@ -56,5 +48,5 @@ def titanic_transform(
         Embarked=datapoint_decoded[11],
     )
 
-    # Return the dictionary
-    return datapoint_obj
+    # Yield the datapoint object
+    yield datapoint_obj
