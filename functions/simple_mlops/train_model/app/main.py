@@ -1,91 +1,78 @@
-from typing import Any
+import os
 
-import joblib
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import functions_framework
+from cloudevents.http import CloudEvent
+from funcs import gcp_apis, models, train_models
+from google.cloud import bigquery, pubsub, storage
 
 
-def main(event_data: dict, context: Any) -> None:
+def load_clients(
+    gcp_project_id: str
+) -> models.GCPClients:
+    """Load the GCP clients.
 
-    if 'data' in event_data:
+    Args:
+        gcp_project_id (str): The GCP project ID.
+
+    Returns:
+        GCPClients: A tuple of GCP clients.
+            With the following attributes:
+                storage_client: A storage client.
+                bigquery_client: A bigquery client.
+                publisher: A pubsub publisher client.
+    """
+
+    storage_client = storage.Client(project=gcp_project_id)
+    bigquery_client = bigquery.Client(project=gcp_project_id)
+    publisher = pubsub.PublisherClient()
+
+    return models.GCPClients(
+        storage_client=storage_client,
+        bigquery_client=bigquery_client,
+        publisher=publisher
+    )
+
+
+def _env_vars() -> models.EnvVars:
+    # fqdn = fully qualified domain name
+    # A table fqdn is in the format: project_id.dataset_id.table_id
+
+    return models.EnvVars(
+        gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
+        bq_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
+{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqdn_tbl")}''',
+        topic_training_complete=os.getenv(
+            "TOPIC_TRAINING_COMPLETE", 'topic_training_complete')
+    )
+
+
+if __name__ == "__main__":
+    env_vars = _env_vars()
+    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+
+
+@functions_framework.cloud_event
+def main(cloud_event: CloudEvent) -> None:
+
+    event_data = cloud_event.get_data()
+    print(event_data)
+    if 'data' in cloud_event:
         # decoded_msg = # IMPLEMENTATION [1]: Add code to decode the base64 message.
         pass  # Remove pass once above line is done
 
-    # storage_client = # IMPLEMENTATION [1]: Use the storage API to make a Client Object
-    # bigquery_client = # IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
+    # Train the model
+    if cloud_event.get_data()['train_model'] == 'True':
+        query = 'SELECT * FROM ??'
+        df = gcp_apis.query_to_pandas_dataframe(
+            query=query,
+            BQ=gcp_clients.bigquery_client)
 
-    def train() -> None:
+        pipeline = train_models.titanic_train(
+            df=df,
+        )
 
-        # Retrieve data from BigQuery and load it into a pandas DataFrame
-        # IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with titanic data.
-        query = ""
-
-        df = bigquery_client.query(query).to_dataframe()
-
-        # Preprocess the data
-        X = df.drop(columns=['Survived', 'PassengerId',
-                    'Name', 'Ticket', 'Cabin'])  # OPTIONAL [1]: add 'set_type' or other columns that shouldn't be passed to the model.
-        y = df['Survived']
-
-        # Drop rows with missing target values
-        missing_target_rows = y.isna()
-        X = X[~missing_target_rows]
-        y = y[~missing_target_rows]
-
-        # Preprocessing for numerical columns
-        numeric_features = ['Age', 'SibSp', 'Parch', 'Fare']
-        numeric_transformer = Pipeline(steps=[
-            ('imputer', SimpleImputer(strategy='median')),
-            ('scaler', StandardScaler())])
-
-        # Preprocessing for the 'Sex' column
-        sex_feature = ['Sex']
-        sex_transformer = Pipeline(steps=[
-            ('imputer', SimpleImputer(strategy='constant', fill_value='unknown')),
-            ('onehot', OneHotEncoder(handle_unknown='ignore'))])
-
-        # Preprocessing for the 'Embarked' column
-        embarked_feature = ['Embarked']
-        embarked_transformer = Pipeline(steps=[
-            ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
-            ('onehot', OneHotEncoder(handle_unknown='ignore'))])
-
-        # Preprocessing for the 'Pclass' column
-        pclass_feature = ['Pclass']
-        pclass_transformer = Pipeline(steps=[
-            ('onehot', OneHotEncoder(handle_unknown='ignore'))])
-
-        # Combine transformers into a preprocessor
-        preprocessor = ColumnTransformer(
-            transformers=[
-                ('num', numeric_transformer, numeric_features),
-                ('sex', sex_transformer, sex_feature),
-                ('embarked', embarked_transformer, embarked_feature),
-                ('pclass', pclass_transformer, pclass_feature)])
-
-        # Create the pipeline with preprocessing and the Random Forest classifier
-        pipeline = Pipeline(steps=[
-            ('preprocessor', preprocessor),
-            ('classifier', RandomForestClassifier(
-                n_estimators=100, random_state=42))
-        ])
-
-        # Train the model on the training data
-        pipeline.fit(X, y)
-
-        # Save the trained pipeline to a GCS bucket
-        # bucket_name = 'Your Bucket Name' # IMPLEMENTATION [4]: Add your prefix-bucket-models here
-        # file_name = 'your_model_name.pkl' # IMPLEMENTATION [5]: Give a name to your model.
-        joblib.dump(pipeline, '/tmp/'+file_name)
-
-        # bucket = # IMPLEMENTATION [6]: Connect to the bucket in [4] using the correct method for the storage Client.
-        # blob = # IMPLEMENTATION [7]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
-        blob.upload_from_filename('/tmp/'+file_name)
-
-    (train()
-     if 'I finished ingesting the file' in decoded_msg
-     else print('My Publisher is tricking me.')
-     )
+        gcp_apis.model_save_to_storage(
+            CS=gcp_clients.storage_client,
+            model=pipeline
+        )

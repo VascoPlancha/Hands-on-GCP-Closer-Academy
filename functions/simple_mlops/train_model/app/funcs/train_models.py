@@ -8,16 +8,16 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
-def train(
-        df: pd.Dataframe,
-        classifier: Callable = RandomForestClassifier(
-            n_estimators=100, random_state=42)
-) -> None:
+def titanic_train(
+    df: pd.Dataframe,
+    classifier: Callable = RandomForestClassifier(
+        n_estimators=100, random_state=42)
+) -> Pipeline:
     """Train a model into a pipeline
 
     Args:
         df (pd.Dataframe): The dataframe with the data to train the model.
-        classifier (Callable, optional): The classifier to use. 
+        classifier (Callable, optional): The classifier to use.
             Defaults to RandomForestClassifier(n_estimators=100, random_state=42).
     """
 
