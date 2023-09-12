@@ -34,7 +34,7 @@ The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery
 
 The resources needed these tasks are:
 
-- One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema.json`)
+- One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema_raw.json`)
 - One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
