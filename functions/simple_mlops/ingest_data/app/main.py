@@ -5,13 +5,13 @@ from cloudevents.http import CloudEvent
 from google.cloud import bigquery, pubsub, storage
 
 try:
-    from _modules import _gcp_apis as gcp_apis
-    from _modules import _models as models
-    from _modules import _transform as transform
+    from funcs import _gcp_apis as gcp_apis
+    from funcs import _models as models
+    from funcs import _transform as transform
 except ImportError:
-    from functions.simple_mlops.ingest_data.app._modules import _gcp_apis as gcp_apis
-    from functions.simple_mlops.ingest_data.app._modules import _models as models
-    from functions.simple_mlops.ingest_data.app._modules import _transform as transform
+    from functions.simple_mlops.ingest_data.app.funcs import _gcp_apis as gcp_apis
+    from functions.simple_mlops.ingest_data.app.funcs import _models as models
+    from functions.simple_mlops.ingest_data.app.funcs import _transform as transform
 
 ################
 # 1. Clients ###
@@ -65,8 +65,8 @@ def _env_vars() -> models.EnvVars:
 
 
 if __name__ == "__main__":
-    gcp_clients = load_clients(gcp_project_id="Your Project ID")
     env_vars = _env_vars()
+    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
@@ -121,5 +121,7 @@ def main(cloud_event: CloudEvent) -> None:
         project_id=env_vars.gcp_project_id,
         topic_id=env_vars.topic_ingestion_complete,
         data=f"I finished ingesting the file {data['name']}!!",
-        attributes={'train_model': 'True'},
+        attributes={
+            'train_model': 'True',
+            'dataset': 'titanic'},
     )

@@ -1,4 +1,4 @@
-"""Models for the ingest_data function. Simplifies"""
+"""Models for the ingest_data function. Simplifies type hinting."""
 from dataclasses import dataclass
 from typing import Any, Dict, NamedTuple
 
