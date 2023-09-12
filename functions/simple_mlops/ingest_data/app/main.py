@@ -60,7 +60,7 @@ def _env_vars() -> models.EnvVars:
 {os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
 {os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqdn_tbl")}''',
         topic_ingestion_complete=os.getenv(
-            "TOPIC_INGESTION_COMPLETE", 'topic_ingestion_complete')
+            "_TOPIC_INGESTION_COMPLETE", 'topic_ingestion_complete')
     )
 
 
@@ -75,9 +75,7 @@ def main(cloud_event: CloudEvent) -> None:
     Args:
         cloud_event (CloudEvent): The cloud event that triggered this function.
     """
-    # Get the event data
-    print(cloud_event.get_data())
-
+    # Get the data from the cloud event
     data = cloud_event.get_data()
 
     #########################################################

@@ -41,6 +41,8 @@ The resources needed these tasks are:
 
 The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
 
+TODO: UPDATE
+
 ```text
 .
 └── ingest_data/
