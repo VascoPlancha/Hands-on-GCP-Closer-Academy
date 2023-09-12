@@ -8,3 +8,9 @@ class GCPClients(NamedTuple):
     storage_client: storage.Client
     bigquery_client: bigquery.Client
     publisher: pubsub.PublisherClient
+
+
+class EnvVars(NamedTuple):
+    gcp_project_id: str
+    bq_table_fqdn: str
+    topic_training_complete: str

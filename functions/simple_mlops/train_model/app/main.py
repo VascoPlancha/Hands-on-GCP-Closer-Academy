@@ -33,7 +33,12 @@ def load_clients(
     )
 
 
-def _env_vars() -> models.EnvVars:
+def env_vars() -> models.EnvVars:
+    """Load the environment variables.
+
+    Returns:
+        models.EnvVars: A tuple of environment variables.
+    """
     # fqdn = fully qualified domain name
     # A table fqdn is in the format: project_id.dataset_id.table_id
 
@@ -47,13 +52,13 @@ def _env_vars() -> models.EnvVars:
     )
 
 
-if __name__ == "__main__":
-    env_vars = _env_vars()
-    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+_env_vars = env_vars()
+gcp_clients = load_clients(gcp_project_id=_env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
 def main(cloud_event: CloudEvent) -> None:
+    """Entrypoint of the cloud function."""
 
     event_data = cloud_event.get_data()
     print(event_data)
