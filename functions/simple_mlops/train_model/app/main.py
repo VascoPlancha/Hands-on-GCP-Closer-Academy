@@ -33,7 +33,7 @@ def load_clients(
     )
 
 
-def env_vars() -> models.EnvVars:
+def _env_vars() -> models.EnvVars:
     """Load the environment variables.
 
     Returns:
@@ -52,14 +52,14 @@ def env_vars() -> models.EnvVars:
     )
 
 
-_env_vars = env_vars()
-gcp_clients = load_clients(gcp_project_id=_env_vars.gcp_project_id)
+env_vars = _env_vars()
+gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
 def main(cloud_event: CloudEvent) -> None:
     """Entrypoint of the cloud function."""
-
+    print(cloud_event)
     event_data = cloud_event.get_data()
     print(event_data)
     if 'data' in cloud_event:
