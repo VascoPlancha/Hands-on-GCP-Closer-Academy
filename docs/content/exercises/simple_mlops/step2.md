@@ -157,7 +157,7 @@ Here are the steps necessary to complete the exercise:
     # 3. Send the correct arguments to load_query ###
     #################################################
 
-    path = common.relative_path() / 'resources' / 'staging_to_facts.sql'
+    path = Path('./resources/staging_to_facts.sql')
 
     query = common.load_query(
         table_facts='??',
