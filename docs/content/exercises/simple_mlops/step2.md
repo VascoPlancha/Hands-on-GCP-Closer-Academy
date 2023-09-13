@@ -118,7 +118,7 @@ Now we are ready to move to the cloud function code.
 
 Here are the steps necessary to complete the exercise:
 
-1. Create the client objects: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
+1. Create the client objects: Use the Google Cloud BigQuery API, and PubSub API to create respective client objects.
 
     ```python
     ################
