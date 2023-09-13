@@ -7,6 +7,7 @@ The function loads the necessary GCP clients, environment variables, and SQL
 query to update the BigQuery table.
 It then executes the query and publishes a message to the Pub/Sub topic.
 """
+import json
 import os
 from pathlib import Path
 
@@ -132,7 +133,9 @@ def main(cloud_event: CloudEvent) -> None:
         PS=gcp_clients.publisher,  # type: ignore
         project_id=env_vars.gcp_project_id,  # type: ignore
         topic_id=env_vars.topic_update_facts_complete,  # type: ignore
-        message="I finished passing the staging data to facts",
+        message=json.dumps({
+            'message': "I finished passing the staging data to facts",
+            'training_data_table': env_vars.bq_facts_table_fqn}),  # type: ignore
         attributes={
             'train_model': 'True',
             'dataset': 'titanic'},
