@@ -5,20 +5,27 @@ We are going to build a simple *MLOps* project in *Google Cloud Platform* using
 
 Our minimal *MLOps* system should look like this in the end:
 
-![architecture](./resources/architecture/architecture.png)
+![architecture](./resources/architecture/architecture_v2.png)
 
-## Ingestion and training
+## 1. Ingestion
 
-1. Cloud Function `ingest_data` monitors the `my-data-landing-zone` for new files.
-2. Upon detecting a new file, `ingest_data` writes its contents to the BigQuery table `training_data`.
-3. A message is sent to the `ingestion_complete` topic, notifying subscribers about the new data in BigQuery.
-4. The `train_model` Cloud Function, subscribed to `ingestion_complete`, is triggered and begins training.
-5. It retrieves data from the `training_data` BigQuery table.
-6. The trained model is saved .
+1. Cloud Function `Ingest Data` monitors the `yourname-lz` for new files.
+2. Upon detecting a new file, `Ingest Data` writes its contents to the BigQuery table `Titanic Raw`.
+3. Once sucessufully complete, a message is sent to the `yourname-ingestion-complete` topic, notifying subscribers about the new data in BigQuery.
 
-### Make the model available
+## 2. Staging to Facts
 
-11. The `predictions_endpoint` Cloud Function receives a request containing new data from a client.
-12. The Function loads the previously stored model into memory.
-13. It makes a prediction and stores the prediction and new data in the `predictions_data` BigQuery table.
-14. The prediction result is returned to the client.
+4. The function `Query to Facts` is activated, and executes a query which moves new data from the `Titanic Raw` *table* to `Titanic Facts`.
+5. Once sucessfully complete, a message is sent to the topic `yourname-update-facts-complete`, notifying its subscribers that the move from raw to facts is complete.
+
+## 3. Train model
+
+6. The `train_model` Cloud Function, is activated by the topic`yourname-update-facts-complete`, and pulls the data from the bigquery table `Titanic Facts`.
+7. Once the training of the model is done, the model file is uplodaded to the `yourname-models` bucket.
+
+## 4. Predictions
+
+8. A model is retrieved from the  `yourname-models` bucket and lodaded into the Cloud Function. The function is ready to take requests.
+9. A request for a prediction is made by an user.
+10. The request is saved to the `Titanic Predictions` table
+11. A response is given back to the user.
