@@ -7,7 +7,11 @@ from google.cloud import bigquery, pubsub, storage
 try:
     from funcs import gcp_apis, models, transform
 except ImportError:
-    from functions.simple_mlops.ingest_data.app.funcs import gcp_apis, models, transform
+    from functions.simple_mlops.a_ingest_data.app.funcs import (
+        gcp_apis,
+        models,
+        transform,
+    )
 
 ##############################################
 # 0. Create the necessary resources in GCP ###

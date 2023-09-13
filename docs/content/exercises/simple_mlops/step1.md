@@ -36,7 +36,7 @@ The resources needed these tasks are:
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/1_ingest_data/app/main.py`.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/a_ingest_data/app/main.py`.
 
 ```text
 TODO: UPDATE filetree
@@ -330,8 +330,8 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
-    --source=functions/simple_mlops/1_ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/1_ingest_data/config/dev.env.yaml \
+    --source=functions/simple_mlops/a_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
     --entry-point=main \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=$YOURNAME-lz"
@@ -347,8 +347,8 @@ gcloud beta functions deploy jm_test_ingest_data \
     --region=europe-west3 \
     --runtime=python311 \
     --entry-point=main \
-    --source=functions/simple_mlops/1_ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/1_ingest_data/config/dev.env.yaml \
+    --source=functions/simple_mlops/a_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=jm-test-delete-bucket"
 ```
@@ -410,10 +410,10 @@ Read more on how to deploy a function that listens to a Cloud Storage bucket eve
 
 ## Documentation
 
-::: simple_mlops.1_ingest_data.app.main
+::: simple_mlops.a_ingest_data.app.main
 
-::: simple_mlops.1_ingest_data.app.funcs.gcp_apis
+::: simple_mlops.a_ingest_data.app.funcs.gcp_apis
 
-::: simple_mlops.1_ingest_data.app.funcs.transform
+::: simple_mlops.a_ingest_data.app.funcs.transform
 
-::: simple_mlops.1_ingest_data.app.funcs.models
+::: simple_mlops.a_ingest_data.app.funcs.models

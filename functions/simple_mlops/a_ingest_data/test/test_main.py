@@ -1,6 +1,6 @@
 from unittest import mock
 
-from functions.simple_mlops.ingest_data.app import main
+from functions.simple_mlops.a_ingest_data.app import main
 
 TEST_ENV = {
     '_GCP_PROJECT_ID': 'test-project',
