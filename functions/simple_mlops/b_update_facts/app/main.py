@@ -1,8 +1,10 @@
 
 """
-This module contains a cloud function that updates a BigQuery table with data from another table and publishes a message to a Pub/Sub topic.
+This module contains a cloud function that updates a BigQuery table with
+data from another table and publishes a message to a Pub/Sub topic.
 
-The function loads the necessary GCP clients, environment variables, and SQL query to update the BigQuery table.
+The function loads the necessary GCP clients, environment variables, and SQL
+query to update the BigQuery table.
 It then executes the query and publishes a message to the Pub/Sub topic.
 """
 import os
@@ -82,8 +84,9 @@ def _env_vars() -> models.EnvVars:
     )
 
 
-env_vars = _env_vars()
-gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+if os.getenv("_CI_TESTING", 'no') == 'no':
+    env_vars = _env_vars()
+    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
@@ -93,9 +96,13 @@ def main(cloud_event: CloudEvent) -> None:
     Args:
         cloud_event (CloudEvent): The cloud event that triggered this function.
     """
-    # Get the data from the cloud event
-    data = cloud_event.get_data()
-    print(data)
+    print(cloud_event)
+    if not hasattr(main, 'env_vars'):
+        env_vars = _env_vars()
+
+    if not hasattr(main, 'gcp_clients'):
+        gcp_clients = load_clients(
+            gcp_project_id=env_vars.gcp_project_id)  # type: ignore
 
     #################################################
     # 3. Send the correct arguments to load_query ###
@@ -104,8 +111,8 @@ def main(cloud_event: CloudEvent) -> None:
     path = Path('./resources/staging_to_facts.sql')
 
     query = common.load_query(
-        table_facts=env_vars.bq_facts_table_fqn,
-        table_raw=env_vars.bq_staging_table_fqn,
+        table_facts=env_vars.bq_facts_table_fqn,  # type: ignore
+        table_raw=env_vars.bq_staging_table_fqn,    # type: ignore
         query_path=path,
     )
 
@@ -114,7 +121,7 @@ def main(cloud_event: CloudEvent) -> None:
     #################################################
 
     _ = gcp_apis.execute_query_result(
-        BQ=gcp_clients.bigquery_client,
+        BQ=gcp_clients.bigquery_client,  # type: ignore
         query=query
     )
 
@@ -122,9 +129,9 @@ def main(cloud_event: CloudEvent) -> None:
     # 5. Correct the arguments below to publish a message to pubsub #
     #################################################################
     gcp_apis.pubsub_publish_message(
-        PS=gcp_clients.publisher,
-        project_id=env_vars.gcp_project_id,
-        topic_id=env_vars.topic_update_facts_complete,
+        PS=gcp_clients.publisher,  # type: ignore
+        project_id=env_vars.gcp_project_id,  # type: ignore
+        topic_id=env_vars.topic_update_facts_complete,  # type: ignore
         message="I finished passing the staging data to facts",
         attributes={
             'train_model': 'True',
