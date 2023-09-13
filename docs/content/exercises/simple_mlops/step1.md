@@ -1,7 +1,6 @@
 # Load a file from Cloud Storage to a Bigquery Table using a Cloud Function
 
 - [Load a file from Cloud Storage to a Bigquery Table using a Cloud Function](#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function)
-  - [My tasks](#my-tasks)
   - [Introduction](#introduction)
   - [Tasks](#tasks)
   - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
@@ -10,49 +9,49 @@
     - [3. Create a Google Cloud Storage Bucket](#3-create-a-google-cloud-storage-bucket)
     - [4. Create the pubsub topic for ingestion complete](#4-create-the-pubsub-topic-for-ingestion-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
+  - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Hints](#hints)
     - [Cloud Events](#cloud-events)
   - [Documentation](#documentation)
 
-## My tasks
-
-- Mudar o nome do bucket na imagem
-
 ## Introduction
 
-![ingestion-architecture](./resources/part_1/ingestion.png)
+![img-ingestion-architecture](./resources/part_1/ingestion_v2.png)
 
-In this exercise, we will create the `ingest_data` Cloud Function, that will perform the following tasks:
+In this exercise, we will create the `Ingest Data` Cloud Function, that will perform the following tasks:
 
-1. The `ingest_data` function will actively monitor the `[YOURNAME]-lz` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (*PubSub*) in the Cloud Function to listen for object creation events in the specified bucket.
+1. The `Ingest Data` function will actively monitor the `[YOURNAME]-lz` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (*PubSub*) in the Cloud Function to listen for object creation events in the specified bucket.
 
-2. When a new file is detected, the `ingest_data` function will read the contents of the file and write the data into a BigQuery table named `training_data`. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.
+2. When a new file is detected, the `Ingest Data` function will read the contents of the file and write the data into a BigQuery table named `Titanic Raw`. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.
 
-3. After successfully importing the data into BigQuery, the `ingest_data` function will send a message to the `ingestion_complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
+3. After successfully importing the data into BigQuery, the `Ingest Data` function will send a message to the `yourname-ingestion-complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
 
-The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud.
+The Cloud Function `Ingest Data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to fix the code for this function to make it function preperly and deploy it to Google Cloud.
 
 The resources needed these tasks are:
 
-- One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema_raw.json`)
+- One Bigquery *Data Set* and one bigquery *Table*
+  - The table schema is at: `./infrastructure/bigquery/titanic_schema_raw.json`
 - One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/a_ingest_data/app/main.py`.
 
 ```text
 .
-└── ingest_data/
+└── a_ingest_data/
     ├── app/
-    │   ├── models.py # Module with models to make typechecking easier. You can safely ignore
-    │   ├── gcp_apis.py # Module that contains functions to call google services. Please take a look inside to understand
-    │   ├── main.py # The Module you will have to change
-    │   └── requirements.txt # Requirements for the function execution
+    │   ├── funcs/
+    │   │   ├── models.py # Models to make typechecking easier.
+    │   │   ├── gcp_apis.py # Functions to call google services.
+    │   │   └── transform.py # Transformations of data into structures
+    │   ├── main.py # Main module and entry point for the Cloud Function
+    │   └── requirements.txt # Requirements for the function execution.
     ├── config/
     │   └── dev.env.yaml # Environment variables that will ship with the function deployment
     └── tests/
-        └── test_*.py # Unit tests
+        └── test_*.py # Unit tests.
 ```
 
 ## Tasks
@@ -64,7 +63,7 @@ The outline of the *Cloud Function* code is available at `functions/simple_mlops
 
 ## Create the Google Cloud Resources
 
-Here are the steps necessary to complete the exercise:
+Here are the resources necessary to complete the exercise:
 
 You can create the resources with Cloud Shell or in the Console.
 ***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.***
@@ -79,7 +78,7 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
 
 ### 1. Create a BigQuery Dataset
 
@@ -103,26 +102,26 @@ With the Console:
 
 1. Go to BigQuery:
 
-    ![bq-1](https://i.imgur.com/Qvhqno3.png)
+    ![img-bq-1](https://i.imgur.com/Qvhqno3.png)
 
 2. Click the bullet points icon next to the project name:
 
-    ![bq-2](https://i.imgur.com/bHct9F7.png)
+    ![img-bq-2](https://i.imgur.com/bHct9F7.png)
 
 3. Name your data set, change the region, and click `CREATE DATA SET`:
 
-    ![bq-3](https://i.imgur.com/poTqdG6.png)
+    ![img-bq-3](https://i.imgur.com/poTqdG6.png)
 
     Congratulations! You have a `data set`!
 
 4. Edit the labels
 
     Click in the recently created dataset.
-    ![bq-4](https://i.imgur.com/HG9KUp2.png)
+    ![img-bq-4](https://i.imgur.com/HG9KUp2.png)
 
     And add the labels
 
-    ![bq-5](https://i.imgur.com/XMXCcF2.png)
+    ![img-bq-5](https://i.imgur.com/XMXCcF2.png)
 
 ### 2. Create a BigQuery Table
 
@@ -147,11 +146,11 @@ With the console:
 
 1. Click the bullets icon next to your data set, and click *Create Table*:
 
-    ![bq-t-1](https://i.imgur.com/dW3pcpN.png)
+    ![img-bq-t-1](https://i.imgur.com/dW3pcpN.png)
 
 2. Configure your table:
 
-    ![bq-t-2](https://i.imgur.com/asXwMxi.png)
+    ![img-bq-t-2](https://i.imgur.com/asXwMxi.png)
 
     1. Make sure it's in your dataset created in the step before
     2. Name your dataset `titanic_raw`
@@ -160,7 +159,7 @@ With the console:
 
 3. Add the labels.
 
-    ![bq-t-3](https://i.imgur.com/sWJsk0K.png)
+    ![img-bq-t-3](https://i.imgur.com/sWJsk0K.png)
 
     To add the labels go to `EDIT DETAILS`, and the same way as the dataset, add the labels. Include the `Dataset` : `titanic` label.
 
@@ -168,9 +167,9 @@ With the console:
 
 ```bash
 gsutil mb \
-    -p ${PROJECT_ID} \
     -c regional \
     -l ${REGION} \
+    -p ${PROJECT_ID} \
     gs://${YOURNAME}-lz
 
 gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-lz
@@ -184,15 +183,15 @@ With the console:
 
 1. Search for the Cloud Storage in the Search bar.
 
-    ![buckets-1](https://i.imgur.com/voKVC6X.png)
+    ![img-buckets-1](https://i.imgur.com/voKVC6X.png)
 
 2. In the Cloud Storage UI, you'll notice there are no buckets created yet. To create one, click the `CREATE` button.
 
-    ![buckets-2](https://i.imgur.com/kYTszb3.png)
+    ![img-buckets-2](https://i.imgur.com/kYTszb3.png)
 
 3. Configurate your bucket
 
-    ![buckets-3-1](https://i.imgur.com/J3daANw.png)
+    ![img-buckets-3-1](https://i.imgur.com/J3daANw.png)
 
     1. Name your bucket and click Continue.
     2. Change the storage class from Multi-region to Region. Set the location to europe-west3, as shown in the image, and click Continue.
@@ -201,15 +200,15 @@ With the console:
 
     Your configuration should look like this:
 
-    ![buckets-4](https://i.imgur.com/vCD4BsS.png)
+    ![img-buckets-4](https://i.imgur.com/vCD4BsS.png)
 
     If this popup appears, leave the settings as they are.
 
-    ![buckets-pupup1](https://i.imgur.com/nty5chF.png)
+    ![img-buckets-pupup1](https://i.imgur.com/nty5chF.png)
 
 And now you have your bucket!
 
-![buckets-created](https://i.imgur.com/ZXLrCRL.png)
+![img-buckets-created](https://i.imgur.com/ZXLrCRL.png)
 
 Alternatively, you can create a bucket using [Python](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-python), other Client Libraries, or even advanced Infrastructure-as-Code tools like [Terraform](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-terraform) or [Pulumi](https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/).
 
@@ -228,13 +227,13 @@ With the Cloud Console:
 1. Search for *Topics* in the search bar.
 2. Click in **CREATE TOPIC**.
 
-    ![ps-1](https://i.imgur.com/iy3OUEr.png)
+    ![img-ps-1](https://i.imgur.com/iy3OUEr.png)
 
 3. Define your Topic ID and click **CREATE**
 
     The topic ID should be `[your_name]-complete`
 
-    ![ps-2](https://i.imgur.com/7t1ewA6.png)
+    ![img-ps-2](https://i.imgur.com/7t1ewA6.png)
 
     In this case, our Topic ID is `ingestion_complete`.
 
@@ -242,7 +241,7 @@ With the Cloud Console:
 
 4. Verify your topic was created
 
-   ![ps-3](https://i.imgur.com/1UjfQoo.png)
+   ![img-ps-3](https://i.imgur.com/1UjfQoo.png)
 
    It automatically creates a subscription, but lets ignore that for now.
 
@@ -271,7 +270,7 @@ Here are the steps necessary to complete the exercise:
 
 2. Set Environment Variables
 
-    In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
+    In the `a_ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```python
     ##############################
@@ -308,7 +307,7 @@ Here are the steps necessary to complete the exercise:
     errors = [
         gcp_apis.bigquery_insert_json_row(
             BQ=gcp_clients.bigquery_client,
-            table_fqdn=env_vars.bq_table_fqdn,
+            table_fqn=env_vars.bq_table_fqn,
             row=[datapoint]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 
@@ -326,40 +325,45 @@ Here are the steps necessary to complete the exercise:
         PS='??',
         project_id='??',
         topic_id='??',
-        data=f"I finished ingesting the file {[change me]}!!",
-        attributes={'test': 'attribute'},
+        message=f"I finished ingesting the file {[change me]}!!",
+        attributes={},
     )
     ```
 
-6. Deployment
+## Deploy the cloud function
 
-   You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
+You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
-    ```bash
-    FUNCTION_NAME="ingest_data"
-    MY_NAME="MyName"
+```bash
+FUNCTION_NAME="ingest_data"
+YOURNAME="your_name_in_lowercase"
 
-    gcloud beta functions deploy $MY_NAME-$FUNCTION_NAME \
-        --gen2 --cpu=1 --memory=512MB \
-        --region=europe-west3 \
-        --runtime=python311 \
-        --source=functions/simple_mlops/ingest_data/app/ \
-        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
-        --entry-point=main \
-        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-        --trigger-event-filters="bucket=$MY_NAME-lz"
+gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/a_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
+    --entry-point=main \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=$YOURNAME-lz"
+```
 
+Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
-    gcloud beta functions deploy jm_test_ingest_data \
-        --gen2 --cpu=1 --memory=512MB \
-        --region=europe-west3 \
-        --runtime=python311 \
-        --source=functions/simple_mlops/ingest_data/app/ \
-        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
-        --entry-point=main \
-        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-        --trigger-event-filters="bucket=jm-test-delete-bucket"
-    ```
+TODO: REMOVE
+
+```bash
+gcloud beta functions deploy jm_test_ingest_data \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --entry-point=main \
+    --source=functions/simple_mlops/a_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=jm-test-delete-bucket"
+```
 
 ## Hints
 
@@ -418,10 +422,10 @@ Read more on how to deploy a function that listens to a Cloud Storage bucket eve
 
 ## Documentation
 
-::: simple_mlops.ingest_data.app.main
+::: simple_mlops.a_ingest_data.app.main
 
-::: simple_mlops.ingest_data.app.funcs.gcp_apis
+::: simple_mlops.a_ingest_data.app.funcs.gcp_apis
 
-::: simple_mlops.ingest_data.app.funcs.transform
+::: simple_mlops.a_ingest_data.app.funcs.transform
 
-::: simple_mlops.ingest_data.app.funcs.models
+::: simple_mlops.a_ingest_data.app.funcs.models
