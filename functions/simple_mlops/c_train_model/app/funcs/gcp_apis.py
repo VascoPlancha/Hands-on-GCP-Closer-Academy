@@ -87,6 +87,4 @@ def query_to_pandas_dataframe(
     Returns:
         pd.DataFrame: The result of the query as a pandas DataFrame.
     """
-    query = ""
-
     return BQ.query(query).to_dataframe()
