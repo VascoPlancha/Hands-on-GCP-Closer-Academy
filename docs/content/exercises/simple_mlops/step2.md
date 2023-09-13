@@ -34,7 +34,18 @@ The resources needed these tasks are:
 The outline of the *Cloud Function* code is available at `functions/simple_mlops/2_update_facts/app`.
 
 ```text
-TODO FILETREE
+b_update_facts
+  app/
+    funcs/
+      models.py # Models to make typechecking easier.
+      gcp_apis.py # Functions to call google services.
+      common.py # Common functions (Utils).
+    main.py # Main module and entry point for the Cloud Function
+    requirements.txt # Requirements for the function execution.
+  config
+    dev.env.yaml # Environment variables that will ship with the function deployment
+  tests/
+    test_*.py # Unit tests.
 ```
 
 ## Tasks
@@ -216,61 +227,14 @@ gcloud beta functions deploy jm_test_update_facts \
     --source=functions/simple_mlops/b_update_facts/app/ \
     --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
     --trigger-topic=your_name_in_lowercase-ingestion-complete
-    ```
-
-## Hints
-
-### Cloud Events
-
-The CloudEvent is an object with the following structure:
-
-```json
-{
-    "attributes": {
-        "specversion": "1.0",
-        "id": "1234567890",
-        "source": " //pubsub.googleapis.com/projects/[The GCP Project of the topic]/topics/[The topic name]",
-        "type": "google.cloud.pubsub.topic.v1.messagePublished",
-        "datacontenttype": "application/json",
-        "time": "2020-08-08T00:11:44.895529672Z"
-    },
-    "data": {
-        "message": {
-            "_comment": "data is base64 encoded string of 'Hello World'",
-            "data": "SGVsbG8gV29ybGQ="
-        }
-    }
-}
 ```
-
-You can read the CloudEvent specification in the [github page](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
-
-When a Cloud Storage event is passed to a CloudEvent function, the data payload is of type [StorageObjectData](https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto). This protobuf translates to the following `JSON`:
-
-```json
-{
-    "attributes": {
-        "specversion": "1.0",
-        "id": "1234567890",
-        "source": "//storage.googleapis.com/projects/_/buckets/[Bucket Name]",
-        "type": "google.cloud.storage.object.v1.finalized",
-        "datacontenttype": "application/json",
-        "time": "2020-08-08T00:11:44.895529672Z"
-    },
-    "data": {
-        "name": "folder/myfile.csv [File path inside the bucket]",
-        "bucket": "[Bucket Name]",
-        "contentType": "application/json",
-        "metageneration": "1",
-        "timeCreated": "2020-04-23T07:38:57.230Z",
-        "updated": "2020-04-23T07:38:57.230Z"
-    }
-}
-```
-
-Read more on how to deploy a function that listens to a Cloud Storage bucket event at:
-
-- [Codelabs - Triggering Event Processing from Cloud Storage using Eventarc and Cloud Functions (2nd gen)](https://codelabs.developers.google.com/triggering-cloud-functions-from-cloud-storage)
-- [Cloud Storage Tutorial (2nd gen)](https://cloud.google.com/functions/docs/tutorials/storage)
 
 ## Documentation
+
+::: simple_mlops.b_update_facts.app.main
+
+::: simple_mlops.b_update_facts.app.funcs.gcp_apis
+
+::: simple_mlops.b_update_facts.app.funcs.common
+
+::: simple_mlops.b_update_facts.app.funcs.models

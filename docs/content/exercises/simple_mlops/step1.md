@@ -39,7 +39,19 @@ The resources needed these tasks are:
 The outline of the *Cloud Function* code is available at `functions/simple_mlops/a_ingest_data/app/main.py`.
 
 ```text
-TODO: UPDATE filetree
+.
+└── a_ingest_data/
+    ├── app/
+    │   ├── funcs/
+    │   │   ├── models.py # Models to make typechecking easier.
+    │   │   ├── gcp_apis.py # Functions to call google services.
+    │   │   └── transform.py # Transformations of data into structures
+    │   ├── main.py # Main module and entry point for the Cloud Function
+    │   └── requirements.txt # Requirements for the function execution.
+    ├── config/
+    │   └── dev.env.yaml # Environment variables that will ship with the function deployment
+    └── tests/
+        └── test_*.py # Unit tests.
 ```
 
 ## Tasks

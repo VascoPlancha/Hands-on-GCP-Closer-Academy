@@ -6,12 +6,14 @@ from google.cloud import bigquery, pubsub, storage
 
 
 class GCPClients(NamedTuple):
+    """GCP Clients Tuple"""
     storage_client: storage.Client
     bigquery_client: bigquery.Client
     publisher: pubsub.PublisherClient
 
 
 class EnvVars(NamedTuple):
+    """Environment Variables Tupe"""
     gcp_project_id: str
     bq_table_fqdn: str
     topic_ingestion_complete: str
@@ -19,7 +21,22 @@ class EnvVars(NamedTuple):
 
 @dataclass(kw_only=True, frozen=True)
 class TitanicData():
-    """The data for the titanic dataset."""
+    """A class representing the data for the titanic dataset.
+
+    Attributes:
+        PassengerId (str | None): The ID of the passenger.
+        Survived (str | None): Whether the passenger survived or not.
+        Pclass (str | None): The class of the passenger's ticket.
+        Name (str | None): The name of the passenger.
+        Sex (str | None): The gender of the passenger.
+        Age (str | None): The age of the passenger.
+        SibSp (str | None): The number of siblings/spouses aboard the Titanic.
+        Parch (str | None): The number of parents/children aboard the Titanic.
+        Ticket (str | None): The ticket number of the passenger.
+        Fare (str | None): The fare paid by the passenger.
+        Cabin (str | None): The cabin number of the passenger.
+        Embarked (str | None): The port of embarkation of the passenger.
+    """
     PassengerId: str | None
     Survived: str | None
     Pclass: str | None
@@ -35,10 +52,23 @@ class TitanicData():
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TitanicData':
+        """Creates a new instance of the TitanicData class from a dictionary.
+
+        Args:
+            data (Dict[str, Any]): A dictionary containing the data for a single passenger.
+
+        Returns:
+            TitanicData: A new instance of the TitanicData class.
+        """
         # Convert the Survived column to a boolean
         return cls(**data)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Converts the TitanicData instance to a dictionary.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing the data for a single passenger.
+        """
         return {
             'PassengerId': self.PassengerId,
             'Survived': self.Survived,
