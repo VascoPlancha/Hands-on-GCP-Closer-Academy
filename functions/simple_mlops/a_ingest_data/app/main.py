@@ -88,8 +88,7 @@ def main(cloud_event: CloudEvent) -> None:
     Args:
         cloud_event (CloudEvent): The cloud event that triggered this function.
     """
-    # if the attrubite gcp_clients does not exist, then create
-    # the clients and the env_vars
+    print(cloud_event)
     if not hasattr(main, 'env_vars'):
         env_vars = _env_vars()
 
