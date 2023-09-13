@@ -258,7 +258,7 @@ Here are the steps necessary to complete the exercise:
 
 2. Set Environment Variables
 
-    In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
+    In the `a_ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```python
     ##############################
