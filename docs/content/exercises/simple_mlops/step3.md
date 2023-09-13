@@ -1,78 +1,95 @@
-# 3. Create an endpoint to serve the model to the outside world.
+# Deploy a Cloud function that trains a model and saves it in GCS
 
-![prediction-architecture](./resources/part_3/predictions.png)
+- [Deploy a Cloud function that trains a model and saves it in GCS](#deploy-a-cloud-function-that-trains-a-model-and-saves-it-in-gcs)
+  - [Code](#code)
 
-In this exercise, you'll be working with the `predictions_endpoint` Cloud Function. This HTTP-triggered function serves as the prediction endpoint for clients to send new data points. Upon receiving a request containing new data, the function performs the following steps:
+![model-architecture](./resources/part_2/model.png)
 
-1. It loads the previously trained model from the `my-model-storage` bucket into memory.
-2. Utilizing the loaded model, it generates a prediction based on the new data point received in the request.
-3. The function then stores both the prediction and the new data in the `predictions_data` BigQuery table to maintain a record of all predictions.
-4. Finally, it returns the prediction result to the client, completing the request-response cycle.
+In this exercise, we will create a Cloud Function called `train_model`, which will be responsible for training a machine learning model using the data ingested in the previous steps. The function will be triggered by the `ingestion_complete` Pub/Sub topic, ensuring it starts training once new data is available in the BigQuery table. The steps involved in this process are as follows:
 
-Your task is to develop the code for the `predictions_endpoint` Cloud Function and deploy it, ensuring that it can efficiently handle the entire process from receiving new data to returning predictions.
+4. The `train_model` Cloud Function is subscribed to the `ingestion_complete` topic, and it will be triggered automatically when a new message is published, indicating that new data has been loaded into the BigQuery table.
+
+5. Upon being triggered, the `train_model` function retrieves the data from the `training_data` BigQuery table using the appropriate query. This data will be used to train a machine learning model, such as a Scikit-learn Random Forest or Logistic Regression model.
+
+6. After the model is trained using the fetched data, the `train_model` function saves the trained model to the `my-model-storage` Google Cloud Storage bucket. The user implementing this function can choose the preferred naming convention for the saved model.
+
+This exercise will guide you through the process of developing the `train_model` Cloud Function, which leverages the power of BigQuery, Scikit-learn, and Google Cloud Storage to create, train, and store a machine learning model.
+
+For this you will need these resources:
+
+- One Bigquery `data set` and two bigquery `tables` (The schemas are available at `./infrastructure/bigquery/titanic_schema_raw.json`)
+- One GCS Bucket named `[prefix]-models-bucket` where you will save the model
+- One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
+- One Topic named `[prefix]-ingestion-complete`, to which the function will be subscribed to.
 
 The outline of the *Cloud Function* code is available at `./functions/manual_exercises/train_model/`
 
-1. Set Bucket Name: Add the GCS bucket name where your model is stored.
+1. Decode Base64 Message: Add code to decode the base64 message.
 
 ```python
-# IMPLEMENTATION [1]: Add your prefix-bucket-models here
+# IMPLEMENTATION [1]: Add code to decode the base64 message.
 ```
 
-2. Set Model Filename: Provide the name you gave to your model.
+2. Create Clients: Use the Google Cloud Storage API and BigQuery API to create respective client objects.
 
 ```python
-# IMPLEMENTATION [2]: Put the name you gave your model here
+# IMPLEMENTATION [1]: Use the storage API to make a Client Object
+# IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
 ```
 
-3. Create Storage Client: Use the storage API to make a Client Object.
+3. Create SQL Query: Create an SQL query to retrieve data from the BigQuery table with Titanic data.
 
 ```python
-# IMPLEMENTATION [3]: Use the storage API to make a Client Object
+# IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with Titanic data.
 ```
 
-4. Connect to Bucket: Connect to the GCS bucket using the correct method for the Storage Client.
+4. Set Bucket Name: Add your GCS bucket name to store the trained model.
 
 ```python
-# IMPLEMENTATION [4]: Connect to the bucket in [4] using the correct method for the storage Client.
+# IMPLEMENTATION [4]: Add your prefix-bucket-models here.
 ```
 
-5. Connect to Blob: Connect to the blob (file object) inside the bucket, using the bucket object.
+5. Set Model Name: Give a name to your trained model.
 
 ```python
-# IMPLEMENTATION [5]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
+# IMPLEMENTATION [5]: Give a name to your model.
 ```
 
-6. Make Prediction: Call the predict method of the global pipeline object to make a prediction.
+6. Connect to Bucket: Connect to the GCS bucket using the correct method for the Storage Client.
 
 ```python
-# IMPLEMENTATION [6]: You pipeline object is lodaded globally, just call it and use the `predict` method
+# IMPLEMENTATION [6]: Connect to the bucket in [4] using the correct method
 ```
+
+7. Connect to Blob: Connect to the blob (file object) inside the bucket, using the bucket object.
+
+```python
+# IMPLEMENTATION [7]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
+```
+
+8. (Optional) Remove Columns: Remove any additional columns that shouldn't be passed to the model.
+
+```python
+# OPTIONAL [1]: Add 'set_type' or other columns that shouldn't be passed to the model.
+```
+
+Remember to remove the pass statement after implementing the first step (Decoding Base64 Message).
 
 Deployment:
 
 ```bash
-gcloud functions deploy prefix_predictions_endpoint \
-    --region=europe-west3 \
-    --runtime=python39 \
-    --source=gs://prefix-functions-bucket/predictions_endpoint.zip \
-    --memory=1024MB \
-    --entry-point=predict \
-    --trigger-http \
-    --allow-unauthenticated
+    gcloud beta functions deploy jm_test_train_model \
+        --gen2 --cpu=1 --memory=512MB \
+        --region=europe-west3 \
+        --runtime=python311 \
+        --source=functions/simple_mlops/train_model/app/ \
+        --env-vars-file=functions/simple_mlops/train_model/config/dev.env.yaml \
+        --entry-point=main \
+        --trigger-topic--trigger-topic
 ```
 
-
-You can make requests with a cURL comamnd like so:
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"Pclass": 3, "Name": "Some Name", "Sex": "male", "Age": 22, "SibSp": 1, "Parch": 0, "Ticket": "A/5 21171", "Fare": 7.25, "Cabin": "", "Embarked": "S"}' http://YOUR_FUNCTION_ENDPOINT
-```
-
-or by going to the app [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.
-
-## Code:
+## Code
 
 Remember, you can still find it in the correct folder.
 
-::: simple_mlops.predictions_endpoint.main
+::: simple_mlops.train_model.app.main
