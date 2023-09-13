@@ -36,6 +36,8 @@ def load_clients(
 def _env_vars() -> models.EnvVars:
     """Load the environment variables.
 
+    This function loads the environment variables required for the application to run. It returns a tuple of environment variables.
+
     Returns:
         models.EnvVars: A tuple of environment variables.
     """
