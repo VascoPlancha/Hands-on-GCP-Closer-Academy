@@ -1,92 +1,285 @@
-# Deploy a Cloud function that trains a model and saves it in GCS.
+# Query Staging to Facts
 
-![model-architecture](./resources/part_2/model.png)
+- [Query Staging to Facts](#query-staging-to-facts)
+  - [Introduction](#introduction)
+  - [Tasks](#tasks)
+  - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
+    - [1. Create a BigQuery Table](#1-create-a-bigquery-table)
+    - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
+  - [Update the Cloud Function Code](#update-the-cloud-function-code)
+  - [Deploy the cloud function](#deploy-the-cloud-function)
+  - [Hints](#hints)
+    - [Cloud Events](#cloud-events)
+  - [Documentation](#documentation)
 
-In this exercise, we will create a Cloud Function called `train_model`, which will be responsible for training a machine learning model using the data ingested in the previous steps. The function will be triggered by the `ingestion_complete` Pub/Sub topic, ensuring it starts training once new data is available in the BigQuery table. The steps involved in this process are as follows:
+## Introduction
 
-4. The `train_model` Cloud Function is subscribed to the `ingestion_complete` topic, and it will be triggered automatically when a new message is published, indicating that new data has been loaded into the BigQuery table.
+![staging-facts-architecture](./resources/part_2/staging_facts_v1.png)
 
-5. Upon being triggered, the `train_model` function retrieves the data from the `training_data` BigQuery table using the appropriate query. This data will be used to train a machine learning model, such as a Scikit-learn Random Forest or Logistic Regression model.
+In this exercise, we will create the `Query To Facts` Cloud Function, that will perform the following tasks:
 
-6. After the model is trained using the fetched data, the `train_model` function saves the trained model to the `my-model-storage` Google Cloud Storage bucket. The user implementing this function can choose the preferred naming convention for the saved model.
+1. Activated by the topic `[yourname]-ingestion-complete`.
 
-This exercise will guide you through the process of developing the `train_model` Cloud Function, which leverages the power of BigQuery, Scikit-learn, and Google Cloud Storage to create, train, and store a machine learning model.
+2. It will send a query to be executed in BigQuery. This query is already done, and will move the data from the staging table to a facts table.
 
+3. After successfully executing the query, this function will send a message to the topic `[yourname]-update-facts-complete`.
 
-For this you will need these resources:
+The Cloud Function `Ingest Data` will utilize the BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to fix the code for this function to make it function preperly and deploy it to Google Cloud.
 
-* One Bigquery `data set` and two bigquery `tables` (The schemas are available at `./infrastructure/bigquery/titanic_schema_raw.json`)
-* One GCS Bucket named `[prefix]-models-bucket` where you will save the model
-* One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
-* One Topic named `[prefix]-ingestion-complete`, to which the function will be subscribed to.
+The resources needed these tasks are:
 
-The outline of the *Cloud Function* code is available at `./functions/manual_exercises/train_model/`
+- The already created *Data Set* in step 1.
+- One Bigquery table, `Titanic Facts`
+  - The table schema is at: `./infrastructure/bigquery/facts_titanic_schema.json`
+- Two Pub/Sub topics, the one already created, and one named `[yourname]-update-facts-complete`, to where the function will send a message once complete.
 
-1. Decode Base64 Message: Add code to decode the base64 message.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
 
-```python
-# IMPLEMENTATION [1]: Add code to decode the base64 message.
+```text
+TODO FILETREE
 ```
 
-2. Create Clients: Use the Google Cloud Storage API and BigQuery API to create respective client objects.
+## Tasks
 
-```python
-# IMPLEMENTATION [1]: Use the storage API to make a Client Object
-# IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
-```
+- [ ] Create the Google Cloud Resources
+- [ ] Update the Cloud Function Code
+- [ ] Deploy the Cloud Function
+- [ ] Test the Cloud Function
 
-3. Create SQL Query: Create an SQL query to retrieve data from the BigQuery table with Titanic data.
+## Create the Google Cloud Resources
 
-```python
-# IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with Titanic data.
-```
+Here are the steps necessary to complete the exercise:
 
-4. Set Bucket Name: Add your GCS bucket name to store the trained model.
+You can create the resources with Cloud Shell or in the Console.
+***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.***
 
-```python
-# IMPLEMENTATION [4]: Add your prefix-bucket-models here.
-```
-
-5. Set Model Name: Give a name to your trained model.
-
-```python
-# IMPLEMENTATION [5]: Give a name to your model.
-```
-
-6. Connect to Bucket: Connect to the GCS bucket using the correct method for the Storage Client.
-
-```python
-# IMPLEMENTATION [6]: Connect to the bucket in [4] using the correct method
-```
-
-7. Connect to Blob: Connect to the blob (file object) inside the bucket, using the bucket object.
-
-```python
-# IMPLEMENTATION [7]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
-```
-
-8. (Optional) Remove Columns: Remove any additional columns that shouldn't be passed to the model.
-
-```python
-# OPTIONAL [1]: Add 'set_type' or other columns that shouldn't be passed to the model.
-```
-
-Remember to remove the pass statement after implementing the first step (Decoding Base64 Message).
-
-Deployment:
+For Cloud Shell, set these variables:
 
 ```bash
-gcloud functions deploy prefix_train_model \
-    --region=europe-west3 \
-    --runtime=python39 \
-    --source=gs://prefix-functions-bucket/train_model.zip \
-    --entry-point=main \
-    --trigger-topic=prefix-ingestion-complete \
-    --memory=1024MB
+export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_NAME=$(gcloud config get-value project)
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+export REGION=europe-west3
+export YOURNAME=your_name_in_lowercase
 ```
 
-## Code:
+![cloudshell](https://i.imgur.com/5vmuTn8.png)
 
-Remember, you can still find it in the correct folder.
+### 1. Create a BigQuery Table
 
-::: simple_mlops.train_model.app.main
+With Cloud Shell (Copy-paste):
+
+```bash
+bq mk \
+    --project_id ${PROJECT_ID} \
+    --table \
+    --description "Table for the Titanic dataset" \
+    --label=owner:${YOURNAME} \
+    --label=project:${PROJECT_NAME} \
+    --label=purpose:academy \
+    --label=dataset:titanic \
+    ${YOURNAME}_titanic.titanic_facts \
+    ./infrastructure/bigquery/facts_titanic_schema.json
+```
+
+Reference: [bq mk --table](https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-table)
+
+With the console:
+
+Same as step 1, but now with the schema `facts_titanic_schema.json`
+
+### 2. Create the pubsub topic for update facts complete
+
+With Cloud Shell:
+
+```bash
+gcloud pubsub topics create ${YOURNAME}-update-facts-complete \
+    --project=${PROJECT_ID} \
+    --labels=owner=${YOURNAME},project=${PROJECT_NAME},purpose=academy
+```
+
+With the Cloud Console:
+
+Same as before, but now with the name `[yourname]-update-facts-complete`
+
+Now we are ready to move to the cloud function code.
+
+## Update the Cloud Function Code
+
+Here are the steps necessary to complete the exercise:
+
+1. Create the client objects: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
+
+    ```python
+    ################
+    # 1. Clients ###
+    ################
+    storage_client = 'Create a storage client here, with the correct project ID argument'
+    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
+    publisher = 'Create a publisher client here, with the correct project ID argument'
+
+    return models.GCPClients(
+        storage_client=storage_client,
+        bigquery_client=bigquery_client,
+        publisher=publisher
+    )
+    ```
+
+2. Set Environment Variables
+
+    In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
+
+    ```python
+    ##############################
+    # 2. Environment variables ###
+    ##############################
+    ```
+
+    ```yaml
+    _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
+    _BIGQUERY_DATASET_ID: "The BigQuery dataset ID you created"
+    _BIGQUERY_TABLE_ID: "The BigQuery table ID where you will store the data"
+    _TOPIC_INGESTION_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
+    ```
+
+3. Send the correct arguments to the `storage_download_blob_as_string` function
+
+    ```python
+    #########################################################
+    # 3. Correct the arguments below to download the file ###
+    #########################################################
+    file_contents = gcp_apis.storage_download_blob_as_string(
+        CS='??',
+        bucket_name='??',
+        file_path='??',
+    )
+    ```
+
+4. Insert Rows into BigQuery: Corrent the arguments in the `bigquery_insert_json_row` function to insert data into the BigQuery table.
+
+    ```python
+    ###############################################################
+    # 4. Correct the arguments below to insert data into bigquery #
+    ###############################################################
+    errors = [
+        gcp_apis.bigquery_insert_json_row(
+            BQ=gcp_clients.bigquery_client,
+            table_fqdn=env_vars.bq_table_fqdn,
+            row=[datapoint]
+        ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
+
+    if any(errors):
+        raise ValueError(f"Errors found: {errors}")
+    ```
+
+5. Publish Message: Correct the arguments in the `pubsub_publish_message` function, to publish a message.
+
+    ```python
+    #########################################################
+    # 5. Correct the arguments below to publish a message ###
+    #########################################################
+    gcp_apis.pubsub_publish_message(
+        PS='??',
+        project_id='??',
+        topic_id='??',
+        data=f"I finished ingesting the file {[change me]}!!",
+        attributes={'test': 'attribute'},
+    )
+    ```
+
+## Deploy the cloud function
+
+You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
+
+Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
+
+```bash
+FUNCTION_NAME="ingest_data"
+YOURNAME="your_name_in_lowercase"
+
+gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --entry-point=main \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=$YOURNAME-lz"
+
+
+gcloud beta functions deploy jm_test_ingest_data \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --entry-point=main \
+    --source=functions/simple_mlops/ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=jm-test-delete-bucket"
+```
+
+## Hints
+
+### Cloud Events
+
+The CloudEvent is an object with the following structure:
+
+```json
+{
+    "attributes": {
+        "specversion": "1.0",
+        "id": "1234567890",
+        "source": " //pubsub.googleapis.com/projects/[The GCP Project of the topic]/topics/[The topic name]",
+        "type": "google.cloud.pubsub.topic.v1.messagePublished",
+        "datacontenttype": "application/json",
+        "time": "2020-08-08T00:11:44.895529672Z"
+    },
+    "data": {
+        "message": {
+            "_comment": "data is base64 encoded string of 'Hello World'",
+            "data": "SGVsbG8gV29ybGQ="
+        }
+    }
+}
+```
+
+You can read the CloudEvent specification in the [github page](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+
+When a Cloud Storage event is passed to a CloudEvent function, the data payload is of type [StorageObjectData](https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto). This protobuf translates to the following `JSON`:
+
+```json
+{
+    "attributes": {
+        "specversion": "1.0",
+        "id": "1234567890",
+        "source": "//storage.googleapis.com/projects/_/buckets/[Bucket Name]",
+        "type": "google.cloud.storage.object.v1.finalized",
+        "datacontenttype": "application/json",
+        "time": "2020-08-08T00:11:44.895529672Z"
+    },
+    "data": {
+        "name": "folder/myfile.csv [File path inside the bucket]",
+        "bucket": "[Bucket Name]",
+        "contentType": "application/json",
+        "metageneration": "1",
+        "timeCreated": "2020-04-23T07:38:57.230Z",
+        "updated": "2020-04-23T07:38:57.230Z"
+    }
+}
+```
+
+Read more on how to deploy a function that listens to a Cloud Storage bucket event at:
+
+- [Codelabs - Triggering Event Processing from Cloud Storage using Eventarc and Cloud Functions (2nd gen)](https://codelabs.developers.google.com/triggering-cloud-functions-from-cloud-storage)
+- [Cloud Storage Tutorial (2nd gen)](https://cloud.google.com/functions/docs/tutorials/storage)
+
+## Documentation
+
+::: simple_mlops.ingest_data.app.main
+
+::: simple_mlops.ingest_data.app.funcs.gcp_apis
+
+::: simple_mlops.ingest_data.app.funcs.transform
+
+::: simple_mlops.ingest_data.app.funcs.models
