@@ -26,8 +26,8 @@ For this you will need these resources:
 
 - The already created *Data Set* in step 1.
 - The already created *Bigquery Table* in step 2.
-- The already created *Pub/Sub Topic* in step 2.
-- One GCS Bucket named `[prefix]-models` where you will save the model
+- A Pub/Sub topic named `[yourname]-train_model-complete` where you will publish a success message.
+- One GCS Bucket named `[yourname]-models` where you will save the model
 
 The outline of the *Cloud Function* code is available at `./functions/manual_exercises/c_train_model/app`
 
@@ -92,6 +92,37 @@ With the console:
 Same as in step 1, but now the bucket name is `[yourname]-models`
 
 ## Update the Cloud Function Code
+
+1. Create the client objects: Use the Google Cloud BigQuery API, and Storage API to create respective client objects.
+
+    ```python
+    ################
+    # 1. Clients ###
+    ################
+    storage_client = 'Create a storage client here, with the correct project ID argument'
+    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
+
+    return models.GCPClients(
+        storage_client=storage_client,
+        bigquery_client=bigquery_client,
+    )
+    ```
+
+2. Set Environment Variables
+
+    In the `c_train_model/config/dev.env.yaml` file, change the environment variables for the correct ones.
+
+    ```python
+    ##############################
+    # 2. Environment variables ###
+    ##############################
+    ```
+
+    ```yaml
+    _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
+    _GCS_BUCKET_NAME_MODELS: "The GCS bucket name where the models will be saved"
+    _TOPIC_TRAINING_COMPLETE: "The Pub/Sub topic name where the success message will be published"
+    ```
 
 1. Decode Base64 Message: Add code to decode the base64 message.
 
