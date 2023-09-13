@@ -34,7 +34,6 @@ def load_clients(
     Returns:
         GCPClients: A tuple of GCP clients.
             With the following attributes:
-                storage_client: A storage client.
                 bigquery_client: A bigquery client.
                 publisher: A pubsub publisher client.
     """
