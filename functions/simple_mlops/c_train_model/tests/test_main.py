@@ -26,7 +26,7 @@ def cloud_event():
                 'dataset': 'titanic',
                 'train_model': 'True'
             },
-            'data': 'SSBmaW5pc2hlZCBwYXNzaW5nIHRoZSBzdGFnaW5nIGRhdGEgdG8gZmFjdHM=',
+            'data': 'eyJtZXNzYWdlIjogIkkgZmluaXNoZWQgcGFzc2luZyB0aGUgc3RhZ2luZyBkYXRhIHRvIGZhY3RzIiwgInRyYWluaW5nX2RhdGFfdGFibGUiOiAiY2xvc2VyYWNhZGVteS1oYW5kc29uLmptX3Rlc3RfdG9fZGVsZXRlLmptX3Rlc3QtZGVsZXRlLXRpdGFuaWNfZmFjdHMifQ==',
             'messageId': '8609886974320393',
             'message_id': '8609886974320393',
             'publishTime': '2023-09-13T16:38:56.559Z',
@@ -118,17 +118,16 @@ def test_main(
     mock_load_clients.return_value = gcp_clients
     mock_query_to_pandas_dataframe.return_value = simple_pandas_dataframe
     mock_env_vars.return_value = env_vars_filled
-
     main.main(cloud_event)
 
     mock_query_train_data.assert_called_once_with(
-        table_fqn=env_vars_filled.bq_table_fqn,
+        table_fqn='closeracademy-handson.jm_test_to_delete.jm_test-delete-titanic_facts',
         query_path=Path('./resources/select_train_data.sql')
     )
 
     mock_query_to_pandas_dataframe.assert_called_once_with(
         query=main.common.query_train_data(
-            table_fqn=env_vars_filled.bq_table_fqn,
+            table_fqn='closeracademy-handson.jm_test_to_delete.jm_test-delete-titanic_facts',
             query_path=Path('./resources/select_train_data.sql')
         ),
         BQ=gcp_clients.bigquery_client,
