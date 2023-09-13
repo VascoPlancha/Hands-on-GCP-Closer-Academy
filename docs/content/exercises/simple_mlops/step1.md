@@ -1,7 +1,6 @@
 # Load a file from Cloud Storage to a Bigquery Table using a Cloud Function
 
 - [Load a file from Cloud Storage to a Bigquery Table using a Cloud Function](#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function)
-  - [My tasks](#my-tasks)
   - [Introduction](#introduction)
   - [Tasks](#tasks)
   - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
@@ -10,38 +9,34 @@
     - [3. Create a Google Cloud Storage Bucket](#3-create-a-google-cloud-storage-bucket)
     - [4. Create the pubsub topic for ingestion complete](#4-create-the-pubsub-topic-for-ingestion-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
+  - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Hints](#hints)
     - [Cloud Events](#cloud-events)
   - [Documentation](#documentation)
 
-## My tasks
-
-- Mudar o nome do bucket na imagem
-
 ## Introduction
 
-![ingestion-architecture](./resources/part_1/ingestion.png)
+![ingestion-architecture](./resources/part_1/ingestion_v2.png)
 
-In this exercise, we will create the `ingest_data` Cloud Function, that will perform the following tasks:
+In this exercise, we will create the `Ingest Data` Cloud Function, that will perform the following tasks:
 
-1. The `ingest_data` function will actively monitor the `[YOURNAME]-lz` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (*PubSub*) in the Cloud Function to listen for object creation events in the specified bucket.
+1. The `Ingest Data` function will actively monitor the `[YOURNAME]-lz` Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (*PubSub*) in the Cloud Function to listen for object creation events in the specified bucket.
 
-2. When a new file is detected, the `ingest_data` function will read the contents of the file and write the data into a BigQuery table named `training_data`. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.
+2. When a new file is detected, the `Ingest Data` function will read the contents of the file and write the data into a BigQuery table named `Titanic Raw`. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.
 
-3. After successfully importing the data into BigQuery, the `ingest_data` function will send a message to the `ingestion_complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
+3. After successfully importing the data into BigQuery, the `Ingest Data` function will send a message to the `yourname-ingestion-complete` topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.
 
-The Cloud Function `ingest_data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to develop the code for this function and deploy it to Google Cloud.
+The Cloud Function `Ingest Data` will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to fix the code for this function to make it function preperly and deploy it to Google Cloud.
 
 The resources needed these tasks are:
 
-- One Bigquery `data set` and one bigquery `table` (The initial schema is available at `./infrastructure/bigquery/titanic_schema_raw.json`)
+- One Bigquery *Data Set* and one bigquery *Table*
+  - The table schema is at: `./infrastructure/bigquery/titanic_schema_raw.json`
 - One GCS Bucket named `[prefix]-landing-zone-bucket` where you will drop the files once the function is ready
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
-
-TODO: UPDATE
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/app/main.py`.
 
 ```text
 .
@@ -333,35 +328,37 @@ Here are the steps necessary to complete the exercise:
     )
     ```
 
-6. Deployment
+## Deploy the cloud function
 
-   You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
+You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
-    ```bash
-    FUNCTION_NAME="ingest_data"
-    MY_NAME="MyName"
+Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
-    gcloud beta functions deploy $MY_NAME-$FUNCTION_NAME \
-        --gen2 --cpu=1 --memory=512MB \
-        --region=europe-west3 \
-        --runtime=python311 \
-        --source=functions/simple_mlops/ingest_data/app/ \
-        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
-        --entry-point=main \
-        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-        --trigger-event-filters="bucket=$MY_NAME-lz"
+```bash
+FUNCTION_NAME="ingest_data"
+YOURNAME="your_name_in_lowercase"
+
+gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --entry-point=main \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=$YOURNAME-lz"
 
 
-    gcloud beta functions deploy jm_test_ingest_data \
-        --gen2 --cpu=1 --memory=512MB \
-        --region=europe-west3 \
-        --runtime=python311 \
-        --source=functions/simple_mlops/ingest_data/app/ \
-        --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
-        --entry-point=main \
-        --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-        --trigger-event-filters="bucket=jm-test-delete-bucket"
-    ```
+gcloud beta functions deploy jm_test_ingest_data \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --entry-point=main \
+    --source=functions/simple_mlops/ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --trigger-event-filters="bucket=jm-test-delete-bucket"
+```
 
 ## Hints
 
