@@ -15,7 +15,7 @@ from google.cloud import bigquery, pubsub
 try:
     from funcs import common, gcp_apis, models
 except ImportError:
-    from functions.simple_mlops.b_update_facts.app.funcs import (
+    from b_update_facts.app.funcs import (
         common,
         gcp_apis,
         models,

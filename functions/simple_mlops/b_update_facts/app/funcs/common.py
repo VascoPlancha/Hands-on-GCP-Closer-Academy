@@ -1,4 +1,4 @@
-"""Common functions for the update_facts pipeline."""
+"""Common functions for the train_model pipeline."""
 from pathlib import Path
 
 
