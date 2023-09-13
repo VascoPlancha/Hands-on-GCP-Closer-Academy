@@ -10,9 +10,11 @@ def storage_download_blob_as_string(
     bucket_name: str,
     file_path: str,
 ) -> str:
-    """Transfers the result to a local folder.
+    """
+    Downloads a blob from a Google Cloud Storage bucket and returns its content as a string.
 
     Args:
+        CS (google.cloud.storage.Client): A Google Cloud Storage client object.
         bucket_name (str): The name of the bucket.
         file_path (str): The location of the blob/file inside the bucket.
 
