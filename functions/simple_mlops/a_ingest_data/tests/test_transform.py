@@ -24,6 +24,7 @@ def test_titanic_transform_line() -> None:
     """Test the first line of the CSV file. A simple line without any quotes."""
     line = '1,0,3,"Braund, Mr. Owen Harris",male,22,1,0,A/5 21171,7.25,,S'
 
+    actual = {}
     for data in transform.titanic_transform(datapoints=[line]):
         actual = data.to_dict()
 
@@ -42,8 +43,6 @@ def test_titanic_transform_line() -> None:
         'Embarked': 'S'
     }
 
-    print(actual)
-
     assert {} == deepdiff.DeepDiff(actual, expected)
 
 
@@ -51,6 +50,7 @@ def test_titanic_line_with_several_quotes() -> None:
     """Test a line of the CSV file with several quotes."""
     line = '23,1,3,"McGowan, Miss. Anna ""Annie""",female,15,0,0,330923,8.0292,,Q'
 
+    actual = {}
     for data in transform.titanic_transform(datapoints=[line]):
         actual = data.to_dict()
 
