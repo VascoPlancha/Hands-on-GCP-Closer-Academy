@@ -7,7 +7,7 @@ from google.cloud import bigquery, pubsub, storage
 try:
     from funcs import gcp_apis, models, transform
 except ImportError:
-    from functions.simple_mlops.a_ingest_data.app.funcs import (
+    from a_ingest_data.app.funcs import (
         gcp_apis,
         models,
         transform,
@@ -76,8 +76,9 @@ def _env_vars() -> models.EnvVars:
     )
 
 
-env_vars = _env_vars()
-gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+if os.getenv("TESTING", 'no') == 'no':
+    env_vars = _env_vars()
+    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event

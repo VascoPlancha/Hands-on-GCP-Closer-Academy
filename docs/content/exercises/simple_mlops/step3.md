@@ -1,7 +1,7 @@
 # Deploy a Cloud function that trains a model and saves it in GCS
 
 - [Deploy a Cloud function that trains a model and saves it in GCS](#deploy-a-cloud-function-that-trains-a-model-and-saves-it-in-gcs)
-  - [Code](#code)
+  - [Documentation](#documentation)
 
 ![model-architecture](./resources/part_3/model.png)
 
@@ -22,7 +22,7 @@ For this you will need these resources:
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to which the function will be subscribed to.
 
-The outline of the *Cloud Function* code is available at `./functions/manual_exercises/train_model/`
+The outline of the *Cloud Function* code is available at `./functions/manual_exercises/c_train_model/`
 
 1. Decode Base64 Message: Add code to decode the base64 message.
 
@@ -78,18 +78,18 @@ Remember to remove the pass statement after implementing the first step (Decodin
 Deployment:
 
 ```bash
-    gcloud beta functions deploy jm_test_train_model \
-        --gen2 --cpu=1 --memory=512MB \
-        --region=europe-west3 \
-        --runtime=python311 \
-        --source=functions/simple_mlops/train_model/app/ \
-        --env-vars-file=functions/simple_mlops/train_model/config/dev.env.yaml \
-        --entry-point=main \
-        --trigger-topic=TODO
+gcloud beta functions deploy jm_test_train_model \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/c_train_model/app/ \
+    --env-vars-file=functions/simple_mlops/c_train_model/config/dev.env.yaml \
+    --entry-point=main \
+    --trigger-topic=your_name_in_lowercase-update-facts-complete
 ```
 
-## Code
+## Documentation
 
 Remember, you can still find it in the correct folder.
 
-::: simple_mlops.train_model.app.main
+::: simple_mlops.c_train_model.app.main
