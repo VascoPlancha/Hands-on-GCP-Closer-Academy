@@ -1,3 +1,4 @@
+import json
 import os
 
 import functions_framework
@@ -85,7 +86,10 @@ def main(cloud_event: CloudEvent) -> None:
 
     event_message: dict = cloud_event.get_data()  # type: ignore
 
-    data = common.decode_base64_to_string(event_message['message']['data'])
+    data = json.loads(
+        common.decode_base64_to_string(
+            event_message['message']['data'])
+    )
     print(data)
 
     # Train the model
@@ -93,7 +97,7 @@ def main(cloud_event: CloudEvent) -> None:
 
         path = common.get_path_to_file()
         query = common.query_train_data(
-            table_fqn=env_vars.bq_table_fqn,  # type: ignore
+            table_fqn=data['training_data_table'],  # type: ignore
             query_path=path
         )
         df = gcp_apis.query_to_pandas_dataframe(
