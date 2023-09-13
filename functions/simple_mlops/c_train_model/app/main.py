@@ -1,9 +1,19 @@
 import os
+from pathlib import Path
 
 import functions_framework
 from cloudevents.http import CloudEvent
-from funcs import gcp_apis, models, train_models
 from google.cloud import bigquery, pubsub, storage
+
+try:
+    from funcs import common, gcp_apis, models, train_models
+except ImportError:
+    from functions.simple_mlops.c_train_model.app.funcs import (
+        common,
+        gcp_apis,
+        models,
+        train_models,
+    )
 
 
 def load_clients(
@@ -62,15 +72,16 @@ gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 def main(cloud_event: CloudEvent) -> None:
     """Entrypoint of the cloud function."""
     print(cloud_event)
-    event_data = cloud_event.get_data()
-    print(event_data)
-    if 'data' in cloud_event:
-        # decoded_msg = # IMPLEMENTATION [1]: Add code to decode the base64 message.
-        pass  # Remove pass once above line is done
+    event_data = cloud_event.get_data()['message']
 
     # Train the model
-    if cloud_event.get_data()['train_model'] == 'True':
-        query = 'SELECT * FROM ??'
+    if event_data['attributes']['train_model'] == 'True':
+
+        path = Path('./resources/select_train_data.sql')
+        query = common.query_train_data(
+            table_fqn='gcp_project_id.bq_table_fqn',
+            path=path
+        )
         df = gcp_apis.query_to_pandas_dataframe(
             query=query,
             BQ=gcp_clients.bigquery_client)

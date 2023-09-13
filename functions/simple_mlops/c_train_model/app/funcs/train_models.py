@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 def titanic_train(
-    df: pd.Dataframe,
+    df: pd.DataFrame,
     classifier: Callable = RandomForestClassifier(
         n_estimators=100, random_state=42)
 ) -> Pipeline:
