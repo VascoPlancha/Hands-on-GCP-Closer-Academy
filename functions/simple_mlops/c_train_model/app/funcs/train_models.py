@@ -1,6 +1,6 @@
-from typing import Callable
 
 import pandas as pd
+from sklearn.base import ClassifierMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
@@ -10,8 +10,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 def titanic_train(
     df: pd.DataFrame,
-    classifier: Callable = RandomForestClassifier(
-        n_estimators=100, random_state=42)
+    classifier: ClassifierMixin = RandomForestClassifier(
+        n_estimators=100, random_state=42),
 ) -> Pipeline:
     """Train a model into a pipeline
 
@@ -20,7 +20,6 @@ def titanic_train(
         classifier (Callable, optional): The classifier to use.
             Defaults to RandomForestClassifier(n_estimators=100, random_state=42).
     """
-
     # Preprocess the data
     X = df.drop(columns=['Survived', 'PassengerId',
                          'Name', 'Ticket', 'Cabin'])  # OPTIONAL [1]: add 'set_type' or other columns that shouldn't be passed to the model.

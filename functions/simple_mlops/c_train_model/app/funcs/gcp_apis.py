@@ -44,7 +44,19 @@ def model_save_to_storage(
     model_name: str = 'nar-rayya',
     content_type: str = 'text/plain',
 ) -> None:
+    """
+    Saves a machine learning model to Google Cloud Storage.
 
+    Args:
+        CS (google.cloud.storage.client.Client): A Google Cloud Storage client object.
+        bucket_name (str): The name of the bucket to save the model to.
+        model (sklearn.pipeline.Pipeline): The machine learning model to save.
+        model_name (str, optional): The name to give the saved model. Defaults to 'nar-rayya'.
+        content_type (str, optional): The content type of the saved model. Defaults to 'text/plain'.
+
+    Returns:
+        None
+    """
     # https://stackoverflow.com/questions/56880703/read-model-as-bytes-without-saving-in-location-in-python
     # https://stackoverflow.com/questions/51921142/how-to-load-a-model-saved-in-joblib-file-from-google-cloud-storage-bucket
     bytes_container = BytesIO()

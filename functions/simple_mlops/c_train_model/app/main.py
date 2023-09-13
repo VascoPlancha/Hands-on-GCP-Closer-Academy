@@ -1,19 +1,22 @@
 import os
-from pathlib import Path
 
 import functions_framework
 from cloudevents.http import CloudEvent
-from google.cloud import bigquery, pubsub, storage
+from google.cloud import bigquery, storage
 
 try:
     from funcs import common, gcp_apis, models, train_models
 except ImportError:
-    from functions.simple_mlops.c_train_model.app.funcs import (
+    from c_train_model.app.funcs import (
         common,
         gcp_apis,
         models,
         train_models,
     )
+
+################
+# 1. Clients ###
+################
 
 
 def load_clients(
@@ -29,18 +32,19 @@ def load_clients(
             With the following attributes:
                 storage_client: A storage client.
                 bigquery_client: A bigquery client.
-                publisher: A pubsub publisher client.
     """
 
     storage_client = storage.Client(project=gcp_project_id)
     bigquery_client = bigquery.Client(project=gcp_project_id)
-    publisher = pubsub.PublisherClient()
 
     return models.GCPClients(
         storage_client=storage_client,
-        bigquery_client=bigquery_client,
-        publisher=publisher
+        bigquery_client=bigquery_client
     )
+
+##############################
+# 2. Environment variables ###
+##############################
 
 
 def _env_vars() -> models.EnvVars:
@@ -56,41 +60,53 @@ def _env_vars() -> models.EnvVars:
 
     return models.EnvVars(
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
-        bq_table_fqn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
-{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqn_dst")}.\
-{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqn_tbl")}''',
+        bucket_name=os.getenv("_GCS_BUCKET_NAME_MODELS", 'bucket_name'),
         topic_training_complete=os.getenv(
-            "TOPIC_TRAINING_COMPLETE", 'topic_training_complete')
+            "TOPIC_TRAINING_COMPLETE", 'topic_training_complete'),
+
     )
 
 
-env_vars = _env_vars()
-gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+if os.getenv("_CI_TESTING", 'no') == 'no':
+    env_vars = _env_vars()
+    gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
 
 
 @functions_framework.cloud_event
 def main(cloud_event: CloudEvent) -> None:
     """Entrypoint of the cloud function."""
     print(cloud_event)
-    event_data = cloud_event.get_data()['message']
+    if not hasattr(main, 'env_vars'):
+        env_vars = _env_vars()
+
+    if not hasattr(main, 'gcp_clients'):
+        gcp_clients = load_clients(
+            gcp_project_id=env_vars.gcp_project_id)  # type: ignore
+
+    event_message: dict = cloud_event.get_data()  # type: ignore
+
+    data = common.decode_base64_to_string(event_message['message']['data'])
+    print(data)
 
     # Train the model
-    if event_data['attributes']['train_model'] == 'True':
+    if event_message['message']['attributes']['train_model'] == 'True':
 
-        path = Path('./resources/select_train_data.sql')
+        path = common.get_path_to_file()
         query = common.query_train_data(
-            table_fqn='gcp_project_id.bq_table_fqn',
-            path=path
+            table_fqn=env_vars.bq_table_fqn,  # type: ignore
+            query_path=path
         )
         df = gcp_apis.query_to_pandas_dataframe(
             query=query,
-            BQ=gcp_clients.bigquery_client)
+            BQ=gcp_clients.bigquery_client,  # type: ignore
+        )
 
         pipeline = train_models.titanic_train(
             df=df,
         )
 
         gcp_apis.model_save_to_storage(
-            CS=gcp_clients.storage_client,
-            model=pipeline
+            CS=gcp_clients.storage_client,  # type: ignore
+            model=pipeline,
+            bucket_name=env_vars.bucket_name,  # type: ignore
         )
