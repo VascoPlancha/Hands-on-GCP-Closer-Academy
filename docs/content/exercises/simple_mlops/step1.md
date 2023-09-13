@@ -39,17 +39,7 @@ The resources needed these tasks are:
 The outline of the *Cloud Function* code is available at `functions/simple_mlops/1_ingest_data/app/main.py`.
 
 ```text
-.
-└── ingest_data/
-    ├── app/
-    │   ├── models.py # Module with models to make typechecking easier. You can safely ignore
-    │   ├── gcp_apis.py # Module that contains functions to call google services. Please take a look inside to understand
-    │   ├── main.py # The Module you will have to change
-    │   └── requirements.txt # Requirements for the function execution
-    ├── config/
-    │   └── dev.env.yaml # Environment variables that will ship with the function deployment
-    └── tests/
-        └── test_*.py # Unit tests
+TODO: UPDATE filetree
 ```
 
 ## Tasks
@@ -332,8 +322,6 @@ Here are the steps necessary to complete the exercise:
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
-Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
-
 ```bash
 FUNCTION_NAME="ingest_data"
 YOURNAME="your_name_in_lowercase"
@@ -347,15 +335,20 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --entry-point=main \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=$YOURNAME-lz"
+```
 
+Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
+TODO: REMOVE
+
+```bash
 gcloud beta functions deploy jm_test_ingest_data \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
     --entry-point=main \
-    --source=functions/simple_mlops/ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --source=functions/simple_mlops/1_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/1_ingest_data/config/dev.env.yaml \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=jm-test-delete-bucket"
 ```
@@ -417,10 +410,10 @@ Read more on how to deploy a function that listens to a Cloud Storage bucket eve
 
 ## Documentation
 
-::: simple_mlops.ingest_data.app.main
+::: simple_mlops.1_ingest_data.app.main
 
-::: simple_mlops.ingest_data.app.funcs.gcp_apis
+::: simple_mlops.1_ingest_data.app.funcs.gcp_apis
 
-::: simple_mlops.ingest_data.app.funcs.transform
+::: simple_mlops.1_ingest_data.app.funcs.transform
 
-::: simple_mlops.ingest_data.app.funcs.models
+::: simple_mlops.1_ingest_data.app.funcs.models
