@@ -3,7 +3,7 @@
 - [Deploy a Cloud function that trains a model and saves it in GCS](#deploy-a-cloud-function-that-trains-a-model-and-saves-it-in-gcs)
   - [Code](#code)
 
-![model-architecture](./resources/part_2/model.png)
+![model-architecture](./resources/part_3/model.png)
 
 In this exercise, we will create a Cloud Function called `train_model`, which will be responsible for training a machine learning model using the data ingested in the previous steps. The function will be triggered by the `ingestion_complete` Pub/Sub topic, ensuring it starts training once new data is available in the BigQuery table. The steps involved in this process are as follows:
 
@@ -85,7 +85,7 @@ Deployment:
         --source=functions/simple_mlops/train_model/app/ \
         --env-vars-file=functions/simple_mlops/train_model/config/dev.env.yaml \
         --entry-point=main \
-        --trigger-topic--trigger-topic
+        --trigger-topic=TODO
 ```
 
 ## Code
