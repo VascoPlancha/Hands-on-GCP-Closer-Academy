@@ -190,7 +190,9 @@ Here are the steps necessary to complete the exercise:
         PS='??',
         project_id='??',
         topic_id='??',
-        message="I finished passing the staging data to facts",
+        message=json.dumps({
+            'message': "I finished passing the staging data to facts",
+            'training_data_table': '??'}),
         attributes={
             'train_model': 'True',
             'dataset': 'titanic'},
