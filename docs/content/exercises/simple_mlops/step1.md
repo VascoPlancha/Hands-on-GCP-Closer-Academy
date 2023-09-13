@@ -16,7 +16,7 @@
 
 ## Introduction
 
-![ingestion-architecture](./resources/part_1/ingestion_v2.png)
+![img-ingestion-architecture](./resources/part_1/ingestion_v2.png)
 
 In this exercise, we will create the `Ingest Data` Cloud Function, that will perform the following tasks:
 
@@ -63,7 +63,7 @@ The outline of the *Cloud Function* code is available at `functions/simple_mlops
 
 ## Create the Google Cloud Resources
 
-Here are the steps necessary to complete the exercise:
+Here are the resources necessary to complete the exercise:
 
 You can create the resources with Cloud Shell or in the Console.
 ***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.***
@@ -78,7 +78,7 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
 
 ### 1. Create a BigQuery Dataset
 
@@ -102,26 +102,26 @@ With the Console:
 
 1. Go to BigQuery:
 
-    ![bq-1](https://i.imgur.com/Qvhqno3.png)
+    ![img-bq-1](https://i.imgur.com/Qvhqno3.png)
 
 2. Click the bullet points icon next to the project name:
 
-    ![bq-2](https://i.imgur.com/bHct9F7.png)
+    ![img-bq-2](https://i.imgur.com/bHct9F7.png)
 
 3. Name your data set, change the region, and click `CREATE DATA SET`:
 
-    ![bq-3](https://i.imgur.com/poTqdG6.png)
+    ![img-bq-3](https://i.imgur.com/poTqdG6.png)
 
     Congratulations! You have a `data set`!
 
 4. Edit the labels
 
     Click in the recently created dataset.
-    ![bq-4](https://i.imgur.com/HG9KUp2.png)
+    ![img-bq-4](https://i.imgur.com/HG9KUp2.png)
 
     And add the labels
 
-    ![bq-5](https://i.imgur.com/XMXCcF2.png)
+    ![img-bq-5](https://i.imgur.com/XMXCcF2.png)
 
 ### 2. Create a BigQuery Table
 
@@ -146,11 +146,11 @@ With the console:
 
 1. Click the bullets icon next to your data set, and click *Create Table*:
 
-    ![bq-t-1](https://i.imgur.com/dW3pcpN.png)
+    ![img-bq-t-1](https://i.imgur.com/dW3pcpN.png)
 
 2. Configure your table:
 
-    ![bq-t-2](https://i.imgur.com/asXwMxi.png)
+    ![img-bq-t-2](https://i.imgur.com/asXwMxi.png)
 
     1. Make sure it's in your dataset created in the step before
     2. Name your dataset `titanic_raw`
@@ -159,7 +159,7 @@ With the console:
 
 3. Add the labels.
 
-    ![bq-t-3](https://i.imgur.com/sWJsk0K.png)
+    ![img-bq-t-3](https://i.imgur.com/sWJsk0K.png)
 
     To add the labels go to `EDIT DETAILS`, and the same way as the dataset, add the labels. Include the `Dataset` : `titanic` label.
 
@@ -183,15 +183,15 @@ With the console:
 
 1. Search for the Cloud Storage in the Search bar.
 
-    ![buckets-1](https://i.imgur.com/voKVC6X.png)
+    ![img-buckets-1](https://i.imgur.com/voKVC6X.png)
 
 2. In the Cloud Storage UI, you'll notice there are no buckets created yet. To create one, click the `CREATE` button.
 
-    ![buckets-2](https://i.imgur.com/kYTszb3.png)
+    ![img-buckets-2](https://i.imgur.com/kYTszb3.png)
 
 3. Configurate your bucket
 
-    ![buckets-3-1](https://i.imgur.com/J3daANw.png)
+    ![img-buckets-3-1](https://i.imgur.com/J3daANw.png)
 
     1. Name your bucket and click Continue.
     2. Change the storage class from Multi-region to Region. Set the location to europe-west3, as shown in the image, and click Continue.
@@ -200,15 +200,15 @@ With the console:
 
     Your configuration should look like this:
 
-    ![buckets-4](https://i.imgur.com/vCD4BsS.png)
+    ![img-buckets-4](https://i.imgur.com/vCD4BsS.png)
 
     If this popup appears, leave the settings as they are.
 
-    ![buckets-pupup1](https://i.imgur.com/nty5chF.png)
+    ![img-buckets-pupup1](https://i.imgur.com/nty5chF.png)
 
 And now you have your bucket!
 
-![buckets-created](https://i.imgur.com/ZXLrCRL.png)
+![img-buckets-created](https://i.imgur.com/ZXLrCRL.png)
 
 Alternatively, you can create a bucket using [Python](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-python), other Client Libraries, or even advanced Infrastructure-as-Code tools like [Terraform](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-terraform) or [Pulumi](https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/).
 
@@ -227,13 +227,13 @@ With the Cloud Console:
 1. Search for *Topics* in the search bar.
 2. Click in **CREATE TOPIC**.
 
-    ![ps-1](https://i.imgur.com/iy3OUEr.png)
+    ![img-ps-1](https://i.imgur.com/iy3OUEr.png)
 
 3. Define your Topic ID and click **CREATE**
 
     The topic ID should be `[your_name]-complete`
 
-    ![ps-2](https://i.imgur.com/7t1ewA6.png)
+    ![img-ps-2](https://i.imgur.com/7t1ewA6.png)
 
     In this case, our Topic ID is `ingestion_complete`.
 
@@ -241,7 +241,7 @@ With the Cloud Console:
 
 4. Verify your topic was created
 
-   ![ps-3](https://i.imgur.com/1UjfQoo.png)
+   ![img-ps-3](https://i.imgur.com/1UjfQoo.png)
 
    It automatically creates a subscription, but lets ignore that for now.
 

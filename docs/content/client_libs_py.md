@@ -128,12 +128,12 @@ python -m venv venv
 
 Install the Python Extension:
 
-![py1](https://i.imgur.com/8JlFCFw.png)
+![img-py1](https://i.imgur.com/8JlFCFw.png)
 
 With VSCode, do `CTRL+SHIFT+P` and write `Select Interpreter`
 
-![py2](https://i.imgur.com/1Ul2HfI.png)
+![img-py2](https://i.imgur.com/1Ul2HfI.png)
 
 And find the `venv` python executable.
 
-![py3](https://i.imgur.com/ULm24gE.png)
+![img-py3](https://i.imgur.com/ULm24gE.png)

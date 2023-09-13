@@ -12,7 +12,7 @@
 
 ## Introduction
 
-![staging-facts-architecture](./resources/part_2/staging_facts_v1.png)
+![img-staging-facts-architecture](./resources/part_2/staging_facts_v1.png)
 
 In this exercise, we will create the `Query To Facts` Cloud Function, that will perform the following tasks:
 
@@ -34,30 +34,31 @@ The resources needed these tasks are:
 The outline of the *Cloud Function* code is available at `functions/simple_mlops/2_update_facts/app`.
 
 ```text
-b_update_facts
-  app/
-    funcs/
-      models.py # Models to make typechecking easier.
-      gcp_apis.py # Functions to call google services.
-      common.py # Common functions (Utils).
-    main.py # Main module and entry point for the Cloud Function
-    requirements.txt # Requirements for the function execution.
-  config
-    dev.env.yaml # Environment variables that will ship with the function deployment
-  tests/
-    test_*.py # Unit tests.
+.
+└── b_update_facts/
+    ├── app/
+    │   ├── funcs/
+    │   │   ├── models.py # Models to make typechecking easier.
+    │   │   ├── gcp_apis.py # Functions to call google services.
+    │   │   └── common.py # Common functions (Utils).
+    │   ├── main.py # Main module and entry point for the Cloud Function
+    │   └── requirements.txt # Requirements for the function execution.
+    ├── config/
+    │   └── dev.env.yaml # Environment variables that will ship with the function deployment
+    └── tests/
+        └── test_*.py # Unit tests.
 ```
 
 ## Tasks
 
 - [ ] Create the Google Cloud Resources
 - [ ] Update the Cloud Function Code
-- [ ] Deploy the Cloud Function
 - [ ] Test the Cloud Function
+- [ ] Deploy the Cloud Function
 
 ## Create the Google Cloud Resources
 
-Here are the steps necessary to complete the exercise:
+Here are the resources necessary to complete the exercise:
 
 You can create the resources with Cloud Shell or in the Console.
 ***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.***
@@ -72,7 +73,7 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
 
 ### 1. Create a BigQuery Table
 
@@ -82,7 +83,7 @@ With Cloud Shell (Copy-paste):
 bq mk \
     --project_id ${PROJECT_ID} \
     --table \
-    --description "Table for the Titanic dataset" \
+    --description "Facts table for the Titanic dataset" \
     --label=owner:${YOURNAME} \
     --label=project:${PROJECT_NAME} \
     --label=purpose:academy \

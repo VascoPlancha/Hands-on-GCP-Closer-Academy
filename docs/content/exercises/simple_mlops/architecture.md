@@ -5,7 +5,7 @@ We are going to build a simple *MLOps* project in *Google Cloud Platform* using
 
 Our minimal *MLOps* system should look like this in the end:
 
-![architecture](./resources/architecture/architecture_v2.png)
+![img-architecture](./resources/architecture/architecture_v2.png)
 
 ## 1. Ingestion
 
