@@ -36,7 +36,7 @@ The resources needed these tasks are:
 - One GCS Bucket named `[prefix]-functions-bucket` where you will deploy the function source code from.
 - One Topic named `[prefix]-ingestion-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/app/main.py`.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/1_ingest_data/app/main.py`.
 
 ```text
 .
@@ -342,8 +342,8 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
-    --source=functions/simple_mlops/ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --source=functions/simple_mlops/1_ingest_data/app/ \
+    --env-vars-file=functions/simple_mlops/1_ingest_data/config/dev.env.yaml \
     --entry-point=main \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=$YOURNAME-lz"
