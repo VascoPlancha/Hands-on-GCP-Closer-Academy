@@ -167,9 +167,9 @@ With the console:
 
 ```bash
 gsutil mb \
-    -p ${PROJECT_ID} \
     -c regional \
     -l ${REGION} \
+    -p ${PROJECT_ID} \
     gs://${YOURNAME}-lz
 
 gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-lz

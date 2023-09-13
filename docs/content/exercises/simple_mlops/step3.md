@@ -75,10 +75,10 @@ export YOURNAME=your_name_in_lowercase
 
 ```bash
 gsutil mb \
-    -p ${PROJECT_ID} \
     -c regional \
     -l ${REGION} \
-    gs://${YOURNAME}-models
+    -p ${PROJECT_NAME} \
+    gs://${YOURNAME}-models-c
 
 gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-models
 gsutil label ch -l project:${PROJECT_NAME} gs://${YOURNAME}-models
