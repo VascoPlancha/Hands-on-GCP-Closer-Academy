@@ -55,14 +55,22 @@ def load_clients(
 
 
 def _env_vars() -> models.EnvVars:
-    # fqdn = fully qualified domain name
-    # A table fqdn is in the format: project_id.dataset_id.table_id
+    """
+    Returns an instance of the EnvVars class with the following environment variables:
+    - gcp_project_id: The ID of the GCP project.
+    - bq_table_fqn: The fully qualified name of the BigQuery table in the format:
+                     project_id.dataset_id.table_id.
+    - topic_ingestion_complete: The name of the Pub/Sub topic to publish a message
+        to when data ingestion is complete.
+    """
+    # fqn = fully qualified name
+    # A table fqn is in the format: project_id.dataset_id.table_id
 
     return models.EnvVars(
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
-        bq_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
-{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
-{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqdn_tbl")}''',
+        bq_table_fqn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqn_dst")}.\
+{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqn_tbl")}''',
         topic_ingestion_complete=os.getenv(
             "_TOPIC_INGESTION_COMPLETE", 'topic_ingestion_complete')
     )
@@ -106,7 +114,7 @@ def main(cloud_event: CloudEvent) -> None:
     errors = [
         gcp_apis.bigquery_insert_json_row(
             BQ=gcp_clients.bigquery_client,
-            table_fqdn=env_vars.bq_table_fqdn,
+            table_fqn=env_vars.bq_table_fqn,
             row=[datapoint.to_dict()]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 

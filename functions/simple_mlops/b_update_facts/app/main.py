@@ -1,3 +1,10 @@
+
+"""
+This module contains a cloud function that updates a BigQuery table with data from another table and publishes a message to a Pub/Sub topic.
+
+The function loads the necessary GCP clients, environment variables, and SQL query to update the BigQuery table.
+It then executes the query and publishes a message to the Pub/Sub topic.
+"""
 import os
 from pathlib import Path
 
@@ -53,17 +60,23 @@ def load_clients(
 
 
 def _env_vars() -> models.EnvVars:
-    # fqdn = fully qualified domain name
-    # A table fqdn is in the format: project_id.dataset_id.table_id
+    """
+    Returns an instance of the EnvVars class with environment variables set.
+
+    Returns:
+        models.EnvVars: An instance of the EnvVars class with environment variables set.
+    """
+    # fqn = fully qualified name
+    # A table fqn is in the format: project_id.dataset_id.table_id
 
     return models.EnvVars(
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
-        bq_staging_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+        bq_staging_table_fqn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
 {os.getenv("_BIGQUERY_DATASET_ID", "bq_table_staging_dst")}.\
-{os.getenv("_BIGQUERY_STAGING_TABLE_ID", "bq_staging_table_fqdn")}''',
-        bq_facts_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
-{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
-{os.getenv("_BIGQUERY_FACTS_TABLE_ID", "bq_facts_table_fqdn")}''',
+{os.getenv("_BIGQUERY_STAGING_TABLE_ID", "bq_staging_table_fqn")}''',
+        bq_facts_table_fqn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqn_dst")}.\
+{os.getenv("_BIGQUERY_FACTS_TABLE_ID", "bq_facts_table_fqn")}''',
         topic_update_facts_complete=os.getenv(
             "_TOPIC_UPDATE_FACTS_COMPLETE", 'topic_update_facts_complete')
     )
@@ -91,8 +104,8 @@ def main(cloud_event: CloudEvent) -> None:
     path = Path('./resources/staging_to_facts.sql')
 
     query = common.load_query(
-        table_facts=env_vars.bq_facts_table_fqdn,
-        table_raw=env_vars.bq_staging_table_fqdn,
+        table_facts=env_vars.bq_facts_table_fqn,
+        table_raw=env_vars.bq_staging_table_fqn,
         query_path=path,
     )
 

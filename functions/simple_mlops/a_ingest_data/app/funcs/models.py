@@ -6,16 +6,28 @@ from google.cloud import bigquery, pubsub, storage
 
 
 class GCPClients(NamedTuple):
-    """GCP Clients Tuple"""
+    """A named tuple that contains GCP client objects for Storage, BigQuery, and Pub/Sub.
+
+    Attributes:
+        storage_client (google.cloud.storage.Client): A client object for Google Cloud Storage.
+        bigquery_client (google.cloud.bigquery.Client): A client object for Google BigQuery.
+        publisher (google.cloud.pubsub_v1.PublisherClient): A client object for Google Cloud Pub/Sub.
+    """
     storage_client: storage.Client
     bigquery_client: bigquery.Client
     publisher: pubsub.PublisherClient
 
 
 class EnvVars(NamedTuple):
-    """Environment Variables Tupe"""
+    """A named tuple representing environment variables required for data ingestion.
+
+    Attributes:
+        gcp_project_id (str): The ID of the Google Cloud Platform project.
+        bq_table_fqn (str): The fully-qualified name of the BigQuery table.
+        topic_ingestion_complete (str): The name of the Pub/Sub topic for ingestion completion notifications.
+    """
     gcp_project_id: str
-    bq_table_fqdn: str
+    bq_table_fqn: str
     topic_ingestion_complete: str
 
 

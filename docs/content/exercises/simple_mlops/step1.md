@@ -307,7 +307,7 @@ Here are the steps necessary to complete the exercise:
     errors = [
         gcp_apis.bigquery_insert_json_row(
             BQ=gcp_clients.bigquery_client,
-            table_fqdn=env_vars.bq_table_fqdn,
+            table_fqn=env_vars.bq_table_fqn,
             row=[datapoint]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 

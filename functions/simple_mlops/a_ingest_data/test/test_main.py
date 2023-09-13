@@ -14,4 +14,4 @@ TEST_ENV = {
 def test_env_vars() -> None:
     env_vars = main._env_vars()
     print(env_vars)
-    assert env_vars.bq_table_fqdn == 'test-project.test-dataset.test-table'
+    assert env_vars.bq_table_fqn == 'test-project.test-dataset.test-table'

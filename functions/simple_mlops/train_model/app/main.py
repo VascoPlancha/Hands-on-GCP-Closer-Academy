@@ -39,14 +39,14 @@ def _env_vars() -> models.EnvVars:
     Returns:
         models.EnvVars: A tuple of environment variables.
     """
-    # fqdn = fully qualified domain name
-    # A table fqdn is in the format: project_id.dataset_id.table_id
+    # fqn = fully qualified name
+    # A table fqn is in the format: project_id.dataset_id.table_id
 
     return models.EnvVars(
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
-        bq_table_fqdn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
-{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqdn_dst")}.\
-{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqdn_tbl")}''',
+        bq_table_fqn=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqn_dst")}.\
+{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqn_tbl")}''',
         topic_training_complete=os.getenv(
             "TOPIC_TRAINING_COMPLETE", 'topic_training_complete')
     )

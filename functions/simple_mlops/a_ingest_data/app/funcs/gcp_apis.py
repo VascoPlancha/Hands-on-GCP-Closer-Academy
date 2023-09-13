@@ -37,14 +37,14 @@ def storage_download_blob_as_string(
 
 def bigquery_insert_json_row(
     BQ: bigquery.Client,
-    table_fqdn: str,
+    table_fqn: str,
     row: Sequence[Dict[str, Any]],
 ) -> Any:
     """Inserts a row into a bigquery table.
 
     Args:
         BQ (bigquery.Client): The bigquery client.
-        table_fqdn (str): The fully qualified name of the table.
+        table_fqn (str): The fully qualified name of the table.
         row (Dict[str, Any]): The row to insert into the table.
     """
     def _filter_dict(d: Dict[str, str]) -> Dict[str, str]:
@@ -54,7 +54,7 @@ def bigquery_insert_json_row(
         row = [row]
 
     errors = BQ.insert_rows_json(
-        table=table_fqdn,
+        table=table_fqn,
         json_rows=[_filter_dict(d=d) for d in row],
     )
 
