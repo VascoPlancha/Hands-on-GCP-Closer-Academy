@@ -96,6 +96,10 @@ def main(cloud_event: CloudEvent) -> None:
     if event_message['message']['attributes']['train_model'] == 'True':
 
         path = common.get_path_to_file()
+
+        ########################################################
+        # 3. Create a query that retrieves the training data ###
+        ########################################################
         query = common.query_train_data(
             table_fqn=data['training_data_table'],  # type: ignore
             query_path=path
@@ -108,6 +112,10 @@ def main(cloud_event: CloudEvent) -> None:
         pipeline = train_models.titanic_train(
             df=df,
         )
+
+        #######################################################
+        # 4. Correct the arguments in model_save_to_storage ###
+        #######################################################
 
         gcp_apis.model_save_to_storage(
             CS=gcp_clients.storage_client,  # type: ignore

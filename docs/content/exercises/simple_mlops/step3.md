@@ -6,6 +6,7 @@
   - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
     - [1. Create the models GCS Bucket](#1-create-the-models-gcs-bucket)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
+  - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -124,58 +125,55 @@ Same as in step 1, but now the bucket name is `[yourname]-models`
     _TOPIC_TRAINING_COMPLETE: "The Pub/Sub topic name where the success message will be published"
     ```
 
-1. Decode Base64 Message: Add code to decode the base64 message.
+3. Create the SQL Query
 
-```python
-# IMPLEMENTATION [1]: Add code to decode the base64 message.
+    You can find the query to change in the `c_train_model/app/resources/select_train_data.sql` file.
+
+    ```python
+    ########################################################
+    # 3. Create a query that retrieves the training data ###
+    ########################################################
+    query = common.query_train_data(
+        table_fqn='??'
+        query_path=path
+    )
+    ```
+
+    ```sql
+    SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
+    ```
+
+4. Correct the arguments in the `model_save_to_storage` function
+
+    ```python
+    gcp_apis.model_save_to_storage(
+        CS='??',
+        model='??',
+        bucket_name='??'
+    )
+    ```
+
+## Deploy the cloud function
+
+You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
+
+Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
+
+```bash
+FUNCTION_NAME="train_model"
+YOURNAME="your_name_in_lowercase"
+
+gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
+    --gen2 --cpu=1 --memory=512MB \
+    --region=europe-west3 \
+    --runtime=python311 \
+    --source=functions/simple_mlops/c_train_model/app/ \
+    --env-vars-file=functions/simple_mlops/c_train_model/config/dev.env.yaml \
+    --entry-point=main \
+    --trigger-topic=$YOURNAME-update-facts-complete
 ```
 
-2. Create Clients: Use the Google Cloud Storage API and BigQuery API to create respective client objects.
-
-```python
-# IMPLEMENTATION [1]: Use the storage API to make a Client Object
-# IMPLEMENTATION [2]: Use the bigquery API to make a Client Object
-```
-
-3. Create SQL Query: Create an SQL query to retrieve data from the BigQuery table with Titanic data.
-
-```python
-# IMPLEMENTATION [3]: Create an SQL query to retrieve data from the bigquery table with Titanic data.
-```
-
-4. Set Bucket Name: Add your GCS bucket name to store the trained model.
-
-```python
-# IMPLEMENTATION [4]: Add your prefix-bucket-models here.
-```
-
-5. Set Model Name: Give a name to your trained model.
-
-```python
-# IMPLEMENTATION [5]: Give a name to your model.
-```
-
-6. Connect to Bucket: Connect to the GCS bucket using the correct method for the Storage Client.
-
-```python
-# IMPLEMENTATION [6]: Connect to the bucket in [4] using the correct method
-```
-
-7. Connect to Blob: Connect to the blob (file object) inside the bucket, using the bucket object.
-
-```python
-# IMPLEMENTATION [7]: Connect to the blob(file object) inside the bucket, using the `bucket` object.
-```
-
-8. (Optional) Remove Columns: Remove any additional columns that shouldn't be passed to the model.
-
-```python
-# OPTIONAL [1]: Add 'set_type' or other columns that shouldn't be passed to the model.
-```
-
-Remember to remove the pass statement after implementing the first step (Decoding Base64 Message).
-
-Deployment:
+TODO: DELETE
 
 ```bash
 gcloud beta functions deploy jm_test_train_model \
