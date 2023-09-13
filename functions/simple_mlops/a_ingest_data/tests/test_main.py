@@ -1,6 +1,9 @@
+from dataclasses import dataclass
+from typing import List
 from unittest import mock
 
 import pytest
+from cloudevents.http import CloudEvent
 from google.cloud import bigquery, pubsub, storage
 
 from a_ingest_data.app import main
@@ -17,13 +20,29 @@ TEST_ENV = {
 @mock.patch.dict('os.environ', TEST_ENV)
 def test_env_vars() -> None:
     env_vars = main._env_vars()
-    print(env_vars)
     assert env_vars.bq_table_fqn == 'test-project.test-dataset.test-table'
 
 
 @pytest.fixture
-def cloud_event() -> mock.Mock:
-    return mock.Mock()
+def cloud_event() -> CloudEvent:
+    attributes = {
+        "specversion": "1.0",
+        "id": "1234567890",
+        "source": "//storage.googleapis.com/projects/_/buckets/[Bucket Name]",
+        "type": "google.cloud.storage.object.v1.finalized",
+        "datacontenttype": "application/json",
+        "time": "2020-08-08T00:11:44.895529672Z"
+    }
+    data = {
+        "name": "folder/myfile.csv [File path inside the bucket]",
+        "bucket": "[Bucket Name]",
+        "contentType": "application/json",
+        "metageneration": "1",
+        "timeCreated": "2020-04-23T07:38:57.230Z",
+        "updated": "2020-04-23T07:38:57.230Z"
+    }
+
+    return CloudEvent(attributes=attributes, data=data)
 
 
 @pytest.fixture
@@ -50,6 +69,17 @@ def gcp_clients(storage_client, bigquery_client, publisher) -> models.GCPClients
     )
 
 
+def test_gcp_clients(
+    storage_client: mock.Mock,
+    bigquery_client: mock.Mock,
+    publisher: mock.Mock,
+    gcp_clients: models.GCPClients
+) -> None:
+    assert gcp_clients.storage_client == storage_client
+    assert gcp_clients.bigquery_client == bigquery_client
+    assert gcp_clients.publisher == publisher
+
+
 @pytest.fixture
 def env_vars() -> models.EnvVars:
     return models.EnvVars(
@@ -57,6 +87,26 @@ def env_vars() -> models.EnvVars:
         bq_table_fqn='test_project.test_dataset.test_table',
         topic_ingestion_complete='test_topic'
     )
+
+
+@dataclass
+class Datapoint:
+    col1: str
+    col2: str
+
+    def to_dict(self) -> dict:
+        return {
+            'col1': self.col1,
+            'col2': self.col2
+        }
+
+
+@pytest.fixture
+def datapoint_in_class() -> List[Datapoint]:
+    return [
+        Datapoint(col1='value1', col2='value2'),
+        Datapoint(col1='value3', col2='value4')
+    ]
 
 
 @pytest.fixture
@@ -67,20 +117,25 @@ def datapoints() -> list:
     ]
 
 
+@mock.patch.dict('os.environ', {'_CI_TESTING': 'no'})
 def test_main(
-    cloud_event,
-    storage_client,
-    bigquery_client,
-    publisher,
-    gcp_clients,
-    env_vars,
-    datapoints
-):
+    cloud_event: mock.Mock,
+    storage_client: mock.Mock,
+    bigquery_client: mock.Mock,
+    publisher: mock.Mock,
+    gcp_clients: models.GCPClients,
+    env_vars: models.EnvVars,
+    datapoints: list,
+    datapoint_in_class: List[Datapoint],
+) -> None:
     # Mock the necessary functions
     with mock.patch.object(gcp_apis, 'storage_download_blob_as_string') as mock_download_blob_as_string, \
             mock.patch.object(transform, 'split_lines', return_value=datapoints), \
             mock.patch.object(gcp_apis, 'bigquery_insert_json_row'), \
-            mock.patch.object(gcp_apis, 'pubsub_publish_message') as mock_publish_message:
+            mock.patch.object(gcp_apis, 'pubsub_publish_message') as mock_publish_message, \
+            mock.patch.object(main, 'load_clients', return_value=gcp_clients), \
+            mock.patch.object(transform, 'titanic_transform', return_value=datapoint_in_class), \
+            mock.patch.object(main, '_env_vars', return_value=env_vars):
 
         # Set the mock return values
         mock_download_blob_as_string.return_value = 'col1,col2\nvalue1,value2\nvalue3,value4\n'
