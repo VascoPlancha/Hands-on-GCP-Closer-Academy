@@ -121,7 +121,5 @@ def main(cloud_event: CloudEvent) -> None:
         project_id=env_vars.gcp_project_id,
         topic_id=env_vars.topic_ingestion_complete,
         message=f"I finished ingesting the file {data['name']}!!",
-        attributes={
-            'train_model': 'True',
-            'dataset': 'titanic'},
+        attributes={},
     )

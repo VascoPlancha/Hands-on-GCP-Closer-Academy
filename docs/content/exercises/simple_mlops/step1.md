@@ -313,8 +313,8 @@ Here are the steps necessary to complete the exercise:
         PS='??',
         project_id='??',
         topic_id='??',
-        data=f"I finished ingesting the file {[change me]}!!",
-        attributes={'test': 'attribute'},
+        message=f"I finished ingesting the file {[change me]}!!",
+        attributes={},
     )
     ```
 

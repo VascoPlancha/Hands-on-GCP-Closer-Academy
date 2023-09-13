@@ -1,68 +1,69 @@
 """This module contains the functions that interact with the GCP APIs."""
-import json
-from typing import Any, Dict, Sequence
+from typing import Any, Dict
 
-from google.cloud import bigquery, pubsub, storage
+from google.cloud import bigquery, pubsub
 
 
-def storage_download_blob_as_string(
-    CS: storage.Client,
-    bucket_name: str,
-    file_path: str,
-) -> str:
-    """Transfers the result to a local folder.
+def execute_query(
+    BQ: bigquery.Client,
+    job_config: bigquery.QueryJobConfig,
+    query: str,
+    location: str | None = None,
+    job_id: str | None = None,
+) -> bigquery.QueryJob:
+    '''Execute a query with the desired job configuration.
 
     Args:
-        bucket_name (str): The name of the bucket.
-        file_path (str): The location of the blob/file inside the bucket.
+        BQ (bigquery.Client): The BigQuery client instance.
+        job_config (bigquery.QueryJobConfig): The desired job configuration for the query execution.
+        query (str): The query string to be executed.
+        location (str, optional): The location where the query will be run. Defaults to None.
+        job_id (str, optional): The ID of the job. Defaults to None.
 
     Returns:
-        str: A string with the file content.
-
-    Raises:
-        ValueError: If the blob does not exist.
-    """
-    # Getting the bucket
-    bucket = CS.bucket(bucket_name)
-
-    # Getting the blob
-    blob = bucket.blob(file_path)
-
-    if blob.exists():
-        # Downloading the blob
-        return blob.download_as_text()
-    else:
-        raise ValueError(f'Blob {file_path} does not exist.')
-
-
-def bigquery_insert_json_row(
-    BQ: bigquery.Client,
-    table_fqdn: str,
-    row: Sequence[Dict[str, Any]],
-) -> Any:
-    """Inserts a row into a bigquery table.
-
-    Args:
-        BQ (bigquery.Client): The bigquery client.
-        table_fqdn (str): The fully qualified name of the table.
-        row (Dict[str, Any]): The row to insert into the table.
-    """
-    def _filter_dict(d: Dict[str, str]) -> Dict[str, str]:
-        return {k: v for k, v in d.items() if isinstance(v, str) and bool(v.strip())}
-
-    if not isinstance(row, Sequence) and isinstance(row, Dict):
-        row = [row]
-
-    errors = BQ.insert_rows_json(
-        table=table_fqdn,
-        json_rows=[_filter_dict(d=d) for d in row],
+        bigquery.QueryJob: A new query job instance.
+    '''
+    return BQ.query(
+        query,
+        job_config=job_config,
+        job_id=job_id,
+        location=location,
     )
 
-    if errors:
-        print(json.dumps({'message': errors, 'severity': 'ERROR'}))
-        return errors
-    else:
-        return None
+
+def execute_query_result(
+    BQ: bigquery.Client,
+    query: str,
+    job_config: bigquery.QueryJobConfig = bigquery.QueryJobConfig(
+        dry_run=False, use_query_cache=True),
+    job_id: str | None = None,
+    location: str | None = None,
+) -> Any:
+    '''Executes a BigQuery query and returns the results.
+
+    This function is an intermediate step between executing a query and
+    holding the query results. It passes the default job configuration to
+    the execute_query function.
+
+    Args:
+        BQ (google.cloud.bigquery.client.Client): A BigQuery client object.
+        query (str): The query to execute.
+        job_config (google.cloud.bigquery.job.QueryJobConfig, optional):
+            The configuration for the query job. Defaults to a QueryJobConfig
+            object with dry_run=False and use_query_cache=True.
+        job_id (str, optional): The ID of the job. Defaults to None.
+        location (str, optional): The location of the job. Defaults to None.
+
+    Returns:
+        The results of the query execution.
+    '''
+    return execute_query(
+        BQ=BQ,
+        query=query,
+        job_config=job_config,
+        job_id=job_id,
+        location=location,
+    ).result()
 
 
 def pubsub_publish_message(

@@ -8,8 +8,6 @@
     - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
-  - [Hints](#hints)
-    - [Cloud Events](#cloud-events)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -33,7 +31,7 @@ The resources needed these tasks are:
   - The table schema is at: `./infrastructure/bigquery/facts_titanic_schema.json`
 - Two Pub/Sub topics, the one already created, and one named `[yourname]-update-facts-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/ingest_data/`.
+The outline of the *Cloud Function* code is available at `functions/simple_mlops/2_update_facts/app`.
 
 ```text
 TODO FILETREE
@@ -114,12 +112,10 @@ Here are the steps necessary to complete the exercise:
     ################
     # 1. Clients ###
     ################
-    storage_client = 'Create a storage client here, with the correct project ID argument'
     bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
     publisher = 'Create a publisher client here, with the correct project ID argument'
 
     return models.GCPClients(
-        storage_client=storage_client,
         bigquery_client=bigquery_client,
         publisher=publisher
     )
@@ -127,7 +123,7 @@ Here are the steps necessary to complete the exercise:
 
 2. Set Environment Variables
 
-    In the `ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
+    In the `b_update_facts/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```python
     ##############################
@@ -138,38 +134,38 @@ Here are the steps necessary to complete the exercise:
     ```yaml
     _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
     _BIGQUERY_DATASET_ID: "The BigQuery dataset ID you created"
-    _BIGQUERY_TABLE_ID: "The BigQuery table ID where you will store the data"
-    _TOPIC_INGESTION_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
+    _BIGQUERY_FACTS_TABLE_ID: "The BigQuery staging table ID"
+    _BIGQUERY_STAGING_TABLE_ID: "The BigQuery facts table ID where the data will be moved towards"
+    _TOPIC_UPDATE_FACTS_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
     ```
 
-3. Send the correct arguments to the `storage_download_blob_as_string` function
+3. Send the correct arguments to the `load_query` function.
 
     ```python
-    #########################################################
-    # 3. Correct the arguments below to download the file ###
-    #########################################################
-    file_contents = gcp_apis.storage_download_blob_as_string(
-        CS='??',
-        bucket_name='??',
-        file_path='??',
+    #################################################
+    # 3. Send the correct arguments to load_query ###
+    #################################################
+
+    path = common.relative_path() / 'resources' / 'staging_to_facts.sql'
+
+    query = common.load_query(
+        table_facts='??',
+        table_raw='??',
+        query_path=path,
     )
     ```
 
-4. Insert Rows into BigQuery: Corrent the arguments in the `bigquery_insert_json_row` function to insert data into the BigQuery table.
+4. Send the correct arguments to `execute_query_result`.
 
     ```python
-    ###############################################################
-    # 4. Correct the arguments below to insert data into bigquery #
-    ###############################################################
-    errors = [
-        gcp_apis.bigquery_insert_json_row(
-            BQ=gcp_clients.bigquery_client,
-            table_fqdn=env_vars.bq_table_fqdn,
-            row=[datapoint]
-        ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
+    #################################################
+    # 4. Send the correct arguments execute query ###
+    #################################################
 
-    if any(errors):
-        raise ValueError(f"Errors found: {errors}")
+    _ = gcp_apis.execute_query_result(
+        BQ='??',
+        query='??'
+    )
     ```
 
 5. Publish Message: Correct the arguments in the `pubsub_publish_message` function, to publish a message.
@@ -182,8 +178,10 @@ Here are the steps necessary to complete the exercise:
         PS='??',
         project_id='??',
         topic_id='??',
-        data=f"I finished ingesting the file {[change me]}!!",
-        attributes={'test': 'attribute'},
+        message="I finished passing the staging data to facts",
+        attributes={
+            'train_model': 'True',
+            'dataset': 'titanic'},
     )
     ```
 
@@ -194,30 +192,31 @@ You can check the deployment here in [Cloud Build](https://console.cloud.google.
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
 ```bash
-FUNCTION_NAME="ingest_data"
+FUNCTION_NAME="update-facts"
 YOURNAME="your_name_in_lowercase"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
-    --source=functions/simple_mlops/ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
+    --source=functions/simple_mlops/b_update_facts/app/ \
+    --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
     --entry-point=main \
-    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-    --trigger-event-filters="bucket=$YOURNAME-lz"
+    --trigger-topic=${YOURNAME}-ingestion-complete
+```
 
+TODO: DELETE
 
-gcloud beta functions deploy jm_test_ingest_data \
+```bash
+gcloud beta functions deploy jm_test_update_facts \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
     --entry-point=main \
-    --source=functions/simple_mlops/ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/ingest_data/config/dev.env.yaml \
-    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-    --trigger-event-filters="bucket=jm-test-delete-bucket"
-```
+    --source=functions/simple_mlops/b_update_facts/app/ \
+    --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
+    --trigger-topic=your_name_in_lowercase-ingestion-complete
+    ```
 
 ## Hints
 
@@ -275,11 +274,3 @@ Read more on how to deploy a function that listens to a Cloud Storage bucket eve
 - [Cloud Storage Tutorial (2nd gen)](https://cloud.google.com/functions/docs/tutorials/storage)
 
 ## Documentation
-
-::: simple_mlops.ingest_data.app.main
-
-::: simple_mlops.ingest_data.app.funcs.gcp_apis
-
-::: simple_mlops.ingest_data.app.funcs.transform
-
-::: simple_mlops.ingest_data.app.funcs.models

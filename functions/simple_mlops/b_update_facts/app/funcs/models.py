@@ -13,4 +13,4 @@ class EnvVars(NamedTuple):
     gcp_project_id: str
     bq_facts_table_fqdn: str
     bq_staging_table_fqdn: str
-    topic_ingestion_complete: str
+    topic_update_facts_complete: str
