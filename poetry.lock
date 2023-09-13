@@ -370,13 +370,13 @@ grpc = ["grpcio (>=1.38.0,<2.0dev)"]
 
 [[package]]
 name = "google-cloud-firestore"
-version = "2.11.1"
+version = "2.12.0"
 description = "Google Cloud Firestore API client library"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "google-cloud-firestore-2.11.1.tar.gz", hash = "sha256:7f7dfa86567c8d66c66c8dba8bc5ef85677c8532b4206055a339413f8071525d"},
-    {file = "google_cloud_firestore-2.11.1-py2.py3-none-any.whl", hash = "sha256:833019175b6c82727da71e2db2fdea9bf203d0b8239c696492f7e2b24566bb3e"},
+    {file = "google-cloud-firestore-2.12.0.tar.gz", hash = "sha256:3eedc9b2238d8fdb6c2645da455de7ba8df0a9a1d253815932ac3a98c5eec9cd"},
+    {file = "google_cloud_firestore-2.12.0-py2.py3-none-any.whl", hash = "sha256:8dbdbe2fd96f2651076ec1a6eb9b68361ed7c560934a927f2ca55c8c5aadfb30"},
 ]
 
 [package.dependencies]
@@ -1147,6 +1147,23 @@ pluggy = ">=0.12,<2.0"
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-env"
+version = "1.0.1"
+description = "py.test plugin that allows you to add environment variables."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest_env-1.0.1-py3-none-any.whl", hash = "sha256:e8faf927c6fcdbbc8fe3317506acc116713c9708d01652a0fd945f9ae27b71aa"},
+    {file = "pytest_env-1.0.1.tar.gz", hash = "sha256:603fe216e8e03a5d134989cb41317c59aabef013d2250c71b864ab0798fbe6f6"},
+]
+
+[package.dependencies]
+pytest = ">=7.3.1"
+
+[package.extras]
+test = ["coverage (>=7.2.7)", "pytest-mock (>=3.10)"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -1505,4 +1522,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "26f9d702ee645c2c123a5d25240b28468728903387a390a51322dbe37e8400df"
+content-hash = "f6b08ea995e50769399b787980f71afbdf5cb5d026f5d7837328e29c36ea3aba"
