@@ -20,6 +20,21 @@ The outline of the *Cloud Function* code is available at `./functions/simple_mlo
 - [ ] Change the configurations in the `dev.env.yaml` file
 - [ ] Change the deployment command to deploy the function correctly.
 
+## Predictions table
+
+```bash
+bq mk \
+    --project_id ${PROJECT_ID} \
+    --table \
+    --description "Facts table for the Titanic dataset" \
+    --label=owner:${YOURNAME} \
+    --label=project:${PROJECT_NAME} \
+    --label=purpose:academy \
+    --label=dataset:titanic \
+    ${YOURNAME}_titanic.titanic_predictions \
+    ./infrastructure/bigquery/facts_titanic_schema.json
+```
+
 ## Deployment
 
 Deployment:
