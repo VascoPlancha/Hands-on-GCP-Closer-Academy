@@ -79,7 +79,7 @@ gsutil mb \
     -c regional \
     -l ${REGION} \
     -p ${PROJECT_NAME} \
-    gs://${YOURNAME}-models-c
+    gs://${YOURNAME}-models
 
 gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-models
 gsutil label ch -l project:${PROJECT_NAME} gs://${YOURNAME}-models
