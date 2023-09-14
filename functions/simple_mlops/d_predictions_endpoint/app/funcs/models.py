@@ -24,8 +24,10 @@ class EnvVars(NamedTuple):
     Attributes:
         gcp_project_id (str): The ID of the Google Cloud Platform project.
         bucket_name (str): The name of the Google Cloud Storage bucket where the model artifacts will be stored.
-        topic_training_complete (str): The name of the Pub/Sub topic to which a message is published when training is complete.
+        model_location (str): The location of the trained model within the Google Cloud Storage bucket.
+        predictions_table (str): The name of the BigQuery table where prediction results will be stored.
     """
     gcp_project_id: str
     bucket_name: str
     model_location: str
+    predictions_table: str
