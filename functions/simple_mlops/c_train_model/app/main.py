@@ -3,6 +3,7 @@ import os
 
 import functions_framework
 from cloudevents.http import CloudEvent
+from google.cloud import bigquery, storage
 
 try:
     from funcs import common, gcp_apis, models, train_models
@@ -34,8 +35,8 @@ def load_clients(
                 bigquery_client: A bigquery client.
     """
 
-    storage_client = 'Create a storage client here, with the correct project ID argument'
-    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
+    storage_client = storage.Client(project=gcp_project_id)
+    bigquery_client = bigquery.Client(project=gcp_project_id)
 
     return models.GCPClients(
         storage_client=storage_client,
@@ -62,7 +63,8 @@ def _env_vars() -> models.EnvVars:
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
         bucket_name=os.getenv("_GCS_BUCKET_NAME_MODELS", 'bucket_name'),
         topic_training_complete=os.getenv(
-            "_TOPIC_TRAINING_COMPLETE", 'topic_training_complete'),
+            "TOPIC_TRAINING_COMPLETE", 'topic_training_complete'),
+
     )
 
 
@@ -99,7 +101,7 @@ def main(cloud_event: CloudEvent) -> None:
         # 3. Create a query that retrieves the training data ###
         ########################################################
         query = common.query_train_data(
-            table_fqn='??'
+            table_fqn=data['training_data_table'],  # type: ignore
             query_path=path
         )
         df = gcp_apis.query_to_pandas_dataframe(
@@ -116,7 +118,7 @@ def main(cloud_event: CloudEvent) -> None:
         #######################################################
 
         gcp_apis.model_save_to_storage(
-            CS='??',
-            model='??',
-            bucket_name='??'
+            CS=gcp_clients.storage_client,  # type: ignore
+            model=pipeline,
+            bucket_name=env_vars.bucket_name,  # type: ignore
         )

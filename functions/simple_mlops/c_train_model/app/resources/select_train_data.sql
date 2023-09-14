@@ -1,1 +1,1 @@
-SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
+SELECT * FROM `{table_source}`

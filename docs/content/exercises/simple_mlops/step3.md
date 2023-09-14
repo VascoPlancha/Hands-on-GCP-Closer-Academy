@@ -143,8 +143,6 @@ Same as in step 1, but now the bucket name is `[yourname]-models`
     SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
     ```
 
-    **Do not change to \`{table_source}\` section.**
-
 4. Correct the arguments in the `model_save_to_storage` function
 
     ```python
