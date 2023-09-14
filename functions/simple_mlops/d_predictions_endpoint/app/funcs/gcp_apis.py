@@ -2,11 +2,12 @@
 from google.cloud import storage
 
 
-def transfer_blob_as_bytes(
+def transfer_blob_to_temp(
     CS: storage.Client,
     gcs_input_bucket: str,
     file_location: str,
-) -> bytes:
+    model_name: str = 'model'
+) -> None:
     """
     Downloads a blob from a Google Cloud Storage bucket as bytes.
 
@@ -30,6 +31,6 @@ def transfer_blob_as_bytes(
 
     if blob.exists():
         # Downloading the blob
-        return blob.download_as_bytes()
+        blob.download_to_filename('/tmp/' + model_name)
     else:
         raise ValueError(f'Blob {file_location} does not exist.')

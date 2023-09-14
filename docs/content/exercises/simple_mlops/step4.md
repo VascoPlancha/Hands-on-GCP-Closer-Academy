@@ -52,11 +52,12 @@ The outline of the *Cloud Function* code is available at `./functions/manual_exe
 Deployment:
 
 ```bash
-gcloud functions deploy prefix_predictions_endpoint \
+gcloud beta functions deploy jm_test-predictions_endpoint \
+    --gen2 --cpu=1 --memory=1024MB \
     --region=europe-west3 \
-    --runtime=python39 \
-    --source=gs://prefix-functions-bucket/predictions_endpoint.zip \
-    --memory=1024MB \
+    --runtime=python311 \
+    --source=functions/simple_mlops/d_predictions_endpoint/app/ \
+    --env-vars-file=functions/simple_mlops/d_predictions_endpoint/config/dev.env.yaml \
     --entry-point=predict \
     --trigger-http \
     --allow-unauthenticated
@@ -74,4 +75,4 @@ or by going to the app [on Stackblitz](https://stackblitz.com/edit/closer-gcp-ti
 
 Remember, you can still find it in the correct folder.
 
-::: simple_mlops.predictions_endpoint.main
+::: simple_mlops.d_predictions_endpoint.app.main

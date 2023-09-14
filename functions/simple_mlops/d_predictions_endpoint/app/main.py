@@ -1,10 +1,14 @@
+import json
 import os
+import traceback
+import uuid
 
 import flask
-import functions_framework
 import joblib
-from flask import make_response
+import pandas as pd
+from flask import abort, jsonify, make_response
 from google.cloud import bigquery, storage
+from sklearn.pipeline import Pipeline
 
 try:
     from funcs import gcp_apis, models
@@ -15,7 +19,7 @@ except ImportError:
     )
 
 # Load the pipeline from the pickle file
-pipeline = None
+pipeline: Pipeline | None = None
 
 ################
 # 1. Clients ###
@@ -64,7 +68,7 @@ def _env_vars() -> models.EnvVars:
     )
 
 
-def load_model(env_vars: models.EnvVars, gcp_clients: models.GCPClients) -> None:
+def load_model(env_vars: models.EnvVars, gcp_clients: models.GCPClients, model_name='model') -> None:
     """
     Downloads a machine learning model from Google Cloud Storage and loads it into memory using joblib.
 
@@ -75,36 +79,34 @@ def load_model(env_vars: models.EnvVars, gcp_clients: models.GCPClients) -> None
     Returns:
         None
     """
+    # Load the pipeline from the pickle file
     global pipeline
     if pipeline is None:
-
-        # Load the pipeline from the pickle file
-        pipeline = joblib.load(
-            filename=gcp_apis.transfer_blob_as_bytes(
-                CS=gcp_clients.storage_client,
-                gcs_input_bucket=env_vars.bucket_name,
-                file_location=env_vars.model_location,
-            )
+        gcp_apis.transfer_blob_to_temp(
+            CS=gcp_clients.storage_client,
+            gcs_input_bucket=env_vars.bucket_name,
+            file_location=env_vars.model_location,
+            model_name=model_name
         )
+        pipeline = joblib.load('/tmp/' + model_name)
 
 
 if os.getenv("_CI_TESTING", 'no') == 'no':
     env_vars = _env_vars()
     gcp_clients = load_clients(gcp_project_id=env_vars.gcp_project_id)
+    load_model(env_vars=env_vars, gcp_clients=gcp_clients)
 
 
-@functions_framework.http
 def predict(request: flask.Request) -> flask.Response:
-    if not hasattr(predict, 'env_vars'):
-        env_vars = _env_vars()
+    """
+    Endpoint function that receives a POST request with JSON data and returns a prediction as a JSON response.
 
-    if not hasattr(predict, 'gcp_clients'):
-        load_clients(
-            gcp_project_id=env_vars.gcp_project_id)  # type: ignore
-    # # Load the model if it hasn't been loaded yet
-    # load_model()
+    Args:
+        request (flask.Request): The request object.
 
-    # Set CORS headers for the preflight request
+    Returns:
+        flask.Response: The response object.
+    """
     if request.method == 'OPTIONS':
         response = make_response('', 204)
         response.headers.set('Access-Control-Allow-Origin', '*')
@@ -112,18 +114,54 @@ def predict(request: flask.Request) -> flask.Response:
         response.headers.set('Access-Control-Allow-Methods', 'POST')
         return response
 
-    else:
-        print(env_vars)  # type: ignore
-        return flask.Response(
-            response='Hello World!',
-            status=200,
-            mimetype='text/plain'
-        )
+    print(request.get_json())
+    # Abort if no model is loaded
+    if not pipeline:
+        print(json.dumps({
+            'severity': "WARNING",
+            'message': 'No model is running',
+            'request': request.get_json()}
+        ))
+        raise ValueError('No model is running')
+
+    if request.content_type != 'application/json':
+        abort(400, "Content-Type must be 'application/json'")
+    # Set CORS headers for the preflight request
+
+    try:
+        point = pd.DataFrame.from_dict(
+            [json.loads(request.data)])  # type: ignore
+
+        print(pipeline.predict(point))
+        # Return the prediction as a JSON response
+        response = jsonify({'prediction': pipeline.predict(point).tolist()[0],  # type: ignore
+                            'uuid': str(uuid.uuid1())})
+        response.headers.set('Access-Control-Allow-Origin', '*')
+        return response
+    except Exception as e:
+        print(json.dumps({
+            'severity': "ERROR",
+            'message': 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()),
+            'request': request.get_json(),
+            'error': str(e)}
+        ))
+        return abort(500, 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()))
+    # return flask.Response(
+    #     response='Hello World!',
+    #     headers={
+    #         'Access-Control-Allow-Origin': '*',
+    #     },
+    #     status=200,
+    #     mimetype='application/json'
+    # )
+
+    # response = jsonify({'prediction': [prediction.tolist()[0]],
+    #                     'uuid': str(uuid.uuid1())})
+    # response.headers.set('Access-Control-Allow-Origin', '*')
+    # return response
 
     # try:
     #     # Get the input data from the request
-    #     if request.content_type != 'application/json':
-    #         abort(400, "Content-Type must be 'application/json'")
 
     #     input_data = json.loads(request.data)
 
@@ -137,10 +175,10 @@ def predict(request: flask.Request) -> flask.Response:
     #     # prediction = # IMPLEMENTATION [6]: You pipeline object is lodaded globally, just call it and use the `predict` method
 
     #     # Return the prediction as a JSON response
-    #     response = jsonify({'prediction': [prediction.tolist()[0]],
-    #                         'uuid': str(uuid.uuid1())})
-    #     response.headers.set('Access-Control-Allow-Origin', '*')
-    #     return response
+    # response = jsonify({'prediction': [prediction.tolist()[0]],
+    #                     'uuid': str(uuid.uuid1())})
+    # response.headers.set('Access-Control-Allow-Origin', '*')
+    # return response
 
     # except:
     #     print(json.dumps({
