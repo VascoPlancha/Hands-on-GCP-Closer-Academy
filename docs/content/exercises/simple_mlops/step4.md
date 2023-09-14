@@ -50,8 +50,8 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --source=functions/simple_mlops/d_predictions_endpoint/app/ \
     --env-vars-file=functions/simple_mlops/d_predictions_endpoint/config/dev.env.yaml \
     --allow-unauthenticated \
-    --entry-point=?? \
-    --trigger-????
+    --entry-point=predict \
+    --trigger-http
 ```
 
 And then you can test it on [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example-v2?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.
