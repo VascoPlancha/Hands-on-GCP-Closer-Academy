@@ -162,3 +162,44 @@ def predict(request: flask.Request) -> flask.Response:
             'error': str(e)}
         ))
         return abort(500, 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()))
+    # return flask.Response(
+    #     response='Hello World!',
+    #     headers={
+    #         'Access-Control-Allow-Origin': '*',
+    #     },
+    #     status=200,
+    #     mimetype='application/json'
+    # )
+
+    # response = jsonify({'prediction': [prediction.tolist()[0]],
+    #                     'uuid': str(uuid.uuid1())})
+    # response.headers.set('Access-Control-Allow-Origin', '*')
+    # return response
+
+    # try:
+    #     # Get the input data from the request
+
+    #     input_data = json.loads(request.data)
+
+    #     if input_data is None:
+    #         abort(400, 'Request must include JSON data')
+
+    #     # Convert the input data to a DataFrame
+    #     pd.DataFrame.from_dict([input_data])
+
+    #     # Make a prediction using the pipeline
+    #     # prediction = # IMPLEMENTATION [6]: You pipeline object is lodaded globally, just call it and use the `predict` method
+
+    #     # Return the prediction as a JSON response
+    # response = jsonify({'prediction': [prediction.tolist()[0]],
+    #                     'uuid': str(uuid.uuid1())})
+    # response.headers.set('Access-Control-Allow-Origin', '*')
+    # return response
+
+    # except:
+    #     print(json.dumps({
+    #         'severity': "ERROR",
+    #         'message': 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()),
+    #         'request': request.get_json()}
+    #     ))
+    #     return abort(500, 'Request Failed. traceback: {trace}'.format(trace=traceback.print_exc()))
