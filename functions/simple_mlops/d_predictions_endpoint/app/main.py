@@ -65,6 +65,9 @@ def _env_vars() -> models.EnvVars:
         gcp_project_id=os.getenv("_GCP_PROJECT_ID", 'gcp_project_id'),
         bucket_name=os.getenv("_GCS_BUCKET_NAME_MODELS", 'bucket_name'),
         model_location=os.getenv("_MODEL_LOCATION", 'model_location'),
+        predictions_table=f'''{os.getenv("_GCP_PROJECT_ID", "gcp_project_id")}.\
+{os.getenv("_BIGQUERY_DATASET_ID", "bq_table_fqn_dst")}.\
+{os.getenv("_BIGQUERY_TABLE_ID", "bq_table_fqn_tbl")}''',
     )
 
 
@@ -129,14 +132,27 @@ def predict(request: flask.Request) -> flask.Response:
     # Set CORS headers for the preflight request
 
     try:
+        prediction_uuid = str(uuid.uuid1())
+        point_json: dict = json.loads(request.data)
         point = pd.DataFrame.from_dict(
-            [json.loads(request.data)])  # type: ignore
+            [point_json])  # type: ignore
+        prediction = pipeline.predict(point).tolist()[0]  # type: ignore
 
-        print(pipeline.predict(point))
         # Return the prediction as a JSON response
-        response = jsonify({'prediction': pipeline.predict(point).tolist()[0],  # type: ignore
-                            'uuid': str(uuid.uuid1())})
+        response = jsonify({'prediction': prediction,
+                            'uuid': prediction_uuid})
         response.headers.set('Access-Control-Allow-Origin', '*')
+
+        gcp_apis.bigquery_insert_json_row(
+            BQ=gcp_clients.bigquery_client,  # type: ignore
+            table_fqn=env_vars.predictions_table,  # type: ignore
+            row=[{k: str(v) for k, v in point_json} | {
+                'uuid': prediction_uuid,
+                'model_prediction': str(prediction),
+                'model_id': 'titanic_basic',
+                'model_version': 'allonz-y'}]
+        )
+
         return response
     except Exception as e:
         print(json.dumps({
