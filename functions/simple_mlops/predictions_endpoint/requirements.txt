@@ -1,6 +1,0 @@
-Flask
-google-cloud-storage
-db-dtypes
-scikit-learn
-pandas
-joblib
