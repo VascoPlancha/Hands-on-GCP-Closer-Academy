@@ -306,9 +306,9 @@ Here are the steps necessary to complete the exercise:
     ###############################################################
     errors = [
         gcp_apis.bigquery_insert_json_row(
-            BQ=gcp_clients.bigquery_client,
-            table_fqn=env_vars.bq_table_fqn,
-            row=[datapoint]
+            BQ='??',
+            table_fqn='??',
+            row=[datapoint.to_dict()]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 
     if any(errors):
