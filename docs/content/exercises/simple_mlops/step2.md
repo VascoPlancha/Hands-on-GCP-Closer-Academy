@@ -199,8 +199,6 @@ Here are the steps necessary to complete the exercise:
     )
     ```
 
-    Hint: you'll have to send to the subscribers which table you added data to.
-
 ## Deploy the cloud function
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
