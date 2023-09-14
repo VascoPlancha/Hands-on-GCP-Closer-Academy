@@ -39,13 +39,7 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --trigger-????
 ```
 
-You can make requests with a cURL comamnd like so:
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"Pclass": 3, "Name": "Some Name", "Sex": "male", "Age": 22, "SibSp": 1, "Parch": 0, "Ticket": "A/5 21171", "Fare": 7.25, "Cabin": "", "Embarked": "S"}' http://YOUR_FUNCTION_ENDPOINT
-```
-
-or by going to the app [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example-v2?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.
+And then you can test it on [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example-v2?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.
 
 ## Documentation
 
