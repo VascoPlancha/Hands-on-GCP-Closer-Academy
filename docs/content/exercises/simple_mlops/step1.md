@@ -351,20 +351,6 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
 
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
-TODO: REMOVE
-
-```bash
-gcloud beta functions deploy jm_test_ingest_data \
-    --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
-    --runtime=python311 \
-    --entry-point=main \
-    --source=functions/simple_mlops/a_ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
-    --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-    --trigger-event-filters="bucket=jm-test-delete-bucket"
-```
-
 ## Hints
 
 ### Cloud Events

@@ -219,19 +219,6 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --trigger-topic=${YOURNAME}-ingestion-complete
 ```
 
-TODO: DELETE
-
-```bash
-gcloud beta functions deploy jm_test_update_facts \
-    --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
-    --runtime=python311 \
-    --entry-point=main \
-    --source=functions/simple_mlops/b_update_facts/app/ \
-    --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
-    --trigger-topic=your_name_in_lowercase-ingestion-complete
-```
-
 ## Documentation
 
 ::: simple_mlops.b_update_facts.app.main
