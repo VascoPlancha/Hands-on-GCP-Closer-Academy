@@ -146,7 +146,7 @@ def predict(request: flask.Request) -> flask.Response:
         gcp_apis.bigquery_insert_json_row(
             BQ=gcp_clients.bigquery_client,  # type: ignore
             table_fqn=env_vars.predictions_table,  # type: ignore
-            row=[{k: str(v) for k, v in point_json} | {
+            row=[{k: str(v) for k, v in point_json.items()} | {
                 'uuid': prediction_uuid,
                 'model_prediction': str(prediction),
                 'model_id': 'titanic_basic',
