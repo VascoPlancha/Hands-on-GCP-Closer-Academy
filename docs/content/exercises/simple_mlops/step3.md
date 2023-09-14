@@ -143,6 +143,8 @@ Same as in step 1, but now the bucket name is `[yourname]-models`
     SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
     ```
 
+    **Do not change to \`{table_source}\` section.**
+
 4. Correct the arguments in the `model_save_to_storage` function
 
     ```python
@@ -171,19 +173,6 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --env-vars-file=functions/simple_mlops/c_train_model/config/dev.env.yaml \
     --entry-point=main \
     --trigger-topic=$YOURNAME-update-facts-complete
-```
-
-TODO: DELETE
-
-```bash
-gcloud beta functions deploy jm_test_train_model \
-    --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
-    --runtime=python311 \
-    --source=functions/simple_mlops/c_train_model/app/ \
-    --env-vars-file=functions/simple_mlops/c_train_model/config/dev.env.yaml \
-    --entry-point=main \
-    --trigger-topic=your_name_in_lowercase-update-facts-complete
 ```
 
 ## Documentation

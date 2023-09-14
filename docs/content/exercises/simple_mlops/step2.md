@@ -199,6 +199,8 @@ Here are the steps necessary to complete the exercise:
     )
     ```
 
+    Hint: you'll have to send to the subscribers which table you added data to.
+
 ## Deploy the cloud function
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
@@ -217,19 +219,6 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
     --entry-point=main \
     --trigger-topic=${YOURNAME}-ingestion-complete
-```
-
-TODO: DELETE
-
-```bash
-gcloud beta functions deploy jm_test_update_facts \
-    --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
-    --runtime=python311 \
-    --entry-point=main \
-    --source=functions/simple_mlops/b_update_facts/app/ \
-    --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
-    --trigger-topic=your_name_in_lowercase-ingestion-complete
 ```
 
 ## Documentation

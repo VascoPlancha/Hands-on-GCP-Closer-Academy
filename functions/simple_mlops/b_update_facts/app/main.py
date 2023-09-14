@@ -13,7 +13,6 @@ from pathlib import Path
 
 import functions_framework
 from cloudevents.http import CloudEvent
-from google.cloud import bigquery, pubsub
 
 try:
     from funcs import common, gcp_apis, models
@@ -48,8 +47,8 @@ def load_clients(
                 publisher: A pubsub publisher client.
     """
 
-    bigquery_client = bigquery.Client(project=gcp_project_id)
-    publisher = pubsub.PublisherClient()
+    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
+    publisher = 'Create a publisher client here, with the correct project ID argument'
 
     return models.GCPClients(
         bigquery_client=bigquery_client,
@@ -102,7 +101,7 @@ def main(cloud_event: CloudEvent) -> None:
         env_vars = _env_vars()
 
     if not hasattr(main, 'gcp_clients'):
-        gcp_clients = load_clients(
+        load_clients(
             gcp_project_id=env_vars.gcp_project_id)  # type: ignore
 
     #################################################
@@ -111,9 +110,9 @@ def main(cloud_event: CloudEvent) -> None:
 
     path = Path('./resources/staging_to_facts.sql')
 
-    query = common.load_query(
-        table_facts=env_vars.bq_facts_table_fqn,  # type: ignore
-        table_raw=env_vars.bq_staging_table_fqn,    # type: ignore
+    query = common.load_query(  # noqa
+        table_facts='??',
+        table_raw='??',
         query_path=path,
     )
 
@@ -122,20 +121,20 @@ def main(cloud_event: CloudEvent) -> None:
     #################################################
 
     _ = gcp_apis.execute_query_result(
-        BQ=gcp_clients.bigquery_client,  # type: ignore
-        query=query
+        BQ='??',
+        query='??'
     )
 
     #################################################################
     # 5. Correct the arguments below to publish a message to pubsub #
     #################################################################
     gcp_apis.pubsub_publish_message(
-        PS=gcp_clients.publisher,  # type: ignore
-        project_id=env_vars.gcp_project_id,  # type: ignore
-        topic_id=env_vars.topic_update_facts_complete,  # type: ignore
+        PS='??',
+        project_id='??',
+        topic_id='??',
         message=json.dumps({
             'message': "I finished passing the staging data to facts",
-            'training_data_table': env_vars.bq_facts_table_fqn}),  # type: ignore
+            'training_data_table': '??'}),
         attributes={
             'train_model': 'True',
             'dataset': 'titanic'},
