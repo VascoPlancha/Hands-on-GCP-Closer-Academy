@@ -2,6 +2,7 @@ import os
 
 import functions_framework
 from cloudevents.http import CloudEvent
+from google.cloud import bigquery, pubsub, storage
 
 try:
     from funcs import gcp_apis, models, transform
@@ -37,9 +38,9 @@ def load_clients(
                 publisher: A pubsub publisher client.
     """
 
-    storage_client = 'Create a storage client here, with the correct project ID argument'
-    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
-    publisher = 'Create a publisher client here, with the correct project ID argument'
+    storage_client = storage.Client(project=gcp_project_id)
+    bigquery_client = bigquery.Client(project=gcp_project_id)
+    publisher = pubsub.PublisherClient()
 
     return models.GCPClients(
         storage_client=storage_client,
@@ -102,9 +103,9 @@ def main(cloud_event: CloudEvent) -> None:
     # 3. Correct the arguments below to download the file ###
     #########################################################
     file_contents = gcp_apis.storage_download_blob_as_string(
-        CS='??',
-        bucket_name='??',
-        file_path='??',
+        CS=gcp_clients.storage_client,  # type: ignore
+        bucket_name=data['bucket'],
+        file_path=data['name']
     )
 
     # Split the content by lines
@@ -121,8 +122,8 @@ def main(cloud_event: CloudEvent) -> None:
     # Iterate through the the datapoints and insert them into BigQuery
     errors = [
         gcp_apis.bigquery_insert_json_row(
-            BQ='??',
-            table_fqn='??',
+            BQ=gcp_clients.bigquery_client,  # type: ignore
+            table_fqn=env_vars.bq_table_fqn,  # type: ignore
             row=[datapoint.to_dict()]
         ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
 
@@ -133,9 +134,9 @@ def main(cloud_event: CloudEvent) -> None:
     # 5. Correct the arguments below to publish a message to pubsub #
     #################################################################
     gcp_apis.pubsub_publish_message(
-        PS='??',
-        project_id='??',
-        topic_id='??',
-        message=f"I finished ingesting the file {[change me]}!!",
+        PS=gcp_clients.publisher,  # type: ignore
+        project_id=env_vars.gcp_project_id,  # type: ignore
+        topic_id=env_vars.topic_ingestion_complete,  # type: ignore
+        message=f"I finished ingesting the file {data['name']}!!",
         attributes={},
     )

@@ -20,13 +20,28 @@ The outline of the *Cloud Function* code is available at `./functions/simple_mlo
 - [ ] Change the configurations in the `dev.env.yaml` file
 - [ ] Change the deployment command to deploy the function correctly.
 
+## Predictions table
+
+```bash
+bq mk \
+    --project_id ${PROJECT_ID} \
+    --table \
+    --description "Facts table for the Titanic dataset" \
+    --label=owner:${YOURNAME} \
+    --label=project:${PROJECT_NAME} \
+    --label=purpose:academy \
+    --label=dataset:titanic \
+    ${YOURNAME}_titanic.titanic_predictions \
+    ./infrastructure/bigquery/facts_titanic_schema.json
+```
+
 ## Deployment
 
 Deployment:
 
 ```bash
 FUNCTION_NAME="predictions_endpoint"
-YOURNAME="your_name_in_lowercase"
+YOURNAME="jomnteiro"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=1024MB \
@@ -35,8 +50,8 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --source=functions/simple_mlops/d_predictions_endpoint/app/ \
     --env-vars-file=functions/simple_mlops/d_predictions_endpoint/config/dev.env.yaml \
     --allow-unauthenticated \
-    --entry-point=?? \
-    --trigger-????
+    --entry-point=predict \
+    --trigger-http
 ```
 
 And then you can test it on [on Stackblitz](https://stackblitz.com/edit/closer-gcp-titanic-frontend-example-v2?file=src%2Fapp%2Ftitanic-prediction.service.ts) and change the `TitanicEndpoint` variable in `./src/app/titanic-prediction.service.ts`.

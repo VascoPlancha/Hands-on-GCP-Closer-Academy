@@ -111,7 +111,7 @@ def predict(request: flask.Request) -> flask.Response:
         flask.Response: The response object.
     """
     if request.method == 'OPTIONS':
-        response = make_response('', 204)
+        response = make_response(json.dumps({}), 204)
         response.headers.set('Access-Control-Allow-Origin', '*')
         response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
         response.headers.set('Access-Control-Allow-Methods', 'POST')
@@ -140,7 +140,7 @@ def predict(request: flask.Request) -> flask.Response:
 
         # Return the prediction as a JSON response
         response = jsonify({'prediction': prediction,
-                            'uuid': prediction_uuid})
+                            'uuid': prediction_uuid, })
         response.headers.set('Access-Control-Allow-Origin', '*')
 
         gcp_apis.bigquery_insert_json_row(

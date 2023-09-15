@@ -79,7 +79,7 @@ gsutil mb \
     -c regional \
     -l ${REGION} \
     -p ${PROJECT_NAME} \
-    gs://${YOURNAME}-models-c
+    gs://${YOURNAME}-models
 
 gsutil label ch -l owner:${YOURNAME} gs://${YOURNAME}-models
 gsutil label ch -l project:${PROJECT_NAME} gs://${YOURNAME}-models
@@ -142,8 +142,6 @@ Same as in step 1, but now the bucket name is `[yourname]-models`
     ```sql
     SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
     ```
-
-    **Do not change to \`{table_source}\` section.**
 
 4. Correct the arguments in the `model_save_to_storage` function
 
