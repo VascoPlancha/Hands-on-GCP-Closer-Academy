@@ -114,7 +114,8 @@ def predict(request: flask.Request) -> flask.Response:
         response = make_response(json.dumps({}), 204)
         response.headers.set('Access-Control-Allow-Origin', '*')
         response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.set('Access-Control-Allow-Methods', 'POST')
+        response.headers.set('Access-Control-Allow-Methods', 'POST, GET')
+        response.headers.set('Access-Control-Max-Age', '3600')
         return response
 
     print(request.get_json())

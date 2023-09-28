@@ -41,7 +41,7 @@ Deployment:
 
 ```bash
 FUNCTION_NAME="predictions_endpoint"
-YOURNAME="jomnteiro"
+YOURNAME="your_name_in_lowercase"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=1024MB \
