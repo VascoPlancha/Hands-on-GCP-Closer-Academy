@@ -32,7 +32,7 @@ bq mk \
     --label=purpose:academy \
     --label=dataset:titanic \
     ${YOURNAME}_titanic.titanic_predictions \
-    ./infrastructure/bigquery/facts_titanic_schema.json
+    ./infrastructure/bigquery/titanic_predictions.json
 ```
 
 ## Deployment
@@ -41,7 +41,7 @@ Deployment:
 
 ```bash
 FUNCTION_NAME="predictions_endpoint"
-YOURNAME="jomnteiro"
+YOURNAME="your_name_in_lowercase"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=1024MB \
