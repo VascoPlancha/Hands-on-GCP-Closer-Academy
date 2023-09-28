@@ -32,7 +32,7 @@ bq mk \
     --label=purpose:academy \
     --label=dataset:titanic \
     ${YOURNAME}_titanic.titanic_predictions \
-    ./infrastructure/bigquery/facts_titanic_schema.json
+    ./infrastructure/bigquery/titanic_predictions.json
 ```
 
 ## Deployment
