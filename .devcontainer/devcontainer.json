@@ -36,7 +36,8 @@
                 "GitHub.vscode-github-actions",
                 "donjayamanne.githistory",
                 "GitHub.copilot-chat",
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "sourcegraph.cody-ai"
             ]
         }
     },
