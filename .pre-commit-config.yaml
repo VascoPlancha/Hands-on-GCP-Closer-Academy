@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0 # Use the ref you want to point at
+    rev: v4.6.0 # Use the ref you want to point at
     hooks:
       - id: check-json
       - id: pretty-format-json
@@ -12,20 +12,38 @@ repos:
         args: [--branch, main]
 
     # -   id: ...
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    # Ruff version.
-    rev: "v0.0.263"
+  # - repo: https://github.com/charliermarsh/ruff-pre-commit
+  #   # Ruff version.
+  #   rev: "v0.0.263"
+  #   hooks:
+  #     - id: ruff
+  #       args:
+  #         - "--fix"
+  #         - "--exit-non-zero-on-fix"
+  #         - "--line-length=150"
+  #         - "--ignore"
+  #         - "E722"
+  #         - "--select"
+  #         - "F"
+  #         - "E"
+  #         - "W"
+  #         - "I"
+  #         - "D"
+
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        args: [--config=pyproject.toml]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0  # Replace with the version of mypy you want to use
+    hooks:
+      - id: mypy
+        args: [--config-file=pyproject.toml]
+
+  - repo: https://github.com/charliermarsh/ruff
+    rev: v0.0.79  # Replace with the version of ruff you want to use
     hooks:
       - id: ruff
-        args:
-          - "--fix"
-          - "--exit-non-zero-on-fix"
-          - "--line-length=150"
-          - "--ignore"
-          - "E722"
-          - "--select"
-          - "F"
-          - "E"
-          - "W"
-          - "I"
-          - "D"
+        args: [--config=pyproject.toml]
