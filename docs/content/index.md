@@ -2,26 +2,36 @@
 
 ## Introduction
 
-This repository contains the code for the Hands On GCP workshop.
+This repository contains the Hands On GCP code for the workshops within Closer Academy .
 
-In this workshop we will build a simple *MLOps* system in *Google Cloud Platform*. By end end of it, we should be able to understand how to create resources in Google Cloud, how to use them and how to integrate them with eachother.
+This repository has the following workshops:
 
-## Requirements and Setup
+- Building a simple *MLOps* system in *Google Cloud Platform*.
+  - By end end of it, we should be able to understand how to create resources in Google Cloud, how to use them and how to integrate them with eachother.
 
-- WSL (Windows Linux Subsystem)
-    - Installation steps: [https://learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)
+## Development - Requirements and Setup
 
-----
-
-- Docker
-    - Download for windows: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+An IDE, we recommend VSCode, but you can use any you like. (Althought there's a [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) you can use to power-up the repository with the necessary requirements faster.)
 
 ----
 
 - Visual Studio Code
     - Download for windows: [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+  
+### In Windows
 
-We are going to use *Visual Studio Code* with devcontainers.
+- WSL (Windows Linux Subsystem)
+  - Installation steps: [https://learn.microsoft.com/en-us/windows/wsl/install](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+----
+
+### For The devcontainer
+
+- Docker
+  - Download for windows: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+
+
+This repository has a devcontainer, which you can use to keep
 You can learn more about Devcontainers [here](https://code.visualstudio.com/docs/devcontainers/containers).
 
 ## Exercises
