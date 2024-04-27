@@ -8,10 +8,9 @@
     - [2. Create a BigQuery Table](#2-create-a-bigquery-table)
     - [3. Create a Google Cloud Storage Bucket](#3-create-a-google-cloud-storage-bucket)
     - [4. Create the pubsub topic for ingestion complete](#4-create-the-pubsub-topic-for-ingestion-complete)
-  - [Update the Cloud Function Code](#update-the-cloud-function-code)
-  - [Deploy the cloud function](#deploy-the-cloud-function)
-  - [Hints](#hints)
-    - [Cloud Events](#cloud-events)
+  - [Cloud Function](#cloud-function)
+    - [Update the Cloud Function Code](#update-the-cloud-function-code)
+    - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -251,7 +250,9 @@ With the Cloud Console:
 
 Now we are ready to move to the cloud function code.
 
-## Update the Cloud Function Code
+## Cloud Function
+
+### Update the Cloud Function Code
 
 Here are the steps necessary to complete the exercise:
 
@@ -285,7 +286,20 @@ Here are the steps necessary to complete the exercise:
     )
     ```
 
-## Deploy the cloud function
+This code deploys a Google Cloud Function named "ingest_data" using the gcloud command-line tool. The function is written in Python 3.11 and is triggered by a Google Cloud Storage object finalization event in the "$YOURNAME-lz" bucket.
+
+The function is deployed with the following configuration:
+
+- CPU: 1
+- Memory: 512MB
+- Region: $REGION
+- Runtime: python311
+- Source code location: "$PATH_TO_USECASE/app/"
+- Environment variables: loaded from "$PATH_TO_USECASE/config/dev.env.yaml"
+- Entry point: "main"
+- Trigger: Google Cloud Storage object finalization event in the "$YOURNAME-lz" bucket
+
+### Deploy the cloud function
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
@@ -301,69 +315,14 @@ gcloud beta functions deploy ${YOURNAME}-${FUNCTION_NAME} \
     --gen2 --cpu=1 --memory=512MB \
     --region=${REGION} \
     --runtime=python311 \
-    --source="${PATH_TO_USECASE}/app/" \
-    --env-vars-file="${PATH_TO_USECASE}/config/dev.env.yaml" \
+    --source=${PATH_TO_FUNCTION}/app/ \
+    --env-vars-file=${PATH_TO_FUNCTION}/config/dev.env.yaml \
     --entry-point=main \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
     --trigger-event-filters="bucket=${YOURNAME}-lz"
 ```
 
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
-
-## Hints
-
-### Cloud Events
-
-The CloudEvent is an object with the following structure:
-
-```json
-{
-    "attributes": {
-        "specversion": "1.0",
-        "id": "1234567890",
-        "source": " //pubsub.googleapis.com/projects/[The GCP Project of the topic]/topics/[The topic name]",
-        "type": "google.cloud.pubsub.topic.v1.messagePublished",
-        "datacontenttype": "application/json",
-        "time": "2020-08-08T00:11:44.895529672Z"
-    },
-    "data": {
-        "message": {
-            "_comment": "data is base64 encoded string of 'Hello World'",
-            "data": "SGVsbG8gV29ybGQ="
-        }
-    }
-}
-```
-
-You can read the CloudEvent specification in the [github page](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
-
-When a Cloud Storage event is passed to a CloudEvent function, the data payload is of type [StorageObjectData](https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto). This protobuf translates to the following `JSON`:
-
-```json
-{
-    "attributes": {
-        "specversion": "1.0",
-        "id": "1234567890",
-        "source": "//storage.googleapis.com/projects/_/buckets/[Bucket Name]",
-        "type": "google.cloud.storage.object.v1.finalized",
-        "datacontenttype": "application/json",
-        "time": "2020-08-08T00:11:44.895529672Z"
-    },
-    "data": {
-        "name": "folder/myfile.csv [File path inside the bucket]",
-        "bucket": "[Bucket Name]",
-        "contentType": "application/json",
-        "metageneration": "1",
-        "timeCreated": "2020-04-23T07:38:57.230Z",
-        "updated": "2020-04-23T07:38:57.230Z"
-    }
-}
-```
-
-Read more on how to deploy a function that listens to a Cloud Storage bucket event at:
-
-- [Codelabs - Triggering Event Processing from Cloud Storage using Eventarc and Cloud Functions (2nd gen)](https://codelabs.developers.google.com/triggering-cloud-functions-from-cloud-storage)
-- [Cloud Storage Tutorial (2nd gen)](https://cloud.google.com/functions/docs/tutorials/storage)
 
 ## Documentation
 
