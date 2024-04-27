@@ -82,6 +82,8 @@ export YOURNAME=your_name_in_lowercase
 
 ### 1. Create a BigQuery Dataset
 
+<u>**Create with either Cloud Shell OR the Console UI.**</u>
+
 With Cloud Shell (Copy-paste):
 
 ```bash
@@ -125,6 +127,8 @@ With the Console:
 
 ### 2. Create a BigQuery Table
 
+<u>**Create with either Cloud Shell OR the Console UI.**</u>
+
 With Cloud Shell (Copy-paste):
 
 ```bash
@@ -137,7 +141,7 @@ bq mk \
     --label=purpose:academy \
     --label=dataset:titanic \
     ${YOURNAME}_titanic.titanic_raw \
-    ./infrastructure/bigquery/titanic_schema_raw.json
+    ./resources/mlops_usecase/bigquery/titanic_schema_raw.json
 ```
 
 Reference: [bq mk --table](https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-table)
@@ -154,7 +158,7 @@ With the console:
 
     1. Make sure it's in your dataset created in the step before
     2. Name your dataset `titanic_raw`
-    3. Copy the schema in `infrastructure/bigquery/titanic_schema_raw.json` and paste it
+    3. Copy the schema in `resources/mlops_example/bigquery/titanic_schema_raw.json` and paste it
     4. Create the table.
 
 3. Add the labels.
@@ -231,7 +235,7 @@ With the Cloud Console:
 
 3. Define your Topic ID and click **CREATE**
 
-    The topic ID should be `[your_name]-complete`
+    The topic ID should be `[your_name]-ingestion_complete`
 
     ![img-ps-2](https://i.imgur.com/7t1ewA6.png)
 
@@ -251,32 +255,9 @@ Now we are ready to move to the cloud function code.
 
 Here are the steps necessary to complete the exercise:
 
-1. Create the client objects: Use the Google Cloud Storage API, BigQuery API, and PubSub API to create respective client objects.
+1. Set Environment Variables
 
-    ```python
-    ################
-    # 1. Clients ###
-    ################
-    storage_client = 'Create a storage client here, with the correct project ID argument'
-    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
-    publisher = 'Create a publisher client here, with the correct project ID argument'
-
-    return models.GCPClients(
-        storage_client=storage_client,
-        bigquery_client=bigquery_client,
-        publisher=publisher
-    )
-    ```
-
-2. Set Environment Variables
-
-    In the `a_ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
-
-    ```python
-    ##############################
-    # 2. Environment variables ###
-    ##############################
-    ```
+    In the `functions/mlops_usecase/a_ingest_data/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```yaml
     _GCP_PROJECT_ID: "The GCP project ID where the resources are located"
@@ -285,48 +266,22 @@ Here are the steps necessary to complete the exercise:
     _TOPIC_INGESTION_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
     ```
 
-3. Send the correct arguments to the `storage_download_blob_as_string` function
+2. Publish the message: To verify you concluded this step with success, change the string in the `'closer-origin-function'` to `'functions.mlops.ingest_data'`
 
     ```python
-    #########################################################
-    # 3. Correct the arguments below to download the file ###
-    #########################################################
-    file_contents = gcp_apis.storage_download_blob_as_string(
-        CS='??',
-        bucket_name='??',
-        file_path='??',
-    )
-    ```
+    ########################################
+    # 2. Send the verification attribute ###
+    ########################################
 
-4. Insert Rows into BigQuery: Corrent the arguments in the `bigquery_insert_json_row` function to insert data into the BigQuery table.
-
-    ```python
-    ###############################################################
-    # 4. Correct the arguments below to insert data into bigquery #
-    ###############################################################
-    errors = [
-        gcp_apis.bigquery_insert_json_row(
-            BQ=gcp_clients.bigquery_client,
-            table_fqn=env_vars.bq_table_fqn,
-            row=[datapoint.to_dict()]
-        ) for datapoint in transform.titanic_transform(datapoints=datapoints)]
-
-    if any(errors):
-        raise ValueError(f"Errors found: {errors}")
-    ```
-
-5. Publish Message: Correct the arguments in the `pubsub_publish_message` function, to publish a message.
-
-    ```python
-    #########################################################
-    # 5. Correct the arguments below to publish a message ###
-    #########################################################
-    gcp_apis.pubsub_publish_message(
-        PS='??',
-        project_id='??',
-        topic_id='??',
-        message=f"I finished ingesting the file {[change me]}!!",
-        attributes={},
+    _ = gcp_apis.pubsub_publish_message(
+        PS=gcp_clients.publisher,
+        project_id=env_vars.gcp_project_id,
+        topic_id='verification',
+        message='ok',
+        attributes={
+        'closer-origin-function': 'functions.mlops.ingest_data',
+        'closer-origin-topic': env_vars.topic_ingestion_complete,
+        },
     )
     ```
 
@@ -335,18 +290,22 @@ Here are the steps necessary to complete the exercise:
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
 
 ```bash
-FUNCTION_NAME="ingest_data"
-YOURNAME="your_name_in_lowercase"
+# Remeber to have $YOURNAME from the first export to the Cloud Shell. 
+# Uncomment the next lines if you see necessary
+# export REGION=europe-west3
+# export YOURNAME=your_name_in_lowercase
+export FUNCTION_NAME="ingest_data"
+export PATH_TO_FUNCTION="functions/mlops_usecase/a_ingest_data"
 
-gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
+gcloud beta functions deploy ${YOURNAME}-${FUNCTION_NAME} \
     --gen2 --cpu=1 --memory=512MB \
-    --region=europe-west3 \
+    --region=${REGION} \
     --runtime=python311 \
-    --source=functions/simple_mlops/a_ingest_data/app/ \
-    --env-vars-file=functions/simple_mlops/a_ingest_data/config/dev.env.yaml \
+    --source="${PATH_TO_USECASE}/app/" \
+    --env-vars-file="${PATH_TO_USECASE}/config/dev.env.yaml" \
     --entry-point=main \
     --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-    --trigger-event-filters="bucket=$YOURNAME-lz"
+    --trigger-event-filters="bucket=${YOURNAME}-lz"
 ```
 
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)

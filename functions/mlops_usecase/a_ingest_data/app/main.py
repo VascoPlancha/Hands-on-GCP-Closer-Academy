@@ -1,6 +1,7 @@
 """Cloud Function to Ingest Data."""
 
 import os
+import uuid
 
 import functions_framework
 from cloudevents.http import CloudEvent
@@ -78,7 +79,7 @@ def main(cloud_event: CloudEvent) -> None:
 	Args:
 	    cloud_event (CloudEvent): The cloud event that triggered this function.
 	"""
-	print(cloud_event)
+	run_hash = str(uuid.uuid4())
 	if not hasattr(main, 'env_vars'):
 		env_vars = _env_vars()
 
@@ -109,7 +110,10 @@ def main(cloud_event: CloudEvent) -> None:
 			table_fqn=env_vars.bq_table_fqn,
 			row=[datapoint.to_dict()],
 		)
-		for datapoint in transform.titanic_transform(datapoints=datapoints)
+		for datapoint in transform.titanic_transform(
+			run_hash=run_hash,
+			datapoints=datapoints,
+		)
 	]
 
 	if any(errors):

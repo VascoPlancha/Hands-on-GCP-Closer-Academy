@@ -39,6 +39,7 @@ class TitanicData:
 	"""A class representing the data for the titanic dataset.
 
 	Attributes:
+		run_hash (str): The hash of the run.
 	    PassengerId (str | None): The ID of the passenger.
 	    Survived (str | None): Whether the passenger survived or not.
 	    Pclass (str | None): The class of the passenger's ticket.
@@ -53,18 +54,19 @@ class TitanicData:
 	    Embarked (str | None): The port of embarkation of the passenger.
 	"""
 
+	run_hash: str
 	PassengerId: str | None
-	Survived: str | None
-	Pclass: str | None
+	Survived: str | None = None
+	Pclass: str | None = None
 	Name: str | None
-	Sex: str | None
-	Age: str | None
-	SibSp: str | None
-	Parch: str | None
-	Ticket: str | None
-	Fare: str | None
-	Cabin: str | None
-	Embarked: str | None
+	Sex: str | None = None
+	Age: str | None = None
+	SibSp: str | None = None
+	Parch: str | None = None
+	Ticket: str | None = None
+	Fare: str | None = None
+	Cabin: str | None = None
+	Embarked: str | None = None
 
 	@classmethod
 	def from_dict(cls, data: Dict[str, Any]) -> 'TitanicData':
