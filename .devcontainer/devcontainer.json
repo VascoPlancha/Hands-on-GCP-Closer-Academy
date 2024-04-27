@@ -35,7 +35,8 @@
                 "me-dutour-mathieu.vscode-github-actions",
                 "GitHub.vscode-github-actions",
                 "donjayamanne.githistory",
-                "GitHub.copilot-chat"
+                "GitHub.copilot-chat",
+                "ms-vscode.makefile-tools"
             ]
         }
     },
