@@ -11,5 +11,9 @@
     },
     "ruff.lint.args": [
         "--config=pyproject.toml"
-    ]
+    ],
+    "markdownlint.config": {
+        "MD007": false,
+        "MD029": false
+    }
 }
