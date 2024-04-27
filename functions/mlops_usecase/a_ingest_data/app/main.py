@@ -15,14 +15,6 @@ except ImportError:
 		transform,
 	)
 
-##############################################
-# 0. Create the necessary resources in GCP ###
-##############################################
-
-################
-# 1. Clients ###
-################
-
 
 def load_clients(gcp_project_id: str) -> models.GCPClients:
 	"""Load the GCP clients.
@@ -45,7 +37,7 @@ def load_clients(gcp_project_id: str) -> models.GCPClients:
 
 
 ##############################
-# 2. Environment variables ###
+# 1. Environment variables ###
 ##############################
 
 
@@ -113,8 +105,8 @@ def main(cloud_event: CloudEvent) -> None:
 	# Iterate through the the datapoints and insert them into BigQuery
 	errors = [
 		gcp_apis.bigquery_insert_json_row(
-			BQ=gcp_clients.bigquery_client,  # type: ignore
-			table_fqn=env_vars.bq_table_fqn,  # type: ignore
+			BQ=gcp_clients.bigquery_client,
+			table_fqn=env_vars.bq_table_fqn,
 			row=[datapoint.to_dict()],
 		)
 		for datapoint in transform.titanic_transform(datapoints=datapoints)
@@ -123,10 +115,25 @@ def main(cloud_event: CloudEvent) -> None:
 	if any(errors):
 		raise ValueError(f'Errors found: {errors}')
 
-	gcp_apis.pubsub_publish_message(
-		PS=gcp_clients.publisher,  # type: ignore
-		project_id=env_vars.gcp_project_id,  # type: ignore
-		topic_id=env_vars.topic_ingestion_complete,  # type: ignore
+	_ = gcp_apis.pubsub_publish_message(
+		PS=gcp_clients.publisher,
+		project_id=env_vars.gcp_project_id,
+		topic_id=env_vars.topic_ingestion_complete,
 		message=f"I finished ingesting the file {data['name']}!!",
-		attributes={},
+		attributes={'closer-origin-function': 'functions.mlops.ingest_data'},
+	)
+
+	########################################
+	# 2. Send the verification attribute ###
+	########################################
+
+	_ = gcp_apis.pubsub_publish_message(
+		PS=gcp_clients.publisher,
+		project_id=env_vars.gcp_project_id,
+		topic_id='verification',
+		message='ok',
+		attributes={
+			'closer-origin-function': 'functions.mlops.ingest_data',
+			'closer-origin-topic': env_vars.topic_ingestion_complete,
+		},
 	)
