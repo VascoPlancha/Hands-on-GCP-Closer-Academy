@@ -62,10 +62,25 @@ env = [
 
 [tool.ruff]
 fix = true
-exit-non-zero-on-fix = true
 line-length = 150
 ignore = ["E722"]
-select = ["F", "E", "W", "I", "D"]
+select = ["F", "E", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+
+[tool.ruff.lint]
+# Enable all `pydocstyle` rules, limiting to those that adhere to the
+# Google convention via `convention = "google"`, below.
+select = ["D"]
+
+# On top of the Google convention, disable `D417`, which requires
+# documentation for every function parameter.
+ignore = ["D417"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.mypy]
 python_version = "3.11"

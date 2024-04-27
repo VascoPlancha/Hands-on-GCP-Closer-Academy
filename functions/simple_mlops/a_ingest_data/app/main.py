@@ -1,3 +1,4 @@
+"""Cloud Function to Ingest Data."""
 import os
 
 import functions_framework
@@ -37,7 +38,6 @@ def load_clients(
                 bigquery_client: A bigquery client.
                 publisher: A pubsub publisher client.
     """
-
     storage_client = storage.Client(project=gcp_project_id)
     bigquery_client = bigquery.Client(project=gcp_project_id)
     publisher = pubsub.PublisherClient()
@@ -55,13 +55,17 @@ def load_clients(
 
 
 def _env_vars() -> models.EnvVars:
-    """
-    Returns an instance of the EnvVars class with the following environment variables:
-    - gcp_project_id: The ID of the GCP project.
-    - bq_table_fqn: The fully qualified name of the BigQuery table in the format:
+    """Return an instance of the EnvVars class.
+
+    Attributes:
+        gcp_project_id: The ID of the GCP project.
+        bq_table_fqn: The fully qualified name of the BigQuery table in the format:
                      project_id.dataset_id.table_id.
-    - topic_ingestion_complete: The name of the Pub/Sub topic to publish a message
+        topic_ingestion_complete: The name of the Pub/Sub topic to publish a message
         to when data ingestion is complete.
+
+    Returns:
+        models.EnvVars: The env vars.
     """
     # fqn = fully qualified name
     # A table fqn is in the format: project_id.dataset_id.table_id
