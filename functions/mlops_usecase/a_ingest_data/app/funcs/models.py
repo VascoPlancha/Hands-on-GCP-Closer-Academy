@@ -40,18 +40,18 @@ class TitanicData:
 
 	Attributes:
 		run_hash (str): The hash of the run.
-	    PassengerId (str | None): The ID of the passenger.
-	    Survived (str | None): Whether the passenger survived or not.
-	    Pclass (str | None): The class of the passenger's ticket.
-	    Name (str | None): The name of the passenger.
-	    Sex (str | None): The gender of the passenger.
-	    Age (str | None): The age of the passenger.
-	    SibSp (str | None): The number of siblings/spouses aboard the Titanic.
-	    Parch (str | None): The number of parents/children aboard the Titanic.
-	    Ticket (str | None): The ticket number of the passenger.
-	    Fare (str | None): The fare paid by the passenger.
-	    Cabin (str | None): The cabin number of the passenger.
-	    Embarked (str | None): The port of embarkation of the passenger.
+		PassengerId (Optional[str]): The ID of the passenger.
+		Survived (Optional[str]): Whether the passenger survived or not.
+		Pclass (Optional[str]): The class of the passenger's ticket.
+		Name (Optional[str]): The name of the passenger.
+		Sex (Optional[str]): The gender of the passenger.
+		Age (Optional[str]): The age of the passenger.
+		SibSp (Optional[str]): The number of siblings/spouses aboard the Titanic.
+		Parch (Optional[str]): The number of parents/children aboard the Titanic.
+		Ticket (Optional[str]): The ticket number of the passenger.
+		Fare (Optional[str]): The fare paid by the passenger.
+		Cabin (Optional[str]): The cabin number of the passenger.
+		Embarked (Optional[str]): The port of embarkation of the passenger.
 	"""
 
 	run_hash: str
@@ -88,6 +88,7 @@ class TitanicData:
 		    Dict[str, Any]: A dictionary containing the data for a single passenger.
 		"""
 		return {
+			'run_hash': self.run_hash,
 			'PassengerId': self.PassengerId,
 			'Survived': self.Survived,
 			'Pclass': self.Pclass,
