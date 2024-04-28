@@ -1,4 +1,8 @@
-# Simple MLOps Pipelines
+# MLOps Pipelines with Cloud Functions
+
+## Requirements
+
+- A Google Cloud Project Environment.
 
 ## Architecture
 

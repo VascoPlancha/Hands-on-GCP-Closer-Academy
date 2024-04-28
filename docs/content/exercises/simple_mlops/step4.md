@@ -58,8 +58,8 @@ And then you can test it on [on Stackblitz](https://stackblitz.com/edit/closer-g
 
 ## Documentation
 
-::: simple_mlops.d_predictions_endpoint.app.main
+::: mlops_usecase.d_predictions_endpoint.app.main
 
-::: simple_mlops.d_predictions_endpoint.app.funcs.gcp_apis
+::: mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis
 
-::: simple_mlops.d_predictions_endpoint.app.funcs.models
+::: mlops_usecase.d_predictions_endpoint.app.funcs.models

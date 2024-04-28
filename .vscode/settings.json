@@ -4,17 +4,16 @@
         "editor.formatOnPaste": true,
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.fixAll": true,
-            "source.organizeImports": true
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
         },
-        "editor.defaultFormatter": "ms-python.python"
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
-    "ruff.args": [
-        "--ignore",
-        "F403",
-        "E722"
+    "ruff.lint.args": [
+        "--config=pyproject.toml"
     ],
-    "flake8.args": [
-        "--ignore=E501"
-    ]
+    "markdownlint.config": {
+        "MD007": false,
+        "MD029": false
+    }
 }

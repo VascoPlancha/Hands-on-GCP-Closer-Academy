@@ -1,5 +1,5 @@
 # Install dependencies
-poetry install --with dev,cloudfunctions,model_train
+poetry install --with dev,cloudfunctions,model_train,docs
 
 # Activate environment
 sh ./.venv/bin/activate

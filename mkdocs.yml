@@ -34,7 +34,6 @@ nav:
           - BigQuery: services/bigquery.md
           - Functions/Serverless: services/serverless_computing.md
           - Message Queue/PubSub: services/message_queue.md
-  - Create Resources: create_resources.md
   - Programming Guidebook: client_libs_py.md
   - Exercises:
       - Simple MLOps Pipelines:

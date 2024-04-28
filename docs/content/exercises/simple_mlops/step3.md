@@ -175,12 +175,12 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
 
 ## Documentation
 
-::: simple_mlops.c_train_model.app.main
+::: mlops_usecase.c_train_model.app.main
 
-::: simple_mlops.c_train_model.app.funcs.train_models
+::: mlops_usecase.c_train_model.app.funcs.train_models
 
-::: simple_mlops.c_train_model.app.funcs.common
+::: mlops_usecase.c_train_model.app.funcs.common
 
-::: simple_mlops.c_train_model.app.funcs.gcp_apis
+::: mlops_usecase.c_train_model.app.funcs.gcp_apis
 
-::: simple_mlops.c_train_model.app.funcs.models
+::: mlops_usecase.c_train_model.app.funcs.models

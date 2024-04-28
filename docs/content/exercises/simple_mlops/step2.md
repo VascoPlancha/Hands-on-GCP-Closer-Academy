@@ -12,7 +12,7 @@
 
 ## Introduction
 
-![img-staging-facts-architecture](./resources/part_2/staging_facts_v1.png)
+![img-staging-facts-architecture](./resources/part_2/architecture-Step2.svg)
 
 In this exercise, we will create the `Query To Facts` Cloud Function, that will perform the following tasks:
 
@@ -221,10 +221,10 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
 
 ## Documentation
 
-::: simple_mlops.b_update_facts.app.main
+::: mlops_usecase.b_update_facts.app.main
 
-::: simple_mlops.b_update_facts.app.funcs.gcp_apis
+::: mlops_usecase.b_update_facts.app.funcs.gcp_apis
 
-::: simple_mlops.b_update_facts.app.funcs.common
+::: mlops_usecase.b_update_facts.app.funcs.common
 
-::: simple_mlops.b_update_facts.app.funcs.models
+::: mlops_usecase.b_update_facts.app.funcs.models
