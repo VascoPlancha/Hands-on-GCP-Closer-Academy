@@ -81,7 +81,7 @@ def main(cloud_event: CloudEvent) -> None:
 	Args:
 	cloud_event (CloudEvent): The cloud event that triggered this function.
 	"""
-	cloud_event_data = json.loads(cloud_event.data)
+	print(cloud_event.data)
 	if not hasattr(main, 'env_vars'):
 		env_vars = _env_vars()
 
