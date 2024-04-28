@@ -12,7 +12,7 @@
 
 ## Introduction
 
-![img-staging-facts-architecture](./resources/part_2/staging_facts_v1.png)
+![img-staging-facts-architecture](./resources/part_2/architecture-Step2.svg)
 
 In this exercise, we will create the `Query To Facts` Cloud Function, that will perform the following tasks:
 
