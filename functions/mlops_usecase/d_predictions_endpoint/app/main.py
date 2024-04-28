@@ -92,8 +92,7 @@ if os.getenv('_CI_TESTING', 'no') == 'no':
 
 
 def predict(request: flask.Request) -> flask.Response:
-	"""
-	Endpoint function that receives a POST request with JSON data and returns a prediction as a JSON response.
+	"""Endpoint function that receives a POST request with JSON data and returns a prediction as a JSON response.
 
 	Args:
 	    request (flask.Request): The request object.

@@ -5,6 +5,7 @@ from a_ingest_data.app.funcs import models
 class TestTitanicPassenger(unittest.TestCase):
 	def test_to_dict(self):
 		passenger = models.TitanicData(
+			run_hash='test',
 			PassengerId='1',
 			Survived='0',
 			Pclass='3',
@@ -20,6 +21,7 @@ class TestTitanicPassenger(unittest.TestCase):
 		)
 
 		expected = {
+			'run_hash': 'test',
 			'PassengerId': '1',
 			'Survived': '0',
 			'Pclass': '3',
@@ -37,7 +39,9 @@ class TestTitanicPassenger(unittest.TestCase):
 		self.assertDictEqual(expected, passenger.to_dict())
 
 	def test_to_dict_missing_fields(self):
+		"""Test missing fields."""
 		passenger = models.TitanicData(
+			run_hash='test',
 			PassengerId='1',
 			Pclass='3',
 			Name='Braund, Mr. Owen Harris',
@@ -45,6 +49,7 @@ class TestTitanicPassenger(unittest.TestCase):
 		)
 
 		expected = {
+			'run_hash': 'test',
 			'PassengerId': '1',
 			'Pclass': '3',
 			'Name': 'Braund, Mr. Owen Harris',

@@ -12,7 +12,7 @@ def load_query(
     table_raw: str,
     query_path: Path,
 ) -> str:
-    '''Inserts raw data into a temporary table. Common pattern in our ETL pipelines.
+    """Inserts raw data into a temporary table. Common pattern in our ETL pipelines.
 
     This function uses the function file_contents to call the appropriate
     SQL query and formats it with this function parameters.
@@ -25,7 +25,7 @@ def load_query(
     Returns:
         str: A string with the query built based on the args.
         This query can be executed later.
-    '''
+    """
     query: str = file_contents(
         path=query_path
     ).format(
