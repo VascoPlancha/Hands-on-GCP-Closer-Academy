@@ -1,7 +1,6 @@
 name: build
 
-permissions:
-  actions: write
+permissions: write-all
 
 on:
   push:
