@@ -336,8 +336,39 @@ The function is deployed with the following configuration:
 
 Go to the Cloud Functions UI in the console, you can confirm the cloud function was deployed successfully. (By searching in the search box), you can check if the deployment was correctly made.
 
-![img-cf-1](./resources/part_1/verification-ok-01.png)
+![img-cf-1](./resources/part_1/verify-ok-01.jpeg)
 
+To add the data to the created cloud storage bucket, you have two options.
+
+1. Transfer the csv to your local machine and upload it to the bucket.
+   1. The data is in the folder `./resources/mlops_usecase/data/titanic.csv`
+   2. Go to the Cloud Storage UI.
+   3. Click on the bucket you created.
+   4. Click on **Upload Files** and select the file. ![verify-ok-02](./resources/part_1/verify-ok-02.jpeg)
+
+2. Use the Cloud Shell to copy the file from the running environment to the cloud storage bucket like so:
+
+    ```bash
+    gsutil cp resources/mlops_usecase/data/titanic.csv gs://${YOURNAME}-lz/
+    ```
+
+After this, you can verify the data was ingested correctly.
+
+1. Go to the BigQuery UI, click your dataset and table, and verify the data is there (Either go to the `Preview` tab or run a query against the table).
+   ![verify-ok-03](./resources/part_1/verify-ok-03.png)
+
+2. You can also check the function logs to see if there was no error.
+   1. Go to the Cloud Functions UI.
+   2. Click on the function name.
+   3. Click in the logs tab
+       1. This is bad:
+    ![verify-ok-04](./resources/part_1/verify-ok-04.png)
+       2. This is good:
+    ![verify-ok-05](./resources/part_1/verify-ok-05.png)
+
+And this first phase is complete. Congratulations!
+
+If you have any questions, please reach out to the tutors.
 
 ## Documentation
 
