@@ -82,7 +82,9 @@ def main(cloud_event: CloudEvent) -> None:
 	Args:
 	cloud_event (CloudEvent): The cloud event that triggered this function.
 	"""
-	print(base64.b64decode(cloud_event.data).decode())
+	# event_data = base64.b64decode(cloud_event.data['message']['data']).decode()
+	event_attributes = cloud_event.data['message']['attributes']
+
 	if not hasattr(main, 'env_vars'):
 		env_vars = _env_vars()
 
@@ -95,6 +97,7 @@ def main(cloud_event: CloudEvent) -> None:
 		table_facts=env_vars.bq_facts_table_fqn,
 		table_raw=env_vars.bq_staging_table_fqn,
 		query_path=path,
+		run_hash=event_attributes['closer-run-hash'],
 	)
 
 	_ = gcp_apis.execute_query_result(
