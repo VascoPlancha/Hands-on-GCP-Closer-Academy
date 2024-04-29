@@ -74,7 +74,7 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](./resources/part_1/cloud-shell-01.png)
 
 ### 1. Create a BigQuery Table
 
