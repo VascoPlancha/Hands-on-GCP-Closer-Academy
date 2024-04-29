@@ -11,8 +11,9 @@ def load_query(
     table_facts: str,
     table_raw: str,
     query_path: Path,
+    run_hash: str,
 ) -> str:
-    '''Inserts raw data into a temporary table. Common pattern in our ETL pipelines.
+    """Inserts raw data into a temporary table. Common pattern in our ETL pipelines.
 
     This function uses the function file_contents to call the appropriate
     SQL query and formats it with this function parameters.
@@ -21,15 +22,17 @@ def load_query(
         table_facts (str): The fqn of the facts table in BigQuery.
         table_raw (str): The fqn of the raw table in BigQuery.
         query_path (Path): The path to the SQL query script.
+        run_hash (str): A unique identifier for the run.
 
     Returns:
         str: A string with the query built based on the args.
         This query can be executed later.
-    '''
+    """
     query: str = file_contents(
         path=query_path
     ).format(
         table_source=table_raw,
         table_target=table_facts,
+        run_hash=run_hash,
     )
     return query

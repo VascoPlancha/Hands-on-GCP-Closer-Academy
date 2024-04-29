@@ -8,6 +8,7 @@
     - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
+  - [Verify the data was moved from raw to facts](#verify-the-data-was-moved-from-raw-to-facts)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -16,22 +17,22 @@
 
 In this exercise, we will create the `Query To Facts` Cloud Function, that will perform the following tasks:
 
-1. Activated by the topic `[yourname]-ingestion-complete`.
+1. Will be triggered by the topic `[yourname]-ingestion-complete`.
 
-2. It will send a query to be executed in BigQuery. This query is already done, and will move the data from the staging table to a facts table.
+2. It will request a query to be executed by BigQuery. This query is partially done, and is part of the exercise to complete it.
 
 3. After successfully executing the query, this function will send a message to the topic `[yourname]-update-facts-complete`.
 
-The Cloud Function `Ingest Data` will utilize the BigQuery, and Pub/Sub client libraries for these tasks. Our goal in this exercise is to fix the code for this function to make it function preperly and deploy it to Google Cloud.
+The Cloud Function `Update Facts` will utilize the BigQuery, and Pub/Sub client libraries for these tasks.
 
 The resources needed these tasks are:
 
-- The already created *Data Set* in step 1.
+- The already created *Dataset* and *Raw Table* in step 1.
 - One Bigquery table, `Titanic Facts`
-  - The table schema is at: `./infrastructure/bigquery/facts_titanic_schema.json`
+  - The table schema is at: `./resources/mlops_usecase/bigquery/facts_titanic_schema.json`
 - Two Pub/Sub topics, the one already created, and one named `[yourname]-update-facts-complete`, to where the function will send a message once complete.
 
-The outline of the *Cloud Function* code is available at `functions/simple_mlops/2_update_facts/app`.
+The outline of the *Cloud Function* code is available at `functions/mlops_usecase/b_update_facts/app`.
 
 ```text
 .
@@ -73,11 +74,17 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](./resources/part_1/cloud-shell-01.png)
 
 ### 1. Create a BigQuery Table
 
-With Cloud Shell (Copy-paste):
+<u>**Create with either Cloud Shell OR the Console UI.**</u>
+
+With the console:
+
+[Same as step 1](./step1.md#2-create-a-bigquery-table), but now create a table with the name `titanic_facts` and use the schema `facts_titanic_schema.json`
+
+With Cloud Shell, execute the following command:
 
 ```bash
 bq mk \
@@ -89,16 +96,19 @@ bq mk \
     --label=purpose:academy \
     --label=dataset:titanic \
     ${YOURNAME}_titanic.titanic_facts \
-    ./infrastructure/bigquery/facts_titanic_schema.json
+    ./resources/mlops_usecase/bigquery/facts_titanic_schema.json
 ```
 
 Reference: [bq mk --table](https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-table)
 
-With the console:
-
-Same as step 1, but now with the schema `facts_titanic_schema.json`
-
 ### 2. Create the pubsub topic for update facts complete
+
+
+With the Cloud Console:
+
+[Same as in step 1](./step1.md#4-create-the-pubsub-topic-for-ingestion-complete), but now with the name `[yourname]-update-facts-complete`
+
+Now we are ready to move to the cloud function code.
 
 With Cloud Shell:
 
@@ -108,38 +118,17 @@ gcloud pubsub topics create ${YOURNAME}-update-facts-complete \
     --labels=owner=${YOURNAME},project=${PROJECT_NAME},purpose=academy
 ```
 
-With the Cloud Console:
-
-Same as before, but now with the name `[yourname]-update-facts-complete`
-
-Now we are ready to move to the cloud function code.
-
 ## Update the Cloud Function Code
 
 Here are the steps necessary to complete the exercise:
 
-1. Create the client objects: Use the Google Cloud BigQuery API, and PubSub API to create respective client objects.
-
-    ```python
-    ################
-    # 1. Clients ###
-    ################
-    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
-    publisher = 'Create a publisher client here, with the correct project ID argument'
-
-    return models.GCPClients(
-        bigquery_client=bigquery_client,
-        publisher=publisher
-    )
-    ```
-
-2. Set Environment Variables
+1. Set Environment Variables
 
     In the `b_update_facts/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```python
     ##############################
-    # 2. Environment variables ###
+    # 1. Environment variables ###
     ##############################
     ```
 
@@ -151,54 +140,6 @@ Here are the steps necessary to complete the exercise:
     _TOPIC_UPDATE_FACTS_COMPLETE: "The Pub/Sub topic ID where you will send a message once the data is ingested"
     ```
 
-3. Send the correct arguments to the `load_query` function.
-
-    ```python
-    #################################################
-    # 3. Send the correct arguments to load_query ###
-    #################################################
-
-    path = Path('./resources/staging_to_facts.sql')
-
-    query = common.load_query(
-        table_facts='??',
-        table_raw='??',
-        query_path=path,
-    )
-    ```
-
-4. Send the correct arguments to `execute_query_result`.
-
-    ```python
-    #################################################
-    # 4. Send the correct arguments execute query ###
-    #################################################
-
-    _ = gcp_apis.execute_query_result(
-        BQ='??',
-        query='??'
-    )
-    ```
-
-5. Publish Message: Correct the arguments in the `pubsub_publish_message` function, to publish a message.
-
-    ```python
-    #########################################################
-    # 5. Correct the arguments below to publish a message ###
-    #########################################################
-    gcp_apis.pubsub_publish_message(
-        PS='??',
-        project_id='??',
-        topic_id='??',
-        message=json.dumps({
-            'message': "I finished passing the staging data to facts",
-            'training_data_table': '??'}),
-        attributes={
-            'train_model': 'True',
-            'dataset': 'titanic'},
-    )
-    ```
-
 ## Deploy the cloud function
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
@@ -206,18 +147,30 @@ You can check the deployment here in [Cloud Build](https://console.cloud.google.
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
 ```bash
-FUNCTION_NAME="update-facts"
-YOURNAME="your_name_in_lowercase"
+# Remeber to have $YOURNAME from the first export to the Cloud Shell. 
+# Uncomment the next lines if you see necessary
+# export REGION=europe-west3
+# export YOURNAME=your_name_in_lowercase
+export FUNCTION_NAME="update_facts"
+export PATH_TO_FUNCTION="functions/mlops_usecase/b_update_facts"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
-    --source=functions/simple_mlops/b_update_facts/app/ \
-    --env-vars-file=functions/simple_mlops/b_update_facts/config/dev.env.yaml \
+    --source=${PATH_TO_FUNCTION}/app/ \
+    --env-vars-file=${PATH_TO_FUNCTION}/config/dev.env.yaml \
     --entry-point=main \
     --trigger-topic=${YOURNAME}-ingestion-complete
 ```
+
+## Verify the data was moved from raw to facts
+
+To confirm that you sucessfully completed this phase, you can check the data in the BigQuery table.
+
+![verify-ok-01](./resources/part_2/verify-ok-01.png)
+
+And, the same way as in Step 1, you can also verify the logs of the Cloud Function `Update Facts`.
 
 ## Documentation
 

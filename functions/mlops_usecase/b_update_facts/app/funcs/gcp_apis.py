@@ -11,7 +11,7 @@ def execute_query(
     location: str | None = None,
     job_id: str | None = None,
 ) -> bigquery.QueryJob:
-    '''Execute a query with the desired job configuration.
+    """Execute a query with the desired job configuration.
 
     Args:
         BQ (bigquery.Client): The BigQuery client instance.
@@ -22,7 +22,7 @@ def execute_query(
 
     Returns:
         bigquery.QueryJob: A new query job instance.
-    '''
+    """
     return BQ.query(
         query,
         job_config=job_config,
@@ -39,7 +39,7 @@ def execute_query_result(
     job_id: str | None = None,
     location: str | None = None,
 ) -> Any:
-    '''Executes a BigQuery query and returns the results.
+    """Executes a BigQuery query and returns the results.
 
     This function is an intermediate step between executing a query and
     holding the query results. It passes the default job configuration to
@@ -56,7 +56,7 @@ def execute_query_result(
 
     Returns:
         The results of the query execution.
-    '''
+    """
     return execute_query(
         BQ=BQ,
         query=query,

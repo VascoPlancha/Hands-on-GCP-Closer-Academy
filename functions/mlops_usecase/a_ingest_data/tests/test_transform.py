@@ -74,7 +74,6 @@ def test_titanic_line_with_several_quotes() -> None:
 
 def test_titanic_incomplete_line() -> None:
     """Test a line of the CSV file that may be incomplete."""
-
     with pytest.raises(IndexError):
         line = '23,1,3,"McGowan, Miss. Anna ""Annie"""'
 

@@ -15,6 +15,7 @@ USING (
         Embarked
     FROM
         `{table_source}`
+    WHERE run_hash = "{run_hash}"
     QUALIFY ROW_NUMBER() OVER (PARTITION BY PassengerId ORDER BY Survived DESC) = 1
 ) S
 ON (

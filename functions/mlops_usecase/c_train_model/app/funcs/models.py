@@ -5,8 +5,7 @@ from google.cloud import bigquery, storage
 
 
 class GCPClients(NamedTuple):
-    """
-    A named tuple that contains clients for Google Cloud Platform services.
+    """A named tuple that contains clients for Google Cloud Platform services.
 
     Attributes:
         storage_client (google.cloud.storage.Client): A client for Google Cloud Storage.
@@ -18,8 +17,7 @@ class GCPClients(NamedTuple):
 
 
 class EnvVars(NamedTuple):
-    """
-    A named tuple representing environment variables used in the model training process.
+    """A named tuple representing environment variables used in the model training process.
 
     Attributes:
         gcp_project_id (str): The ID of the Google Cloud Platform project.

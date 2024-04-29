@@ -52,8 +52,7 @@ def test_gcp_clients(
     publisher: mock.Mock,
     gcp_clients: models.GCPClients,
 ) -> None:
-    """
-    Test function to check if the GCP clients are correctly initialized.
+    """Test function to check if the GCP clients are correctly initialized.
 
     Args:
         bigquery_client (mock.Mock): A mock object of the BigQuery client.
@@ -82,8 +81,7 @@ def test_main(
     gcp_clients: models.GCPClients,
     env_vars: models.EnvVars,
 ) -> None:
-    """
-    Test function for the main function in the update_facts module.
+    """Test function for the main function in the update_facts module.
 
     Args:
         cloud_event (CloudEvent): A CloudEvent object.

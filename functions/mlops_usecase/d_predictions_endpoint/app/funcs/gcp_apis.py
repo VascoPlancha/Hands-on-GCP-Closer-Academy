@@ -11,8 +11,7 @@ def transfer_blob_to_temp(
     file_location: str,
     model_name: str = 'model'
 ) -> None:
-    """
-    Downloads a blob from a Google Cloud Storage bucket as bytes.
+    """Downloads a blob from a Google Cloud Storage bucket as bytes.
 
     Args:
         CS (storage.Client): A Google Cloud Storage client object.
@@ -25,7 +24,6 @@ def transfer_blob_to_temp(
     Raises:
         ValueError: If the specified blob does not exist in the bucket.
     """
-
     # Getting the bucket
     bucket = CS.bucket(gcs_input_bucket)
 

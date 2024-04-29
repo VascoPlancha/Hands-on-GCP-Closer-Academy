@@ -25,7 +25,6 @@
                 "charliermarsh.ruff",
                 "yzhang.markdown-all-in-one",
                 "DavidAnson.vscode-markdownlint",
-                "ms-python.vscode-pylance",
                 "ms-python.python",
                 "njpwerner.autodocstring",
                 "KevinRose.vsc-python-indent",

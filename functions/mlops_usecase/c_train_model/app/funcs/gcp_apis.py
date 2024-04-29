@@ -13,8 +13,7 @@ def _storage_write_bytes_file_to_bucket(
     model_content: bytes,
     content_type: str = 'text/plain',
 ) -> None:
-    """
-    Uploads a file to a Google Cloud Storage bucket.
+    """Uploads a file to a Google Cloud Storage bucket.
 
     Args:
         bucket_name (str): The name of the bucket to upload the file to.
@@ -44,8 +43,7 @@ def model_save_to_storage(
     model_name: str = 'nar-rayya',
     content_type: str = 'text/plain',
 ) -> None:
-    """
-    Saves a machine learning model to Google Cloud Storage.
+    """Saves a machine learning model to Google Cloud Storage.
 
     Args:
         CS (google.cloud.storage.client.Client): A Google Cloud Storage client object.
@@ -76,8 +74,7 @@ def query_to_pandas_dataframe(
     query: str,
     BQ: bigquery.Client
 ) -> pd.DataFrame:
-    """
-    This function takes a SQL query and a BigQuery client object as input, and
+    """This function takes a SQL query and a BigQuery client object as input, and
     returns the result of the query as a pandas DataFrame.
 
     Args:

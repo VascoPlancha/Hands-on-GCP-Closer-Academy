@@ -34,7 +34,6 @@ def load_clients(
                 storage_client: A storage client.
                 bigquery_client: A bigquery client.
     """
-
     storage_client = storage.Client(project=gcp_project_id)
     bigquery_client = bigquery.Client(project=gcp_project_id)
 
