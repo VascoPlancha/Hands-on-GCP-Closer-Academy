@@ -5,19 +5,20 @@
   - [Tasks](#tasks)
   - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
     - [1. Create the models GCS Bucket](#1-create-the-models-gcs-bucket)
+    - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Documentation](#documentation)
 
 ## Introduction
 
-![img-train_model-architecture](./resources/part_3/model_v2.png)
+![img-train_model-architecture](./resources/part_3/architecture-Step3.svg)
 
-In this exercise, we will create a Cloud Function called `Train Model`, which will be responsible for training a machine learning model using the data ingested in the previous steps. The function will be triggered by the `ingestion_complete` Pub/Sub topic, ensuring it starts training once new data is available in the BigQuery table. The steps involved in this process are as follows:
+In this exercise, we will create a Cloud Function called `Train Model`, which will be responsible for training a machine learning model using the data ingested in the previous steps. The function will be triggered by the `update-facts-complete` Pub/Sub topic, ensuring it starts training once new facts data is available in the BigQuery table. The steps involved in this process are as follows:
 
 1. The `Train Model` Cloud Function is subscribed to the `[yourname]-update-facts-complete` topic, and it will be triggered automatically when a new message is published, indicating that new data has been loaded into the BigQuery table.
 
-2. Upon being triggered, the `train_model` function retrieves the data from the `Titanic Facts` BigQuery table using the appropriate query. This data will be used to train a machine learning model, such as a Scikit-learn Random Forest or Logistic Regression model.
+2. Upon being triggered, the `train_model` function retrieves the data from the `Titanic Facts` BigQuery table using the appropriate query. This data will be used to train a machine learning model, such as an Scikit-learn Random Forest or Logistic Regression model.
 
 3. After the model is trained using the fetched data, the `Train Model` function saves the trained model to the `[yourname]-models` Google Cloud Storage bucket. You can choose the name for this model, but it should be unique.
 
@@ -27,10 +28,10 @@ For this you will need these resources:
 
 - The already created *Data Set* in step 1.
 - The already created *Bigquery Table* in step 2.
-- A Pub/Sub topic named `[yourname]-train_model-complete` where you will publish a success message.
+- A Pub/Sub topic named `[yourname]-train-model-complete` where you will publish a success message.
 - One GCS Bucket named `[yourname]-models` where you will save the model
 
-The outline of the *Cloud Function* code is available at `./functions/manual_exercises/c_train_model/app`
+The outline of the *Cloud Function* code is available at `./functions/simple_mlops/c_train_model/app`
 
 ```text
 c_train_model/
@@ -70,9 +71,15 @@ export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
 ```
 
-![img-cloudshell](https://i.imgur.com/5vmuTn8.png)
+![img-cloudshell](./resources/part_1/cloud-shell-01.png)
 
 ### 1. Create the models GCS Bucket
+
+<u>**Create with either Cloud Shell OR the Console UI.**</u>
+
+With the console:
+
+[Same as in step 1](./step1.md#3-create-a-google-cloud-storage-bucket), but now the bucket name is `[yourname]-models`
 
 ```bash
 gsutil mb \
@@ -88,28 +95,26 @@ gsutil label ch -l purpose:academy gs://${YOURNAME}-models
 
 Reference: [gsutil mb](https://cloud.google.com/storage/docs/gsutil/commands/mb), [gsutil label](https://cloud.google.com/storage/docs/gsutil/commands/label)
 
-With the console:
+### 2. Create the pubsub topic for update facts complete
 
-Same as in step 1, but now the bucket name is `[yourname]-models`
+With the Cloud Console:
+
+[Same as in step 1](./step1.md#4-create-the-pubsub-topic-for-ingestion-complete), but now with the name `[yourname]-train-model-complete`
+
+Now we are ready to move to the cloud function code.
+
+With Cloud Shell:
+
+```bash
+gcloud pubsub topics create ${YOURNAME}-train-model-complete \
+    --project=${PROJECT_ID} \
+    --labels=owner=${YOURNAME},project=${PROJECT_NAME},purpose=academy
+```
 
 ## Update the Cloud Function Code
 
-1. Create the client objects: Use the Google Cloud BigQuery API, and Storage API to create respective client objects.
 
-    ```python
-    ################
-    # 1. Clients ###
-    ################
-    storage_client = 'Create a storage client here, with the correct project ID argument'
-    bigquery_client = 'Create a bigquery client here, with the correct project ID argument'
-
-    return models.GCPClients(
-        storage_client=storage_client,
-        bigquery_client=bigquery_client,
-    )
-    ```
-
-2. Set Environment Variables
+1. Set Environment Variables
 
     In the `c_train_model/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
@@ -125,34 +130,6 @@ Same as in step 1, but now the bucket name is `[yourname]-models`
     _TOPIC_TRAINING_COMPLETE: "The Pub/Sub topic name where the success message will be published"
     ```
 
-3. Create the SQL Query
-
-    You can find the query to change in the `c_train_model/app/resources/select_train_data.sql` file.
-
-    ```python
-    ########################################################
-    # 3. Create a query that retrieves the training data ###
-    ########################################################
-    query = common.query_train_data(
-        table_fqn='??'
-        query_path=path
-    )
-    ```
-
-    ```sql
-    SELECT 'THIS QUERY IS NOT IMPLEMENTED YET' FROM `{table_source}`
-    ```
-
-4. Correct the arguments in the `model_save_to_storage` function
-
-    ```python
-    gcp_apis.model_save_to_storage(
-        CS='??',
-        model='??',
-        bucket_name='??'
-    )
-    ```
-
 ## Deploy the cloud function
 
 You can check the deployment here in [Cloud Build](https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&project=closeracademy-handson)
@@ -160,15 +137,19 @@ You can check the deployment here in [Cloud Build](https://console.cloud.google.
 Reference: [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 
 ```bash
-FUNCTION_NAME="train_model"
-YOURNAME="your_name_in_lowercase"
+# Remeber to have $YOURNAME from the first export to the Cloud Shell. 
+# Uncomment the next lines if you see necessary
+# export REGION=europe-west3
+# export YOURNAME=your_name_in_lowercase
+export FUNCTION_NAME="train_model"
+export PATH_TO_FUNCTION="functions/mlops_usecase/c_train_model"
 
 gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --gen2 --cpu=1 --memory=512MB \
     --region=europe-west3 \
     --runtime=python311 \
-    --source=functions/simple_mlops/c_train_model/app/ \
-    --env-vars-file=functions/simple_mlops/c_train_model/config/dev.env.yaml \
+    --source=${PATH_TO_FUNCTION}/app/ \
+    --env-vars-file=${PATH_TO_FUNCTION}/config/dev.env.yaml \
     --entry-point=main \
     --trigger-topic=$YOURNAME-update-facts-complete
 ```
