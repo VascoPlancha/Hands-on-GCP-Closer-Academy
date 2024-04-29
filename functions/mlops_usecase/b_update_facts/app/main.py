@@ -7,6 +7,7 @@ query to update the BigQuery table.
 It then executes the query and publishes a message to the Pub/Sub topic.
 """
 
+import base64
 import json
 import os
 from pathlib import Path
@@ -81,7 +82,7 @@ def main(cloud_event: CloudEvent) -> None:
 	Args:
 	cloud_event (CloudEvent): The cloud event that triggered this function.
 	"""
-	print(cloud_event.data)
+	print(base64.b64decode(cloud_event.data).decode())
 	if not hasattr(main, 'env_vars'):
 		env_vars = _env_vars()
 
