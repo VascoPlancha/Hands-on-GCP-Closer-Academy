@@ -8,6 +8,7 @@
     - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
+  - [Verify the data was moved from raw to facts](#verify-the-data-was-moved-from-raw-to-facts)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -162,6 +163,14 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --entry-point=main \
     --trigger-topic=${YOURNAME}-ingestion-complete
 ```
+
+## Verify the data was moved from raw to facts
+
+To confirm that you sucessfully completed this phase, you can check the data in the BigQuery table.
+
+![verify-ok-01](./resources/part_2/verify-ok-01.png)
+
+And, the same way as in Step 1, you can also verify the logs of the Cloud Function `Update Facts`.
 
 ## Documentation
 
