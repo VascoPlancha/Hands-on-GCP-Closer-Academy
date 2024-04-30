@@ -8,6 +8,7 @@
     - [2. Create the pubsub topic for train model complete](#2-create-the-pubsub-topic-for-train-model-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
+  - [Confirm the model was uplodad](#confirm-the-model-was-uplodad)
   - [Documentation](#documentation)
 
 ## Introduction
@@ -153,6 +154,16 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
     --entry-point=main \
     --trigger-topic=$YOURNAME-update-facts-complete
 ```
+
+## Confirm the model was uplodad
+
+To verify that the model was correctly uploaded, you can 1) Check the cloud function logs, and 2) Go to your cloud storage bucket `your_name_in_lowercase-models`.
+
+1.
+    ![verify-ok-01](./resources/part_3/verify-ok-01.png)
+
+2.
+    ![verify-ok-02](./resources/part_3/verify-ok-02.png)
 
 ## Documentation
 
