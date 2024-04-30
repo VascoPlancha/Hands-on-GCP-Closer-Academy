@@ -1,0 +1,2456 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../step3/">
+      
+      
+        <link rel="next" href="../step5/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+    
+    
+      
+        <title>Step 4 - Hands-On GCP | Closer Academy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.66ac8b77.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#create-an-endpoint-to-serve-the-model-to-the-outside-world" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Hands-On GCP | Closer Academy" class="md-header__button md-logo" aria-label="Hands-On GCP | Closer Academy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Hands-On GCP | Closer Academy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Step 4
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Closer-Smart4/Hands-on-GCP-Closer-Academy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Hands-on GCP Closer Academy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+    
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../client_libs_py/" class="md-tabs__link">
+        
+  
+    
+  
+  Programming Guidebook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Exercises
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Hands-On GCP | Closer Academy" class="md-nav__button md-logo" aria-label="Hands-On GCP | Closer Academy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Hands-On GCP | Closer Academy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Closer-Smart4/Hands-on-GCP-Closer-Academy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Hands-on GCP Closer Academy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../.." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../services/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Services/Resources
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Services/Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/cloud_storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/bigquery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BigQuery
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/serverless_computing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Functions/Serverless
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/message_queue/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Message Queue/PubSub
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../client_libs_py/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Programming Guidebook
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Exercises
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Exercises
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Simple MLOps Pipelines
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Simple MLOps Pipelines
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataset
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Step 4
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Step 4
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predictions-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Predictions table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.load_clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.load_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      predict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcp_apis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="gcp_apis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.bigquery_insert_json_row" class="md-nav__link">
+    <span class="md-ellipsis">
+      bigquery_insert_json_row
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.transfer_blob_to_temp" class="md-nav__link">
+    <span class="md-ellipsis">
+      transfer_blob_to_temp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models" class="md-nav__link">
+    <span class="md-ellipsis">
+      models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnvVars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCPClients
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (Extra) Step 5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predictions-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Predictions table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.load_clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.load_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.main.predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      predict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcp_apis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="gcp_apis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.bigquery_insert_json_row" class="md-nav__link">
+    <span class="md-ellipsis">
+      bigquery_insert_json_row
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.transfer_blob_to_temp" class="md-nav__link">
+    <span class="md-ellipsis">
+      transfer_blob_to_temp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models" class="md-nav__link">
+    <span class="md-ellipsis">
+      models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnvVars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCPClients
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="create-an-endpoint-to-serve-the-model-to-the-outside-world">Create an endpoint to serve the model to the outside world<a class="headerlink" href="#create-an-endpoint-to-serve-the-model-to-the-outside-world" title="Permanent link">&para;</a></h1>
+<p><img alt="img-prediction-architecture" src="../resources/part_4/architecture-Step4.drawio.svg" /></p>
+<p>In this exercise, you'll be working with the <code>predictions_endpoint</code> Cloud Function. This HTTP-triggered function serves as the prediction endpoint for clients to send new data points. Upon receiving a request containing new data, the function performs the following steps:</p>
+<ol>
+<li>It loads the previously trained model from the <code>[yourname]-models</code> bucket into memory.</li>
+<li>Utilizing the loaded model, it generates a prediction based on a data point received in an HTTP request.</li>
+<li>The function then stores both the prediction and the new data in the <code>Titanic Prediction</code> BigQuery table to maintain a record of all predictions.</li>
+<li>Finally, it returns the prediction result to the client, completing the request-response cycle.</li>
+</ol>
+<p>Your task is to create the resources necessary and deploy the function.</p>
+<p>The outline of the <em>Cloud Function</em> code is available at <code>./functions/simple_mlops/d_predictions_endpoint/</code></p>
+<h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox"/> Create the <code>Titanic Predictions</code> Table</li>
+<li>The table is schema is at <code>resources/mlops_usecase/bigquery/titanic_predictions.json</code></li>
+<li class="task-list-item"><input type="checkbox"/> Change the configurations in the <code>dev.env.yaml</code> file</li>
+<li class="task-list-item"><input type="checkbox"/> Change the deployment command to deploy the function correctly.</li>
+</ul>
+<p>For Cloud Shell, set these variables:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>config<span class="w"> </span>get-value<span class="w"> </span>project<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_NAME</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>config<span class="w"> </span>get-value<span class="w"> </span>project<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>europe-west3
+<span class="nb">export</span><span class="w"> </span><span class="nv">YOURNAME</span><span class="o">=</span>your_name_in_lowercase
+</code></pre></div>
+<h2 id="predictions-table">Predictions table<a class="headerlink" href="#predictions-table" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>bq<span class="w"> </span>mk<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--project_id<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--table<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Facts table for the Titanic dataset&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>owner:<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>project:<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>purpose:academy<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>dataset:titanic<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>_titanic.titanic_predictions<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./resources/mlops_usecase/bigquery/titanic_predictions.json
+</code></pre></div>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
+<p>Deployment:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Remeber to have $YOURNAME from the first export to the Cloud Shell. </span>
+<span class="c1"># Uncomment the next lines if you see necessary</span>
+<span class="c1"># export REGION=europe-west3</span>
+<span class="c1"># export YOURNAME=your_name_in_lowercase</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FUNCTION_NAME</span><span class="o">=</span><span class="s2">&quot;predictions_endpoint&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH_TO_FUNCTION</span><span class="o">=</span><span class="s2">&quot;functions/mlops_usecase/d_predictions_endpoint&quot;</span>
+
+gcloud<span class="w"> </span>beta<span class="w"> </span>functions<span class="w"> </span>deploy<span class="w"> </span><span class="nv">$YOURNAME</span>-<span class="nv">$FUNCTION_NAME</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--gen2<span class="w"> </span>--cpu<span class="o">=</span><span class="m">1</span><span class="w"> </span>--memory<span class="o">=</span>1024MB<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--region<span class="o">=</span>europe-west3<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--runtime<span class="o">=</span>python311<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--source<span class="o">=</span><span class="si">${</span><span class="nv">PATH_TO_FUNCTION</span><span class="si">}</span>/app/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--env-vars-file<span class="o">=</span><span class="si">${</span><span class="nv">PATH_TO_FUNCTION</span><span class="si">}</span>/config/dev.env.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--allow-unauthenticated<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--entry-point<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--trigger-http
+</code></pre></div>
+<p>And then you can test it on <a href="https://stackblitz.com/edit/closer-gcp-titanic-frontend-example?file=src%2Fapp%2Ftitanic-prediction.service.ts">on Stackblitz</a> and change the <code>TitanicEndpoint</code> variable in <code>./src/app/titanic-prediction.service.ts</code>.</p>
+<p>If all goes ok, you should receive the predictions in the frontend application, and they should be written to the <code>titanic_predictions</code> BigQuery table.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.d_predictions_endpoint.app.main" class="doc doc-heading">
+          <code>main</code>
+
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.main" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.main.load_clients" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">load_clients</span><span class="p">(</span><span class="n">gcp_project_id</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.main.load_clients" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Load the GCP clients.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>gcp_project_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The GCP project ID.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+<td><code>GCPClients</code></td>          <td>
+                <code><span title="d_predictions_endpoint.app.funcs.models.GCPClients">GCPClients</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A tuple of GCP clients.
+With the following attributes:
+    storage_client: A storage client.
+    bigquery_client: A bigquery client.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/main.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_clients</span><span class="p">(</span><span class="n">gcp_project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">GCPClients</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Load the GCP clients.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    gcp_project_id (str): The GCP project ID.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    GCPClients: A tuple of GCP clients.</span>
+<span class="sd">	        With the following attributes:</span>
+<span class="sd">	            storage_client: A storage client.</span>
+<span class="sd">	            bigquery_client: A bigquery client.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">storage_client</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">gcp_project_id</span><span class="p">)</span>
+	<span class="n">bigquery_client</span> <span class="o">=</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">gcp_project_id</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">GCPClients</span><span class="p">(</span><span class="n">storage_client</span><span class="o">=</span><span class="n">storage_client</span><span class="p">,</span> <span class="n">bigquery_client</span><span class="o">=</span><span class="n">bigquery_client</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.main.load_model" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">load_model</span><span class="p">(</span><span class="n">env_vars</span><span class="p">,</span> <span class="n">gcp_clients</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.main.load_model" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads a machine learning model from Google Cloud Storage and loads it into memory using joblib.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>env_vars</code></td>
+          <td>
+                <code><span title="d_predictions_endpoint.app.funcs.models.EnvVars">EnvVars</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An object containing environment variables required for the function.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>gcp_clients</code></td>
+          <td>
+                <code><span title="d_predictions_endpoint.app.funcs.models.GCPClients">GCPClients</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An object containing Google Cloud Platform clients required for the function.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>model_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The model namo retrieve from Cloud Storage.</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;model&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code>None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>None</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/main.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">env_vars</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">EnvVars</span><span class="p">,</span> <span class="n">gcp_clients</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">GCPClients</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Downloads a machine learning model from Google Cloud Storage and loads it into memory using joblib.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    env_vars (models.EnvVars): An object containing environment variables required for the function.</span>
+<span class="sd">	    gcp_clients (models.GCPClients): An object containing Google Cloud Platform clients required for the function.</span>
+<span class="sd">	    model_name (str): The model namo retrieve from Cloud Storage.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    None</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># Load the pipeline from the pickle file</span>
+	<span class="k">global</span> <span class="n">pipeline</span>
+	<span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">gcp_apis</span><span class="o">.</span><span class="n">transfer_blob_to_temp</span><span class="p">(</span>
+			<span class="n">CS</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">storage_client</span><span class="p">,</span> <span class="n">gcs_input_bucket</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">file_location</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">model_location</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span>
+		<span class="p">)</span>
+		<span class="n">pipeline</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;/tmp/&#39;</span> <span class="o">+</span> <span class="n">model_name</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.main.predict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">predict</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.main.predict" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Endpoint function that receives a POST request with JSON data and returns a prediction as a JSON response.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>request</code></td>
+          <td>
+                <code><span title="flask.Request">Request</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The request object.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><span title="flask.Response">Response</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>flask.Response: The response object.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/main.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">flask</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Endpoint function that receives a POST request with JSON data and returns a prediction as a JSON response.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    request (flask.Request): The request object.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    flask.Response: The response object.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">:</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({}),</span> <span class="mi">204</span><span class="p">)</span>
+		<span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+		<span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Headers&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="p">)</span>
+		<span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Methods&#39;</span><span class="p">,</span> <span class="s1">&#39;POST, GET&#39;</span><span class="p">)</span>
+		<span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Access-Control-Max-Age&#39;</span><span class="p">,</span> <span class="s1">&#39;3600&#39;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">response</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">())</span>
+	<span class="c1"># Abort if no model is loaded</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;No model is running&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()}))</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No model is running&#39;</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">content_type</span> <span class="o">!=</span> <span class="s1">&#39;application/json&#39;</span><span class="p">:</span>
+		<span class="n">abort</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;Content-Type must be &#39;application/json&#39;&quot;</span><span class="p">)</span>
+	<span class="c1"># Set CORS headers for the preflight request</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">prediction_uuid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
+		<span class="n">point_json</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+		<span class="n">point</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span><span class="n">point_json</span><span class="p">])</span>  <span class="c1"># type: ignore</span>
+		<span class="n">prediction</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">point</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+
+		<span class="c1"># Return the prediction as a JSON response</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s1">&#39;prediction&#39;</span><span class="p">:</span> <span class="n">prediction</span><span class="p">,</span>
+				<span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="n">prediction_uuid</span><span class="p">,</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
+		<span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+		<span class="n">gcp_apis</span><span class="o">.</span><span class="n">bigquery_insert_json_row</span><span class="p">(</span>
+			<span class="n">BQ</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">bigquery_client</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+			<span class="n">table_fqn</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">predictions_table</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+			<span class="n">row</span><span class="o">=</span><span class="p">[</span>
+				<span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">point_json</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+				<span class="o">|</span> <span class="p">{</span><span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="n">prediction_uuid</span><span class="p">,</span> <span class="s1">&#39;model_prediction&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">prediction</span><span class="p">),</span> <span class="s1">&#39;model_id&#39;</span><span class="p">:</span> <span class="s1">&#39;titanic_basic&#39;</span><span class="p">,</span> <span class="s1">&#39;model_version&#39;</span><span class="p">:</span> <span class="s1">&#39;allonz-y&#39;</span><span class="p">}</span>
+			<span class="p">],</span>
+		<span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">response</span>
+	<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span>
+			<span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+				<span class="p">{</span>
+					<span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">,</span>
+					<span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Request Failed. traceback: </span><span class="si">{trace}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trace</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()),</span>
+					<span class="s1">&#39;request&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(),</span>
+					<span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+				<span class="p">}</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;Request Failed. traceback: </span><span class="si">{trace}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trace</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis" class="doc doc-heading">
+          <code>gcp_apis</code>
+
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.bigquery_insert_json_row" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">bigquery_insert_json_row</span><span class="p">(</span><span class="n">BQ</span><span class="p">,</span> <span class="n">table_fqn</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.bigquery_insert_json_row" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Inserts a row into a bigquery table.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>BQ</code></td>
+          <td>
+                <code><span title="google.cloud.bigquery.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The bigquery client.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>table_fqn</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The fully qualified name of the table.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>row</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The row to insert into the table.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/funcs/gcp_apis.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">bigquery_insert_json_row</span><span class="p">(</span>
+    <span class="n">BQ</span><span class="p">:</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+    <span class="n">table_fqn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">row</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Inserts a row into a bigquery table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        BQ (bigquery.Client): The bigquery client.</span>
+<span class="sd">        table_fqn (str): The fully qualified name of the table.</span>
+<span class="sd">        row (Dict[str, Any]): The row to insert into the table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_filter_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())}</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">]</span>
+
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">BQ</span><span class="o">.</span><span class="n">insert_rows_json</span><span class="p">(</span>
+        <span class="n">table</span><span class="o">=</span><span class="n">table_fqn</span><span class="p">,</span>
+        <span class="n">json_rows</span><span class="o">=</span><span class="p">[</span><span class="n">_filter_dict</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">row</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span> <span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">}))</span>
+        <span class="k">return</span> <span class="n">errors</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.transfer_blob_to_temp" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">transfer_blob_to_temp</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">gcs_input_bucket</span><span class="p">,</span> <span class="n">file_location</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.gcp_apis.transfer_blob_to_temp" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads a blob from a Google Cloud Storage bucket as bytes.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>CS</code></td>
+          <td>
+                <code><span title="google.cloud.storage.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A Google Cloud Storage client object.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>gcs_input_bucket</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the Google Cloud Storage bucket.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>file_location</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The location of the blob in the bucket.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+<td><code>bytes</code></td>          <td>
+                <code>None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The contents of the blob as bytes.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Raises:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code>ValueError</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the specified blob does not exist in the bucket.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/funcs/gcp_apis.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">transfer_blob_to_temp</span><span class="p">(</span>
+    <span class="n">CS</span><span class="p">:</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+    <span class="n">gcs_input_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">file_location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;model&#39;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads a blob from a Google Cloud Storage bucket as bytes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        CS (storage.Client): A Google Cloud Storage client object.</span>
+<span class="sd">        gcs_input_bucket (str): The name of the Google Cloud Storage bucket.</span>
+<span class="sd">        file_location (str): The location of the blob in the bucket.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bytes: The contents of the blob as bytes.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the specified blob does not exist in the bucket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Getting the bucket</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">bucket</span><span class="p">(</span><span class="n">gcs_input_bucket</span><span class="p">)</span>
+
+    <span class="c1"># Getting the blob</span>
+    <span class="n">blob</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">file_location</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">blob</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="c1"># Downloading the blob</span>
+        <span class="n">blob</span><span class="o">.</span><span class="n">download_to_filename</span><span class="p">(</span><span class="s1">&#39;/tmp/&#39;</span> <span class="o">+</span> <span class="n">model_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Blob </span><span class="si">{</span><span class="n">file_location</span><span class="si">}</span><span class="s1"> does not exist.&#39;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.d_predictions_endpoint.app.funcs.models" class="doc doc-heading">
+          <code>models</code>
+
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>Models for the ingest_data function. Simplifies type hinting.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars" class="doc doc-heading">
+          <code>EnvVars</code>
+
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="typing.NamedTuple">NamedTuple</span></code></p>
+
+  
+      <p>A named tuple representing environment variables used in the model training process.</p>
+
+
+
+  <p><span class="doc-section-title">Attributes:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars.gcp_project_id">gcp_project_id</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ID of the Google Cloud Platform project.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars.bucket_name">bucket_name</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the Google Cloud Storage bucket where the model artifacts will be stored.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars.model_location">model_location</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The location of the trained model within the Google Cloud Storage bucket.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.EnvVars.predictions_table">predictions_table</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the BigQuery table where prediction results will be stored.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/funcs/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">EnvVars</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A named tuple representing environment variables used in the model training process.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        gcp_project_id (str): The ID of the Google Cloud Platform project.</span>
+<span class="sd">        bucket_name (str): The name of the Google Cloud Storage bucket where the model artifacts will be stored.</span>
+<span class="sd">        model_location (str): The location of the trained model within the Google Cloud Storage bucket.</span>
+<span class="sd">        predictions_table (str): The name of the BigQuery table where prediction results will be stored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gcp_project_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_location</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">predictions_table</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients" class="doc doc-heading">
+          <code>GCPClients</code>
+
+
+<a href="#mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="typing.NamedTuple">NamedTuple</span></code></p>
+
+  
+      <p>A named tuple that contains clients for Google Cloud Platform services.</p>
+
+
+
+  <p><span class="doc-section-title">Attributes:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients.storage_client">storage_client</span></code></td>
+          <td>
+                <code><span title="google.cloud.storage.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client for Google Cloud Storage.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients.bigquery_client">bigquery_client</span></code></td>
+          <td>
+                <code><span title="google.cloud.bigquery.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client for Google BigQuery.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.d_predictions_endpoint.app.funcs.models.GCPClients.publisher">publisher</span></code></td>
+          <td>
+                <code><span title="google.cloud.pubsub_v1.PublisherClient">PublisherClient</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client for Google Cloud Pub/Sub.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>functions/mlops_usecase/d_predictions_endpoint/app/funcs/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GCPClients</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A named tuple that contains clients for Google Cloud Platform services.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        storage_client (google.cloud.storage.Client): A client for Google Cloud Storage.</span>
+<span class="sd">        bigquery_client (google.cloud.bigquery.Client): A client for Google BigQuery.</span>
+<span class="sd">        publisher (google.cloud.pubsub_v1.PublisherClient): A client for Google Cloud Pub/Sub.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">storage_client</span><span class="p">:</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span>
+    <span class="n">bigquery_client</span><span class="p">:</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      
+    
+  </body>
+</html>

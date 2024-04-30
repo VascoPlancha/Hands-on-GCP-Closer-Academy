@@ -1,0 +1,3855 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../dataset/">
+      
+      
+        <link rel="next" href="../step2/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+    
+    
+      
+        <title>Step 1 - Hands-On GCP | Closer Academy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.66ac8b77.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Hands-On GCP | Closer Academy" class="md-header__button md-logo" aria-label="Hands-On GCP | Closer Academy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Hands-On GCP | Closer Academy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Step 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Closer-Smart4/Hands-on-GCP-Closer-Academy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Hands-on GCP Closer Academy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+    
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../client_libs_py/" class="md-tabs__link">
+        
+  
+    
+  
+  Programming Guidebook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Exercises
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Hands-On GCP | Closer Academy" class="md-nav__button md-logo" aria-label="Hands-On GCP | Closer Academy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Hands-On GCP | Closer Academy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Closer-Smart4/Hands-on-GCP-Closer-Academy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Hands-on GCP Closer Academy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../.." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../services/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Services/Resources
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Services/Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/cloud_storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/bigquery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BigQuery
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/serverless_computing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Functions/Serverless
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../services/message_queue/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Message Queue/PubSub
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../client_libs_py/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Programming Guidebook
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Exercises
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Exercises
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Simple MLOps Pipelines
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Simple MLOps Pipelines
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataset
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Step 1
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Step 1
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-google-cloud-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create the Google Cloud Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create the Google Cloud Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-a-bigquery-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Create a BigQuery Dataset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-a-bigquery-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Create a BigQuery Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-a-google-cloud-storage-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Create a Google Cloud Storage Bucket
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-the-pubsub-topic-for-ingestion-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Create the pubsub topic for ingestion complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloud-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cloud Function
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cloud Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-cloud-function-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update the Cloud Function Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-cloud-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy the cloud function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ingest the data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main.load_clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcp_apis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="gcp_apis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.bigquery_insert_json_row" class="md-nav__link">
+    <span class="md-ellipsis">
+      bigquery_insert_json_row
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.pubsub_publish_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      pubsub_publish_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.storage_download_blob_as_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      storage_download_blob_as_string
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      transform
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="transform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform.split_lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      split_lines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform.titanic_transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      titanic_transform
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models" class="md-nav__link">
+    <span class="md-ellipsis">
+      models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.EnvVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnvVars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.GCPClients" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCPClients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" class="md-nav__link">
+    <span class="md-ellipsis">
+      TitanicData
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TitanicData">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.from_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      from_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_dict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step 4
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../step5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (Extra) Step 5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-google-cloud-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create the Google Cloud Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create the Google Cloud Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-a-bigquery-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Create a BigQuery Dataset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-a-bigquery-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Create a BigQuery Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-a-google-cloud-storage-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Create a Google Cloud Storage Bucket
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-the-pubsub-topic-for-ingestion-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Create the pubsub topic for ingestion complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloud-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cloud Function
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cloud Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-cloud-function-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update the Cloud Function Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-cloud-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy the cloud function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ingest the data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main.load_clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.main.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcp_apis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="gcp_apis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.bigquery_insert_json_row" class="md-nav__link">
+    <span class="md-ellipsis">
+      bigquery_insert_json_row
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.pubsub_publish_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      pubsub_publish_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.storage_download_blob_as_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      storage_download_blob_as_string
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      transform
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="transform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform.split_lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      split_lines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.transform.titanic_transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      titanic_transform
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models" class="md-nav__link">
+    <span class="md-ellipsis">
+      models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.EnvVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnvVars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.GCPClients" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCPClients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" class="md-nav__link">
+    <span class="md-ellipsis">
+      TitanicData
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TitanicData">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.from_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      from_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_dict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function">Load a file from Cloud Storage to a Bigquery Table using a Cloud Function<a class="headerlink" href="#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function" title="Permanent link">&para;</a></h1>
+<ul>
+<li><a href="#load-a-file-from-cloud-storage-to-a-bigquery-table-using-a-cloud-function">Load a file from Cloud Storage to a Bigquery Table using a Cloud Function</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#create-the-google-cloud-resources">Create the Google Cloud Resources</a><ul>
+<li><a href="#1-create-a-bigquery-dataset">1. Create a BigQuery Dataset</a></li>
+<li><a href="#2-create-a-bigquery-table">2. Create a BigQuery Table</a></li>
+<li><a href="#3-create-a-google-cloud-storage-bucket">3. Create a Google Cloud Storage Bucket</a></li>
+<li><a href="#4-create-the-pubsub-topic-for-ingestion-complete">4. Create the pubsub topic for ingestion complete</a></li>
+</ul>
+</li>
+<li><a href="#cloud-function">Cloud Function</a><ul>
+<li><a href="#update-the-cloud-function-code">Update the Cloud Function Code</a></li>
+<li><a href="#deploy-the-cloud-function">Deploy the cloud function</a></li>
+</ul>
+</li>
+<li><a href="#ingest-the-data">Ingest the data</a></li>
+<li><a href="#documentation">Documentation</a></li>
+</ul>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p><img alt="img-ingestion-architecture" src="../resources/part_1/architecture-Step1.svg" /></p>
+<p>In this exercise, we will create the <code>Ingest Data</code> Cloud Function, that will perform the following tasks:</p>
+<ol>
+<li>
+<p>The <code>Ingest Data</code> function will actively monitor the <code>[YOURNAME]-lz</code> Google Cloud Storage bucket for new files. This is achieved by configuring a trigger topic (<em>PubSub</em>) in the Cloud Function to listen for object creation events in the specified bucket.</p>
+</li>
+<li>
+<p>When a new file is detected, the <code>Ingest Data</code> function will read the contents of the file and write the data into a BigQuery table named <code>Titanic Raw</code>. The function will leverage the BigQuery Python client library to facilitate this process, efficiently importing the data from the file into the specified table.</p>
+</li>
+<li>
+<p>After successfully importing the data into BigQuery, the <code>Ingest Data</code> function will send a message to the <code>yourname-ingestion-complete</code> topic in Google Cloud Pub/Sub. This message will notify all subscribers that new data has been loaded into BigQuery, allowing them to react accordingly, such as by initiating further data processing tasks.</p>
+</li>
+</ol>
+<p>The Cloud Function <code>Ingest Data</code> will utilize the Google Cloud Storage, BigQuery, and Pub/Sub client libraries for these tasks.</p>
+<p>The resources needed these tasks are:</p>
+<ul>
+<li>One Bigquery <em>Data Set</em> and one bigquery <em>Table</em></li>
+<li>The table schema is at: <code>./resources/mlops_usecase/bigquery/titanic_schema_raw.json</code></li>
+<li>One GCS Bucket named <code>[your_name]-lz</code> where you will drop the files once the function is ready</li>
+<li>One Topic named <code>[your_name]-ingestion-complete</code>, to where the function will send a message once complete.</li>
+</ul>
+<p>The outline of the <em>Cloud Function</em> code is available at <code>functions/simple_mlops/a_ingest_data/app/main.py</code>.</p>
+<div class="highlight"><pre><span></span><code>.
+└── a_ingest_data/
+    ├── app/
+    │   ├── funcs/
+    │   │   ├── models.py # Models to make typechecking easier.
+    │   │   ├── gcp_apis.py # Functions to call google services.
+    │   │   └── transform.py # Transformations of data into structures
+    │   ├── main.py # Main module and entry point for the Cloud Function
+    │   └── requirements.txt # Requirements for the function execution.
+    ├── config/
+    │   └── dev.env.yaml # Environment variables that will ship with the function deployment
+    └── tests/
+        └── test_*.py # Unit tests.
+</code></pre></div>
+<h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox"/> Create the Google Cloud Resources</li>
+<li class="task-list-item"><input type="checkbox"/> Update the Cloud Function Code</li>
+<li class="task-list-item"><input type="checkbox"/> Deploy the Cloud Function</li>
+<li class="task-list-item"><input type="checkbox"/> Test the Cloud Function</li>
+</ul>
+<h2 id="create-the-google-cloud-resources">Create the Google Cloud Resources<a class="headerlink" href="#create-the-google-cloud-resources" title="Permanent link">&para;</a></h2>
+<p>Here are the resources necessary to complete the exercise:</p>
+<p>You can create the resources with Cloud Shell or in the Console.
+***The end result will be the same. When creating a resource, choose either to create it with the cloud shell or the console, but not both.</p>
+<p>We recommend using the UI to get a better understanding of GCP.***</p>
+<p>For Cloud Shell, set these variables:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_ID</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>config<span class="w"> </span>get-value<span class="w"> </span>project<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_NAME</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>config<span class="w"> </span>get-value<span class="w"> </span>project<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_NUMBER</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>projects<span class="w"> </span>describe<span class="w"> </span><span class="nv">$PROJECT_ID</span><span class="w"> </span>--format<span class="o">=</span><span class="s1">&#39;value(projectNumber)&#39;</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>europe-west3
+<span class="nb">export</span><span class="w"> </span><span class="nv">YOURNAME</span><span class="o">=</span>your_name_in_lowercase
+</code></pre></div>
+<p><img alt="img-cloudshell" src="../resources/part_1/cloud-shell-01.png" /></p>
+<h3 id="1-create-a-bigquery-dataset">1. Create a BigQuery Dataset<a class="headerlink" href="#1-create-a-bigquery-dataset" title="Permanent link">&para;</a></h3>
+<p><u><strong>Create with either Cloud Shell OR the Console UI.</strong></u></p>
+<p>With the Console:</p>
+<ol>
+<li>
+<p>Go to BigQuery:</p>
+<p><img alt="img-bq-1" src="../resources/part_1/bq-dataset-01.png" /></p>
+</li>
+<li>
+<p>Click the bullet points icon next to the project name:</p>
+<p><img alt="img-bq-2" src="../resources/part_1/bq-dataset-02.png" /></p>
+</li>
+<li>
+<p>Name your data set, change the region, and click <code>CREATE DATA SET</code>:</p>
+<p><img alt="img-bq-3" src="../resources/part_1/bq-dataset-03.png" /></p>
+<p>Congratulations! You have a <code>data set</code>!</p>
+</li>
+<li>
+<p>Edit the labels</p>
+<p>Click in the recently created dataset.
+<img alt="img-bq-4" src="../resources/part_1/bq-dataset-04.png" /></p>
+<p>And add the labels</p>
+<p><img alt="img-bq-5" src="../resources/part_1/bq-dataset-05.png" /></p>
+</li>
+</ol>
+<p>With Cloud Shell, execute the following command:</p>
+<div class="highlight"><pre><span></span><code>bq<span class="w"> </span>mk<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--project_id<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--location<span class="w"> </span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dataset<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Dataset for the Titanic dataset&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>owner:<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>project:<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>purpose:academy<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>_titanic
+</code></pre></div>
+<p>Reference: <a href="https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-dataset">bq mk --dataset</a></p>
+<h3 id="2-create-a-bigquery-table">2. Create a BigQuery Table<a class="headerlink" href="#2-create-a-bigquery-table" title="Permanent link">&para;</a></h3>
+<p><u><strong>Create with either Cloud Shell OR the Console UI.</strong></u></p>
+<p>With the console:</p>
+<ol>
+<li>
+<p>Click the bullets icon next to your data set, and click <em>Create Table</em>:</p>
+<p><img alt="img-bq-t-1" src="../resources/part_1/bq-table-01.png" /></p>
+</li>
+<li>
+<p>Configure your table:</p>
+<p><img alt="img-bq-t-2" src="../resources/part_1/bq-table-02.png" /></p>
+<ol>
+<li>Make sure it's in your dataset created in the step before</li>
+<li>Name your dataset <code>titanic_raw</code></li>
+<li>Copy the schema in the repository folder <code>resources/mlops_example/bigquery/titanic_schema_raw.json</code> and paste it</li>
+<li>Create the table.</li>
+</ol>
+</li>
+<li>
+<p>Add the labels.</p>
+<p><img alt="img-bq-t-3" src="../resources/part_1/bq-table-03.png" /></p>
+<p>To add the labels go to <code>EDIT DETAILS</code>, and the same way as the dataset, add the labels. Include the <code>Dataset</code> : <code>titanic</code> label.</p>
+</li>
+</ol>
+<p>With Cloud Shell, execute the following command:</p>
+<div class="highlight"><pre><span></span><code>bq<span class="w"> </span>mk<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--project_id<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--table<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Table for the Titanic dataset&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>owner:<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>project:<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>purpose:academy<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--label<span class="o">=</span>dataset:titanic<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>_titanic.titanic_raw<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./resources/mlops_usecase/bigquery/titanic_schema_raw.json
+</code></pre></div>
+<p>Reference: <a href="https://cloud.google.com/bigquery/docs/reference/bq-cli-reference#mk-table">bq mk --table</a></p>
+<h3 id="3-create-a-google-cloud-storage-bucket">3. Create a Google Cloud Storage Bucket<a class="headerlink" href="#3-create-a-google-cloud-storage-bucket" title="Permanent link">&para;</a></h3>
+<p><u><strong>Create with either Cloud Shell OR the Console UI.</strong></u></p>
+<p>With the console:</p>
+<ol>
+<li>
+<p>Search for the Cloud Storage in the Search bar.</p>
+<p><img alt="img-buckets-1" src="../resources/part_1/cs-lz-bucket-01.png" /></p>
+</li>
+<li>
+<p>In the Cloud Storage UI, you'll notice there are no buckets created yet. To create one, click the <code>CREATE</code> button.</p>
+<p><img alt="img-buckets-2" src="../resources/part_1/cs-lz-bucket-02.png" /></p>
+</li>
+<li>
+<p>Configurate your bucket</p>
+<p><img alt="img-buckets-3-1" src="../resources/part_1/cs-lz-bucket-03.png" /></p>
+<ol>
+<li>Name your bucket and click Continue.</li>
+<li>Change the storage class from Multi-region to Region. Set the location to europe-west3, as shown in the image, and click Continue.</li>
+<li>Keep the remaining settings as they are.</li>
+<li>Click create.</li>
+</ol>
+<p>Your configuration should look like this:</p>
+<p><img alt="img-buckets-4" src="../resources/part_1/cs-lz-bucket-04.png" /></p>
+<p>If this popup appears, leave the settings as they are.</p>
+<p><img alt="img-buckets-popup1" src="../resources/part_1/cs-lz-bucket-05.png" /></p>
+</li>
+</ol>
+<p>With Cloud Shell, execute the following command:</p>
+<div class="highlight"><pre><span></span><code>gsutil<span class="w"> </span>mb<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>regional<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-l<span class="w"> </span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>gs://<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-lz
+
+gsutil<span class="w"> </span>label<span class="w"> </span>ch<span class="w"> </span>-l<span class="w"> </span>owner:<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span><span class="w"> </span>gs://<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-lz
+gsutil<span class="w"> </span>label<span class="w"> </span>ch<span class="w"> </span>-l<span class="w"> </span>project:<span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="w"> </span>gs://<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-lz
+gsutil<span class="w"> </span>label<span class="w"> </span>ch<span class="w"> </span>-l<span class="w"> </span>purpose:academy<span class="w"> </span>gs://<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-lz
+</code></pre></div>
+<p>Reference: <a href="https://cloud.google.com/storage/docs/gsutil/commands/mb">gsutil mb</a>, <a href="https://cloud.google.com/storage/docs/gsutil/commands/label">gsutil label</a></p>
+<p>And now you have your bucket!</p>
+<p><img alt="img-buckets-created" src="../resources/part_1/cs-lz-bucket-06.png" /></p>
+<p>Alternatively, you can create a bucket using <a href="https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-python">Python</a>, other Client Libraries, or even advanced Infrastructure-as-Code tools like <a href="https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-terraform">Terraform</a> or <a href="https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/">Pulumi</a>.</p>
+<h3 id="4-create-the-pubsub-topic-for-ingestion-complete">4. Create the pubsub topic for ingestion complete<a class="headerlink" href="#4-create-the-pubsub-topic-for-ingestion-complete" title="Permanent link">&para;</a></h3>
+<p><u><strong>Create with either Cloud Shell OR the Console UI.</strong></u></p>
+<p>With the Cloud Console:</p>
+<ol>
+<li>Search for <em>Topics</em> in the search bar.</li>
+<li>
+<p>Click in <strong>CREATE TOPIC</strong>.</p>
+<p><img alt="img-ps-1" src="../resources/part_1/pubsub-ing-01.png" /></p>
+</li>
+<li>
+<p>Define your Topic ID and click <strong>CREATE</strong></p>
+<p>The topic ID should be <code>[your_name]-ingestion_complete</code></p>
+<p><img alt="img-ps-2" src="../resources/part_1/pubsub-ing-02.png" /></p>
+<p>In this case, our Topic ID is <code>ingestion_complete</code>.</p>
+<p>Remember where to find your Topic IDs, it will be useful when instrumenting the python scripts.</p>
+</li>
+<li>
+<p>Verify your topic was created</p>
+</li>
+</ol>
+<p><img alt="img-ps-3" src="../resources/part_1/pubsub-ing-03.png" /></p>
+<p>It automatically creates a subscription, but lets ignore that for now.</p>
+<p>With Cloud Shell:</p>
+<div class="highlight"><pre><span></span><code>gcloud<span class="w"> </span>pubsub<span class="w"> </span>topics<span class="w"> </span>create<span class="w"> </span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-ingestion-complete<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--project<span class="o">=</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--labels<span class="o">=</span><span class="nv">owner</span><span class="o">=</span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>,project<span class="o">=</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>,purpose<span class="o">=</span>academy
+</code></pre></div>
+<p>Now we are ready to move to the cloud function code.</p>
+<h2 id="cloud-function">Cloud Function<a class="headerlink" href="#cloud-function" title="Permanent link">&para;</a></h2>
+<h3 id="update-the-cloud-function-code">Update the Cloud Function Code<a class="headerlink" href="#update-the-cloud-function-code" title="Permanent link">&para;</a></h3>
+<p>Here are the steps necessary to complete the exercise:</p>
+<ol>
+<li>
+<p>Set Environment Variables</p>
+<p>In the <code>functions/mlops_usecase/a_ingest_data/config/dev.env.yaml</code> file, change the environment variables for the correct ones.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">_GCP_PROJECT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">GCP</span><span class="nv"> </span><span class="s">project</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">resources</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">located&quot;</span>
+<span class="nt">_BIGQUERY_DATASET_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">BigQuery</span><span class="nv"> </span><span class="s">dataset</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">created&quot;</span>
+<span class="nt">_BIGQUERY_TABLE_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">BigQuery</span><span class="nv"> </span><span class="s">table</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">store</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data&quot;</span>
+<span class="nt">_TOPIC_INGESTION_COMPLETE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">Pub/Sub</span><span class="nv"> </span><span class="s">topic</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">send</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">message</span><span class="nv"> </span><span class="s">once</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">ingested&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Publish the message: To verify you concluded this step with success, change the string in the <code>'closer-origin-function'</code> to <code>'functions.mlops.ingest_data'</code></p>
+<div class="highlight"><pre><span></span><code><span class="c1">########################################</span>
+<span class="c1"># 2. Send the verification attribute ###</span>
+<span class="c1">########################################</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">gcp_apis</span><span class="o">.</span><span class="n">pubsub_publish_message</span><span class="p">(</span>
+    <span class="n">PS</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">publisher</span><span class="p">,</span>
+    <span class="n">project_id</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">gcp_project_id</span><span class="p">,</span>
+    <span class="n">topic_id</span><span class="o">=</span><span class="s1">&#39;verification&#39;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;closer-origin-function&#39;</span><span class="p">:</span> <span class="s1">&#39;functions.mlops.ingest_data&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;closer-origin-topic&#39;</span><span class="p">:</span> <span class="n">env_vars</span><span class="o">.</span><span class="n">topic_ingestion_complete</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="deploy-the-cloud-function">Deploy the cloud function<a class="headerlink" href="#deploy-the-cloud-function" title="Permanent link">&para;</a></h3>
+<p>You can check the deployment here in <a href="https://console.cloud.google.com/cloud-build/builds;region=europe-west3?referrer=search&amp;project=closeracademy-handson">Cloud Build</a></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Remeber to have $YOURNAME from the first export to the Cloud Shell. </span>
+<span class="c1"># Uncomment the next lines if you see necessary</span>
+<span class="c1"># export REGION=europe-west3</span>
+<span class="c1"># export YOURNAME=your_name_in_lowercase</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FUNCTION_NAME</span><span class="o">=</span><span class="s2">&quot;ingest_data&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH_TO_FUNCTION</span><span class="o">=</span><span class="s2">&quot;functions/mlops_usecase/a_ingest_data&quot;</span>
+
+gcloud<span class="w"> </span>beta<span class="w"> </span>functions<span class="w"> </span>deploy<span class="w"> </span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-<span class="si">${</span><span class="nv">FUNCTION_NAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--gen2<span class="w"> </span>--cpu<span class="o">=</span><span class="m">1</span><span class="w"> </span>--memory<span class="o">=</span>512MB<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--region<span class="o">=</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--runtime<span class="o">=</span>python311<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--source<span class="o">=</span><span class="si">${</span><span class="nv">PATH_TO_FUNCTION</span><span class="si">}</span>/app/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--env-vars-file<span class="o">=</span><span class="si">${</span><span class="nv">PATH_TO_FUNCTION</span><span class="si">}</span>/config/dev.env.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--entry-point<span class="o">=</span>main<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--trigger-event-filters<span class="o">=</span><span class="s2">&quot;type=google.cloud.storage.object.v1.finalized&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--trigger-event-filters<span class="o">=</span><span class="s2">&quot;bucket=</span><span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span><span class="s2">-lz&quot;</span>
+</code></pre></div>
+<p>Reference: <a href="https://cloud.google.com/sdk/gcloud/reference/functions/deploy">gcloud functions deploy</a></p>
+<p>This code deploys a Google Cloud Function named "ingest_data" using the gcloud command-line tool. The function is written in Python 3.11 and is triggered by a Google Cloud Storage object finalization event in the "${YOURNAME}-lz" bucket.</p>
+<p>The function is deployed with the following configuration:</p>
+<ul>
+<li>CPU: 1</li>
+<li>Memory: 512MB</li>
+<li>Region: $REGION</li>
+<li>Runtime: python311</li>
+<li>Source code location: "${PATH_TO_USECASE}/app/"</li>
+<li>Environment variables: loaded from "${PATH_TO_USECASE}/config/dev.env.yaml"</li>
+<li>Entry point: "main"</li>
+<li>Trigger: Google Cloud Storage object finalization event in the "${YOURNAME}-lz" bucket</li>
+</ul>
+<h2 id="ingest-the-data">Ingest the data<a class="headerlink" href="#ingest-the-data" title="Permanent link">&para;</a></h2>
+<p>Go to the Cloud Functions UI in the console, you can confirm the cloud function was deployed successfully. (By searching in the search box), you can check if the deployment was correctly made.</p>
+<p><img alt="img-cf-1" src="../resources/part_1/verify-ok-01.jpeg" /></p>
+<p>To add the data to the created cloud storage bucket, you have two options.</p>
+<ol>
+<li>Transfer the csv to your local machine and upload it to the bucket.</li>
+<li>The data is in the folder <code>./resources/mlops_usecase/data/titanic.csv</code></li>
+<li>Go to the Cloud Storage UI.</li>
+<li>Click on the bucket you created.</li>
+<li>
+<p>Click on <strong>Upload Files</strong> and select the file. <img alt="verify-ok-02" src="../resources/part_1/verify-ok-02.jpeg" /></p>
+</li>
+<li>
+<p>Use the Cloud Shell to copy the file from the running environment to the cloud storage bucket like so:</p>
+<div class="highlight"><pre><span></span><code>gsutil<span class="w"> </span>cp<span class="w"> </span>resources/mlops_usecase/data/titanic.csv<span class="w"> </span>gs://<span class="si">${</span><span class="nv">YOURNAME</span><span class="si">}</span>-lz/
+</code></pre></div>
+</li>
+</ol>
+<p>After this, you can verify the data was ingested correctly.</p>
+<ol>
+<li>
+<p>Go to the BigQuery UI, click your dataset and table, and verify the data is there (Either go to the <code>Preview</code> tab or run a query against the table).
+   <img alt="verify-ok-03" src="../resources/part_1/verify-ok-03.png" /></p>
+</li>
+<li>
+<p>You can also check the function logs to see if there was no error.</p>
+</li>
+<li>Go to the Cloud Functions UI.</li>
+<li>Click on the function name.</li>
+<li>Click in the logs tab<ol>
+<li>This is bad:
+<img alt="verify-ok-04" src="../resources/part_1/verify-ok-04.png" /></li>
+<li>This is good:
+<img alt="verify-ok-05" src="../resources/part_1/verify-ok-05.png" /></li>
+</ol>
+</li>
+</ol>
+<p>And this first phase is complete. Congratulations!</p>
+<p>If you have any questions, please reach out to the tutors.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.a_ingest_data.app.main" class="doc doc-heading">
+          <code>main</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.main" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>Cloud Function to Ingest Data.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.main.load_clients" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">load_clients</span><span class="p">(</span><span class="n">gcp_project_id</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.main.load_clients" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Load the GCP clients.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>gcp_project_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The GCP project ID.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+<td><code>GCPClients</code></td>          <td>
+                <code><span title="a_ingest_data.app.funcs.models.GCPClients">GCPClients</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A tuple of GCP clients.
+With the following attributes:
+    storage_client: A storage client.
+    bigquery_client: A bigquery client.
+    publisher: A pubsub publisher client.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/main.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_clients</span><span class="p">(</span><span class="n">gcp_project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">GCPClients</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Load the GCP clients.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    gcp_project_id (str): The GCP project ID.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    GCPClients: A tuple of GCP clients.</span>
+<span class="sd">	        With the following attributes:</span>
+<span class="sd">	            storage_client: A storage client.</span>
+<span class="sd">	            bigquery_client: A bigquery client.</span>
+<span class="sd">	            publisher: A pubsub publisher client.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">storage_client</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">gcp_project_id</span><span class="p">)</span>
+	<span class="n">bigquery_client</span> <span class="o">=</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">gcp_project_id</span><span class="p">)</span>
+	<span class="n">publisher</span> <span class="o">=</span> <span class="n">pubsub</span><span class="o">.</span><span class="n">PublisherClient</span><span class="p">()</span>
+
+	<span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">GCPClients</span><span class="p">(</span><span class="n">storage_client</span><span class="o">=</span><span class="n">storage_client</span><span class="p">,</span> <span class="n">bigquery_client</span><span class="o">=</span><span class="n">bigquery_client</span><span class="p">,</span> <span class="n">publisher</span><span class="o">=</span><span class="n">publisher</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.main.main" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">main</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.main.main" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Entrypoint of the cloud function.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cloud_event</code></td>
+          <td>
+                <code><span title="cloudevents.http.CloudEvent">CloudEvent</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The cloud event that triggered this function.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/main.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@functions_framework</span><span class="o">.</span><span class="n">cloud_event</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">:</span> <span class="n">CloudEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Entrypoint of the cloud function.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    cloud_event (CloudEvent): The cloud event that triggered this function.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">run_hash</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s1">&#39;env_vars&#39;</span><span class="p">):</span>
+		<span class="n">env_vars</span> <span class="o">=</span> <span class="n">_env_vars</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s1">&#39;gcp_clients&#39;</span><span class="p">):</span>
+		<span class="n">gcp_clients</span> <span class="o">=</span> <span class="n">load_clients</span><span class="p">(</span><span class="n">gcp_project_id</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">gcp_project_id</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+	<span class="c1"># Get the data from the cloud event</span>
+	<span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cloud_event</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+
+	<span class="n">file_contents</span> <span class="o">=</span> <span class="n">gcp_apis</span><span class="o">.</span><span class="n">storage_download_blob_as_string</span><span class="p">(</span>
+		<span class="n">CS</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">storage_client</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+		<span class="n">bucket_name</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;bucket&#39;</span><span class="p">],</span>
+		<span class="n">file_path</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+	<span class="p">)</span>
+
+	<span class="c1"># Split the content by lines</span>
+	<span class="n">datapoints</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">split_lines</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">file_contents</span><span class="p">)</span>
+
+	<span class="c1"># Get the headers (column names) from the first line</span>
+	<span class="n">has_headers</span> <span class="o">=</span> <span class="kc">True</span>
+	<span class="k">if</span> <span class="n">has_headers</span><span class="p">:</span>
+		<span class="n">datapoints</span> <span class="o">=</span> <span class="n">datapoints</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+	<span class="c1"># Iterate through the the datapoints and insert them into BigQuery</span>
+	<span class="n">errors</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">gcp_apis</span><span class="o">.</span><span class="n">bigquery_insert_json_row</span><span class="p">(</span>
+			<span class="n">BQ</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">bigquery_client</span><span class="p">,</span>
+			<span class="n">table_fqn</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">bq_table_fqn</span><span class="p">,</span>
+			<span class="n">row</span><span class="o">=</span><span class="p">[</span><span class="n">datapoint</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()],</span>
+		<span class="p">)</span>
+		<span class="k">for</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="n">transform</span><span class="o">.</span><span class="n">titanic_transform</span><span class="p">(</span>
+			<span class="n">run_hash</span><span class="o">=</span><span class="n">run_hash</span><span class="p">,</span>
+			<span class="n">datapoints</span><span class="o">=</span><span class="n">datapoints</span><span class="p">,</span>
+		<span class="p">)</span>
+	<span class="p">]</span>
+
+	<span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Errors found: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+	<span class="n">_</span> <span class="o">=</span> <span class="n">gcp_apis</span><span class="o">.</span><span class="n">pubsub_publish_message</span><span class="p">(</span>
+		<span class="n">PS</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">publisher</span><span class="p">,</span>
+		<span class="n">project_id</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">gcp_project_id</span><span class="p">,</span>
+		<span class="n">topic_id</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">topic_ingestion_complete</span><span class="p">,</span>
+		<span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I finished ingesting the file </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">!!&quot;</span><span class="p">,</span>
+		<span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
+			<span class="s1">&#39;closer-origin-function&#39;</span><span class="p">:</span> <span class="s1">&#39;functions.mlops.ingest_data&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;closer-run-hash&#39;</span><span class="p">:</span> <span class="n">run_hash</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">)</span>
+
+	<span class="c1">########################################</span>
+	<span class="c1"># 2. Send the verification attribute ###</span>
+	<span class="c1">########################################</span>
+
+	<span class="n">_</span> <span class="o">=</span> <span class="n">gcp_apis</span><span class="o">.</span><span class="n">pubsub_publish_message</span><span class="p">(</span>
+		<span class="n">PS</span><span class="o">=</span><span class="n">gcp_clients</span><span class="o">.</span><span class="n">publisher</span><span class="p">,</span>
+		<span class="n">project_id</span><span class="o">=</span><span class="n">env_vars</span><span class="o">.</span><span class="n">gcp_project_id</span><span class="p">,</span>
+		<span class="n">topic_id</span><span class="o">=</span><span class="s1">&#39;verification&#39;</span><span class="p">,</span>
+		<span class="n">message</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span>
+		<span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
+			<span class="s1">&#39;closer-origin-function&#39;</span><span class="p">:</span> <span class="s1">&#39;functions.mlops.ingest_data&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;closer-origin-topic&#39;</span><span class="p">:</span> <span class="n">env_vars</span><span class="o">.</span><span class="n">topic_ingestion_complete</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.a_ingest_data.app.funcs.gcp_apis" class="doc doc-heading">
+          <code>gcp_apis</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>This module contains the functions that interact with the GCP APIs.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.gcp_apis.bigquery_insert_json_row" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">bigquery_insert_json_row</span><span class="p">(</span><span class="n">BQ</span><span class="p">,</span> <span class="n">table_fqn</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.bigquery_insert_json_row" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Inserts a row into a bigquery table.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>BQ</code></td>
+          <td>
+                <code><span title="google.cloud.bigquery.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The bigquery client.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>table_fqn</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The fully qualified name of the table.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>row</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The row to insert into the table.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/gcp_apis.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">bigquery_insert_json_row</span><span class="p">(</span>
+	<span class="n">BQ</span><span class="p">:</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+	<span class="n">table_fqn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">row</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Inserts a row into a bigquery table.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    BQ (bigquery.Client): The bigquery client.</span>
+<span class="sd">	    table_fqn (str): The fully qualified name of the table.</span>
+<span class="sd">	    row (Dict[str, Any]): The row to insert into the table.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">_filter_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+		<span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())}</span>
+
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+		<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">]</span>
+
+	<span class="n">errors</span> <span class="o">=</span> <span class="n">BQ</span><span class="o">.</span><span class="n">insert_rows_json</span><span class="p">(</span>
+		<span class="n">table</span><span class="o">=</span><span class="n">table_fqn</span><span class="p">,</span>
+		<span class="n">json_rows</span><span class="o">=</span><span class="p">[</span><span class="n">_filter_dict</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">row</span><span class="p">],</span>
+	<span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span> <span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">}))</span>
+		<span class="k">return</span> <span class="n">errors</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.gcp_apis.pubsub_publish_message" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">pubsub_publish_message</span><span class="p">(</span><span class="n">PS</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">topic_id</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">{})</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.pubsub_publish_message" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Publishes a message to a Pub/Sub topic.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>PS</code></td>
+          <td>
+                <code><span title="google.cloud.pubsub.PublisherClient">PublisherClient</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The pubsub client.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>project_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ID of the project where the topic is located.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>topic_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ID of the topic.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>message</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The message to publish.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>attributes</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The attributes of the message.
+Defaults to {}.</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/gcp_apis.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pubsub_publish_message</span><span class="p">(</span>
+	<span class="n">PS</span><span class="p">:</span> <span class="n">pubsub</span><span class="o">.</span><span class="n">PublisherClient</span><span class="p">,</span>
+	<span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">topic_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">attributes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Publishes a message to a Pub/Sub topic.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    PS (pubsub.PublisherClient): The pubsub client.</span>
+<span class="sd">	    project_id (str): The ID of the project where the topic is located.</span>
+<span class="sd">	    topic_id (str): The ID of the topic.</span>
+<span class="sd">	    message (str): The message to publish.</span>
+<span class="sd">	    attributes (Dict[str, str], optional): The attributes of the message.</span>
+<span class="sd">	        Defaults to {}.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">_topic</span> <span class="o">=</span> <span class="n">PS</span><span class="o">.</span><span class="n">topic_path</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">topic_id</span><span class="p">)</span>
+
+	<span class="n">PS</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span>
+		<span class="n">topic</span><span class="o">=</span><span class="n">_topic</span><span class="p">,</span>
+		<span class="n">data</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+		<span class="o">**</span><span class="n">attributes</span><span class="p">,</span>
+	<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.gcp_apis.storage_download_blob_as_string" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">storage_download_blob_as_string</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.gcp_apis.storage_download_blob_as_string" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads a blob from a Google Cloud Storage bucket and returns its content as a string.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>CS</code></td>
+          <td>
+                <code><span title="google.cloud.storage.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A Google Cloud Storage client object.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>bucket_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the bucket.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>file_path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The location of the blob/file inside the bucket.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+<td><code>str</code></td>          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A string with the file content.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Raises:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code>ValueError</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the blob does not exist.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/gcp_apis.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">storage_download_blob_as_string</span><span class="p">(</span>
+	<span class="n">CS</span><span class="p">:</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+	<span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Downloads a blob from a Google Cloud Storage bucket and returns its content as a string.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    CS (google.cloud.storage.Client): A Google Cloud Storage client object.</span>
+<span class="sd">	    bucket_name (str): The name of the bucket.</span>
+<span class="sd">	    file_path (str): The location of the blob/file inside the bucket.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    str: A string with the file content.</span>
+
+<span class="sd">	Raises:</span>
+<span class="sd">	    ValueError: If the blob does not exist.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># Getting the bucket</span>
+	<span class="n">bucket</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+	<span class="c1"># Getting the blob</span>
+	<span class="n">blob</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">blob</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+		<span class="c1"># Downloading the blob</span>
+		<span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">download_as_text</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Blob </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1"> does not exist.&#39;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.a_ingest_data.app.funcs.transform" class="doc doc-heading">
+          <code>transform</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.transform" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.transform.split_lines" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">split_lines</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.transform.split_lines" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Split the content by lines.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>content</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The content of the file.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>List[str]: The lines of the file.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">split_lines</span><span class="p">(</span>
+	<span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Split the content by lines.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    content (str): The content of the file.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    List[str]: The lines of the file.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.transform.titanic_transform" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">titanic_transform</span><span class="p">(</span><span class="n">run_hash</span><span class="p">,</span> <span class="n">datapoints</span><span class="p">)</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.transform.titanic_transform" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generator that transforms a CSV datapoint into a titanic data object.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>run_hash</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The hash of the run.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>datapoints</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of CSV datapoints.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Yields:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData">TitanicData</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>models.TitanicData: A titanic data object.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">titanic_transform</span><span class="p">(</span>
+	<span class="n">run_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">datapoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">TitanicData</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Generator that transforms a CSV datapoint into a titanic data object.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    run_hash (str): The hash of the run.</span>
+<span class="sd">	    datapoints (List[str]): A list of CSV datapoints.</span>
+
+<span class="sd">	Yields:</span>
+<span class="sd">	    models.TitanicData: A titanic data object.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">for</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="n">datapoints</span><span class="p">:</span>
+		<span class="n">datapoint_decoded</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">([</span><span class="n">datapoint</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+
+		<span class="c1"># Zip the headers and values together into a dictionary</span>
+		<span class="n">datapoint_obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TitanicData</span><span class="p">(</span>
+			<span class="n">run_hash</span><span class="o">=</span><span class="n">run_hash</span><span class="p">,</span>
+			<span class="n">PassengerId</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Survived</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Pclass</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Name</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Sex</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Age</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">SibSp</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Parch</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Ticket</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Fare</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Cabin</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="n">Embarked</span><span class="o">=</span><span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="k">if</span> <span class="n">datapoint_decoded</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+		<span class="p">)</span>
+
+		<span class="c1"># Yield the datapoint object</span>
+		<span class="k">yield</span> <span class="n">datapoint_obj</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="mlops_usecase.a_ingest_data.app.funcs.models" class="doc doc-heading">
+          <code>models</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models" class="headerlink" title="Permanent link">&para;</a></h3>
+
+  <div class="doc doc-contents first">
+  
+      <p>Models for the ingest_data function. Simplifies type hinting.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.models.EnvVars" class="doc doc-heading">
+          <code>EnvVars</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models.EnvVars" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="typing.NamedTuple">NamedTuple</span></code></p>
+
+  
+      <p>A named tuple representing environment variables required for data ingestion.</p>
+
+
+
+  <p><span class="doc-section-title">Attributes:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.EnvVars.gcp_project_id">gcp_project_id</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ID of the Google Cloud Platform project.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.EnvVars.bq_table_fqn">bq_table_fqn</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The fully-qualified name of the BigQuery table.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.EnvVars.topic_ingestion_complete">topic_ingestion_complete</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the Pub/Sub topic for ingestion completion notifications.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">EnvVars</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;A named tuple representing environment variables required for data ingestion.</span>
+
+<span class="sd">	Attributes:</span>
+<span class="sd">	    gcp_project_id (str): The ID of the Google Cloud Platform project.</span>
+<span class="sd">	    bq_table_fqn (str): The fully-qualified name of the BigQuery table.</span>
+<span class="sd">	    topic_ingestion_complete (str): The name of the Pub/Sub topic for ingestion completion notifications.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">gcp_project_id</span><span class="p">:</span> <span class="nb">str</span>
+	<span class="n">bq_table_fqn</span><span class="p">:</span> <span class="nb">str</span>
+	<span class="n">topic_ingestion_complete</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.models.GCPClients" class="doc doc-heading">
+          <code>GCPClients</code>
+
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models.GCPClients" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="typing.NamedTuple">NamedTuple</span></code></p>
+
+  
+      <p>A named tuple that contains GCP client objects for Storage, BigQuery, and Pub/Sub.</p>
+
+
+
+  <p><span class="doc-section-title">Attributes:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.GCPClients.storage_client">storage_client</span></code></td>
+          <td>
+                <code><span title="google.cloud.storage.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client object for Google Cloud Storage.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.GCPClients.bigquery_client">bigquery_client</span></code></td>
+          <td>
+                <code><span title="google.cloud.bigquery.Client">Client</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client object for Google BigQuery.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.GCPClients.publisher">publisher</span></code></td>
+          <td>
+                <code><span title="google.cloud.pubsub_v1.PublisherClient">PublisherClient</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A client object for Google Cloud Pub/Sub.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GCPClients</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;A named tuple that contains GCP client objects for Storage, BigQuery, and Pub/Sub.</span>
+
+<span class="sd">	Attributes:</span>
+<span class="sd">	    storage_client (google.cloud.storage.Client): A client object for Google Cloud Storage.</span>
+<span class="sd">	    bigquery_client (google.cloud.bigquery.Client): A client object for Google BigQuery.</span>
+<span class="sd">	    publisher (google.cloud.pubsub_v1.PublisherClient): A client object for Google Cloud Pub/Sub.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">storage_client</span><span class="p">:</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span>
+	<span class="n">bigquery_client</span><span class="p">:</span> <span class="n">bigquery</span><span class="o">.</span><span class="n">Client</span>
+	<span class="n">publisher</span><span class="p">:</span> <span class="n">pubsub</span><span class="o">.</span><span class="n">PublisherClient</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" class="doc doc-heading">
+          <code>TitanicData</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A class representing the data for the titanic dataset.</p>
+
+
+
+  <p><span class="doc-section-title">Attributes:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.run_hash">run_hash</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The hash of the run.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.PassengerId">PassengerId</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ID of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Survived">Survived</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether the passenger survived or not.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Pclass">Pclass</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The class of the passenger's ticket.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Name">Name</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Sex">Sex</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The gender of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Age">Age</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The age of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.SibSp">SibSp</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The number of siblings/spouses aboard the Titanic.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Parch">Parch</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The number of parents/children aboard the Titanic.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Ticket">Ticket</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ticket number of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Fare">Fare</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The fare paid by the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Cabin">Cabin</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The cabin number of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code><span title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.Embarked">Embarked</span></code></td>
+          <td>
+                <code>Optional[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The port of embarkation of the passenger.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TitanicData</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;A class representing the data for the titanic dataset.</span>
+
+<span class="sd">	Attributes:</span>
+<span class="sd">		run_hash (str): The hash of the run.</span>
+<span class="sd">		PassengerId (Optional[str]): The ID of the passenger.</span>
+<span class="sd">		Survived (Optional[str]): Whether the passenger survived or not.</span>
+<span class="sd">		Pclass (Optional[str]): The class of the passenger&#39;s ticket.</span>
+<span class="sd">		Name (Optional[str]): The name of the passenger.</span>
+<span class="sd">		Sex (Optional[str]): The gender of the passenger.</span>
+<span class="sd">		Age (Optional[str]): The age of the passenger.</span>
+<span class="sd">		SibSp (Optional[str]): The number of siblings/spouses aboard the Titanic.</span>
+<span class="sd">		Parch (Optional[str]): The number of parents/children aboard the Titanic.</span>
+<span class="sd">		Ticket (Optional[str]): The ticket number of the passenger.</span>
+<span class="sd">		Fare (Optional[str]): The fare paid by the passenger.</span>
+<span class="sd">		Cabin (Optional[str]): The cabin number of the passenger.</span>
+<span class="sd">		Embarked (Optional[str]): The port of embarkation of the passenger.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">run_hash</span><span class="p">:</span> <span class="nb">str</span>
+	<span class="n">PassengerId</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+	<span class="n">Survived</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Pclass</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+	<span class="n">Sex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Age</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">SibSp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Parch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Ticket</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Fare</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Cabin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">Embarked</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;TitanicData&#39;</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Creates a new instance of the TitanicData class from a dictionary.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">		    data (Dict[str, Any]): A dictionary containing the data for a single passenger.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">		    TitanicData: A new instance of the TitanicData class.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># Convert the Survived column to a boolean</span>
+		<span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Converts the TitanicData instance to a dictionary.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">		    Dict[str, Any]: A dictionary containing the data for a single passenger.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">{</span>
+			<span class="s1">&#39;run_hash&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_hash</span><span class="p">,</span>
+			<span class="s1">&#39;PassengerId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PassengerId</span><span class="p">,</span>
+			<span class="s1">&#39;Survived&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Survived</span><span class="p">,</span>
+			<span class="s1">&#39;Pclass&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pclass</span><span class="p">,</span>
+			<span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+			<span class="s1">&#39;Sex&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sex</span><span class="p">,</span>
+			<span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span>
+			<span class="s1">&#39;SibSp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SibSp</span><span class="p">,</span>
+			<span class="s1">&#39;Parch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parch</span><span class="p">,</span>
+			<span class="s1">&#39;Ticket&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ticket</span><span class="p">,</span>
+			<span class="s1">&#39;Fare&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Fare</span><span class="p">,</span>
+			<span class="s1">&#39;Cabin&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cabin</span><span class="p">,</span>
+			<span class="s1">&#39;Embarked&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Embarked</span><span class="p">,</span>
+		<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h5 id="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.from_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.from_dict" class="headerlink" title="Permanent link">&para;</a></h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a new instance of the TitanicData class from a dictionary.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>data</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dictionary containing the data for a single passenger.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+<td><code>TitanicData</code></td>          <td>
+                <code><a class="autorefs autorefs-internal" title="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData" href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData">TitanicData</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A new instance of the TitanicData class.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/models.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;TitanicData&#39;</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Creates a new instance of the TitanicData class from a dictionary.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    data (Dict[str, Any]): A dictionary containing the data for a single passenger.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    TitanicData: A new instance of the TitanicData class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># Convert the Survived column to a boolean</span>
+	<span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h5 id="mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.to_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">to_dict</span><span class="p">()</span></code>
+
+<a href="#mlops_usecase.a_ingest_data.app.funcs.models.TitanicData.to_dict" class="headerlink" title="Permanent link">&para;</a></h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts the TitanicData instance to a dictionary.</p>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Dict[str, Any]: A dictionary containing the data for a single passenger.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>functions/mlops_usecase/a_ingest_data/app/funcs/models.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Converts the TitanicData instance to a dictionary.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    Dict[str, Any]: A dictionary containing the data for a single passenger.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="p">{</span>
+		<span class="s1">&#39;run_hash&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_hash</span><span class="p">,</span>
+		<span class="s1">&#39;PassengerId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PassengerId</span><span class="p">,</span>
+		<span class="s1">&#39;Survived&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Survived</span><span class="p">,</span>
+		<span class="s1">&#39;Pclass&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Pclass</span><span class="p">,</span>
+		<span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+		<span class="s1">&#39;Sex&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sex</span><span class="p">,</span>
+		<span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span>
+		<span class="s1">&#39;SibSp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SibSp</span><span class="p">,</span>
+		<span class="s1">&#39;Parch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parch</span><span class="p">,</span>
+		<span class="s1">&#39;Ticket&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ticket</span><span class="p">,</span>
+		<span class="s1">&#39;Fare&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Fare</span><span class="p">,</span>
+		<span class="s1">&#39;Cabin&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cabin</span><span class="p">,</span>
+		<span class="s1">&#39;Embarked&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Embarked</span><span class="p">,</span>
+	<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      
+    
+  </body>
+</html>
