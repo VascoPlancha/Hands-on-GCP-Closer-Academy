@@ -5,7 +5,7 @@
   - [Tasks](#tasks)
   - [Create the Google Cloud Resources](#create-the-google-cloud-resources)
     - [1. Create the models GCS Bucket](#1-create-the-models-gcs-bucket)
-    - [2. Create the pubsub topic for update facts complete](#2-create-the-pubsub-topic-for-update-facts-complete)
+    - [2. Create the pubsub topic for train model complete](#2-create-the-pubsub-topic-for-train-model-complete)
   - [Update the Cloud Function Code](#update-the-cloud-function-code)
   - [Deploy the cloud function](#deploy-the-cloud-function)
   - [Documentation](#documentation)
@@ -66,6 +66,7 @@ You can create the resources with Cloud Shell or in the Console.
 For Cloud Shell, set these variables:
 
 ```bash
+export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NAME=$(gcloud config get-value project)
 export REGION=europe-west3
 export YOURNAME=your_name_in_lowercase
@@ -95,7 +96,7 @@ gsutil label ch -l purpose:academy gs://${YOURNAME}-models
 
 Reference: [gsutil mb](https://cloud.google.com/storage/docs/gsutil/commands/mb), [gsutil label](https://cloud.google.com/storage/docs/gsutil/commands/label)
 
-### 2. Create the pubsub topic for update facts complete
+### 2. Create the pubsub topic for train model complete
 
 With the Cloud Console:
 
@@ -113,14 +114,13 @@ gcloud pubsub topics create ${YOURNAME}-train-model-complete \
 
 ## Update the Cloud Function Code
 
-
 1. Set Environment Variables
 
     In the `c_train_model/config/dev.env.yaml` file, change the environment variables for the correct ones.
 
     ```python
     ##############################
-    # 2. Environment variables ###
+    # 1. Environment variables ###
     ##############################
     ```
 
