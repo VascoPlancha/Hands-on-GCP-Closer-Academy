@@ -157,6 +157,15 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
 
 ## Confirm the model was uplodad
 
+!!! warning
+    Since the function is triggered by the `update-facts-complete`, which is activated by CF `Update Facts`, which is activated by the `ingestion-complete` topic,
+    you'll need to re-activate the previous ingestion function. You can achieve this by re-adding the `titanic.csv`.
+    file to the bucket. In the UI, you can upload and `Overwrite File`.
+
+    In the command line, you can do this with the following command:
+
+    `gsutil cp resources/mlops_usecase/data/titanic.csv gs://${YOURNAME}-lz/`
+
 To verify that the model was correctly uploaded, you can 1) Check the cloud function logs, and 2) Go to your cloud storage bucket `your_name_in_lowercase-models`.
 
 1.
