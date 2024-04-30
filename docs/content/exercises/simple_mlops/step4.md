@@ -16,7 +16,7 @@ The outline of the *Cloud Function* code is available at `./functions/simple_mlo
 ## Tasks
 
 - [ ] Create the `Titanic Predictions` Table
-  - The table is schena is at `resources/mlops_usecase/bigquery/titanic_predictions.json`
+  - The table is schema is at `resources/mlops_usecase/bigquery/titanic_predictions.json`
 - [ ] Change the configurations in the `dev.env.yaml` file
 - [ ] Change the deployment command to deploy the function correctly.
 
