@@ -7,7 +7,25 @@ This repository contains the Hands On GCP code for the workshops within Closer A
 This repository has the following workshops:
 
 - [Building a simple *MLOps* system in *Google Cloud Platform*](./exercises/simple_mlops/index.md).
-    - By end end of it, we should be able to understand how to create resources in Google Cloud, how to use them and how to integrate them with eachother.
+    - By end end of it, we should be able to understand how to create resources in Google Cloud, how to use them and how to integrate them with each other.
+
+
+## Setup
+
+Use the Cloud Editor to copy this repository.
+
+Click the Cloud Shell Icon:
+
+![setup-1](./_assets/setup-01.png)
+
+Something like this should pop-up:
+
+![setup-2](./_assets/setup-02.png)
+
+After that, clone the git repository and change directory to the cloned repository.
+In the exercises, you'll change between the Cloud Editor and the Cloud Shell.
+
+![setup-3](./_assets/setup-03.png)
 
 ## Development - Requirements and Setup
 
