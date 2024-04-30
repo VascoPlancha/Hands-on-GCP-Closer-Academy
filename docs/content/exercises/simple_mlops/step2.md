@@ -198,6 +198,11 @@ gcloud beta functions deploy $YOURNAME-$FUNCTION_NAME \
 
 ## Verify the data was moved from raw to facts
 
+!!! warning
+    Since the function is triggered by the `ingestion-complete` topic, you'll need to re-activate the previous ingestion function. You can achieve this by re-adding the `titanic.csv` file to the bucket. In the UI, you can upload and `Overwrite File`.
+    In the command line, you can do this with the following command:
+    gsutil cp resources/mlops_usecase/data/titanic.csv gs://${YOURNAME}-lz/
+
 To confirm that you sucessfully completed this phase, you can check the data in the BigQuery table.
 
 ![verify-ok-01](./resources/part_2/verify-ok-01.png)
